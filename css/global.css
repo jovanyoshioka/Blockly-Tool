@@ -1,0 +1,25 @@
+body {
+  background-color: #FF8200;
+}
+
+div#blocklyDiv,
+textarea#jsCode {
+  width: 45vw;
+  height: 35vw;
+}
+div#blocklyDiv {
+  display: inline-block;
+}
+textarea#jsCode {
+  float: right;
+}
+
+button#run {
+  font-size: 2em;
+  border: none;
+  background-color: #FFFFFF;
+  color: #FF8200;
+}
+button#run:hover {
+  cursor: pointer;
+}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Blockly Tool</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="A tool that generates mazes based on stories' plots to be traversed using block-based coding.">
+    <meta name="keywords" content="Blockly, University, Tennessee, Knoxville, UTK, Research">
+    <meta name="author" content="Jovan Yoshioka">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/global.css">
+  </head>
+  <body>
+    <!-- Import blockly libraries -->
+    <script src="js/blockly/blockly_compressed.js"></script> <!-- Core -->
+    <script src="js/blockly/javascript_compressed.js"></script> <!-- Translates block to JS -->
+    <script src="js/blockly/blocks_compressed.js"></script> <!-- Block sets -->
+    <script src="js/blockly/msg/js/en.js"></script> <!-- Language -->
+
+    <!-- Workspace: container holding block code -->
+    <div id="blocklyDiv"></div>
+    <xml id="toolbox" style="display: none">
+      <block type="controls_if"></block>
+      <block type="controls_repeat_ext"></block>
+      <block type="logic_compare"></block>
+      <block type="math_number"></block>
+      <block type="math_arithmetic"></block>
+      <block type="text"></block>
+      <block type="text_print"></block>
+    </xml>
+
+    <!-- JavaScript output text box -->
+    <textarea id="jsCode"></textarea>
+
+    <!-- Run button -->
+    <br>
+    <button id="run" onclick="runCode()">Run</button>
+
+    <script src="js/main.js"></script>
+  </body>
+</html>
