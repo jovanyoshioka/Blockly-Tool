@@ -1,19 +1,57 @@
-body {
-  background-color: #FF8200;
+:root {
+  --canvasSize: 675px;
 }
 
-div#blocklyDiv,
-textarea#jsCode {
-  width: 45vw;
-  height: 35vw;
-}
-div#blocklyDiv {
-  display: inline-block;
-}
-textarea#jsCode {
-  float: right;
+html, body {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
+div#story {
+  width: var(--canvasSize);
+  height: 100%;
+  position: relative;
+  float: left;
+}
+
+div#story canvas {
+  width: var(--canvasSize);
+  height: var(--canvasSize);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+div#story canvas#charCanvas {
+  z-index: 2;
+}
+div#story canvas#storyCanvas {
+  z-index: 1;
+  background-color: #48CC2D;
+}
+
+div#story div {
+  width: 100%;
+  height: calc(100% - var(--canvasSize));
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: #BBBBBB;
+}
+
+div#workspace {
+  width: 100%;
+  height: 100%;
+}
+xml#toolbox {
+  display: none;
+}
+
+/* main section textarea#jsCode {
+  width: 100%;
+  height: 100%;
+}
 button#run {
   font-size: 2em;
   border: none;
@@ -22,4 +60,4 @@ button#run {
 }
 button#run:hover {
   cursor: pointer;
-}
+} */

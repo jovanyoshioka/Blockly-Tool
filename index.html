@@ -16,9 +16,18 @@
     <script src="js/blockly/blocks_compressed.js"></script> <!-- Block sets -->
     <script src="js/blockly/msg/js/en.js"></script> <!-- Language -->
 
-    <!-- Workspace: container holding block code -->
-    <div id="blocklyDiv"></div>
-    <xml id="toolbox" style="display: none">
+    <!-- Story canvas and subtitles container -->
+    <div id="story">
+      <!-- Character and other elements canvas -->
+      <!-- Note: Separate because applying transformations to character; can not do this with one canvas. -->
+      <canvas id="charCanvas"></canvas>
+      <canvas id="storyCanvas"></canvas>
+      <!-- Story subtitles -->
+      <div>Note: Currently, console must be used to utilize movement functionalities.</div>
+    </div>
+    <!-- Blockly workspace: container holding toolbox and block code -->
+    <div id="workspace"></div>
+    <xml id="toolbox">
       <block type="controls_if"></block>
       <block type="controls_repeat_ext"></block>
       <block type="logic_compare"></block>
@@ -29,12 +38,12 @@
     </xml>
 
     <!-- JavaScript output text box -->
-    <textarea id="jsCode"></textarea>
-
+    <!-- <textarea id="jsCode"></textarea> -->
     <!-- Run button -->
-    <br>
-    <button id="run" onclick="runCode()">Run</button>
+    <!-- <br> -->
+    <!-- <button id="run" onclick="runCode()">Run</button> -->
 
-    <script src="js/main.js"></script>
+    <script src="js/blockly.js"></script>
+    <script src="js/canvas.js"></script>
   </body>
 </html>

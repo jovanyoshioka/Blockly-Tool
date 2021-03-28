@@ -1,7 +1,8 @@
 var workspace;
+
 window.addEventListener('load', function () {
   // Inject workspace into DOM.
-  workspace = Blockly.inject("blocklyDiv",
+  workspace = Blockly.inject("workspace",
     {toolbox: document.getElementById("toolbox")});
 
   // Update displayed JavaScript when workspace (block code) is manipulated.
