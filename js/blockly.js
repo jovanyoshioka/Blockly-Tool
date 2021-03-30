@@ -9,7 +9,7 @@ window.addEventListener('load', function () {
   workspace.addChangeListener(updateJS);
 
   // Prevent user's code from colliding with local variables.
-  Blockly.JavaScript.addReservedWords("workspace", "code", "lines", "highlightBlock");
+  Blockly.JavaScript.addReservedWords("workspace", "code", "lines");
 
   // Prevents infinite loops by using a counter.
   window.LoopTrap = 1000;
@@ -46,25 +46,34 @@ function updateJS()
 }
 
 /**
- * Highlights block of code being currently executed.
- * @param id serial number of block to be highlighted (auto-passed)
- */
-function highlightBlock(id)
-{
-  workspace.highlightBlock(id);
-}
-
-/**
  * Runs translated code.
  */
 function runCode()
 {
-  // Evaluate code string as JavaScript. Watch for any runtime errors.
-  try
+  // Disable run button.
+  // TEMPORARY: Instead, change to a pause/reset button?
+  document.getElementById("run").disabled = true;
+  
+  var code = getTranslatedCode(workspace);
+  var jsInterpreter = new Interpreter(code, initApi);
+  
+  /**
+   * Steps through code utilizing JS-Interpreter.
+   */
+  function nextStep()
   {
-    eval(getTranslatedCode(workspace));
-  } catch (e)
-  {
-    alert(e);
+    if (jsInterpreter.step())
+    {
+      // Execute next available semantic unit.
+      setTimeout(nextStep, 100);
+    } else
+    {
+      // End of program
+      // Remove all highlighting.
+      workspace.highlightBlock(null);
+      // Enable run button.
+      document.getElementById("run").disabled = false;
+    }
   }
+  nextStep();
 }
