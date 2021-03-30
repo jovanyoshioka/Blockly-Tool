@@ -120,6 +120,19 @@ function turn(dir)
 }
 
 /**
+ * Turns character left or right.
+ * Keeps displayed JavaScript readable for user, e.g., turnLeft() instead of turn('L').
+ */
+function turnLeft()
+{
+  turn('L');
+}
+function turnRight()
+{
+  turn('R');
+}
+
+/**
  * Moves character forward one space.
  * Note: direction is automatically taken into account.
  */
