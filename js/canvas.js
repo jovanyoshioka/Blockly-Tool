@@ -1,7 +1,7 @@
 /*************
  * CONSTANTS *
  *************/
-const GRID_DOT_SIZE = 5;
+const GRID_DOT_SIZE  = 5;
 const GRID_DOT_COLOR = "#666666";
 
 /***********
@@ -67,48 +67,64 @@ class canvasContainer
 
 class canvasElement
 {
-  constructor(canvasObj, x, y)
+  constructor(canvasObj, x, y, type)
   {
     // Canvas of which this element belongs to.
     this.canvasObj = canvasObj;
 
     // Element properties.
+    // Tracks element's position relative to canvas.
     this.x = x;
     this.y = y;
+    // Tracks element's position relative to transformation.
+    this.pos = 0;
+    // Tracks element's direction relative to canvas (from 0 to 2pi).
     this.dir = 0;
+    // Each element's size is equivalent to one grid unit size.
     this.size = this.canvasObj.unitSize;
+
+    // Differentiates between: character, boundary, goal
+    // Specific actions, mostly related to movement, only for specific types.
+    this.type = type;
   }
 
-  // Places element onto canvas as a square.
+  /**
+   * Places element onto canvas as a square.
+   */
   drawSquare()
   {
-    // TEMPORARY FILL STYLE
-    var gradient = this.canvasObj.ctx.createLinearGradient(this.x, this.y, this.x + this.size, this.y);
-    gradient.addColorStop(0, "blue");
-    gradient.addColorStop(1, "red");
-    this.canvasObj.ctx.fillStyle = gradient;
-    this.canvasObj.ctx.fillRect(
-      this.x,
-      this.y,
-      this.size,
-      this.size
-    );
-  }
+    // Character element undergoes transformations, so position used to draw is different.
+    if (this.type == "character")
+    {
+      // TEMPORARY FILL STYLE
+      var gradient = this.canvasObj.ctx.createLinearGradient(this.pos, 0, this.pos + this.size, 0);
+      gradient.addColorStop(0, "blue");
+      gradient.addColorStop(1, "red");
+      this.canvasObj.ctx.fillStyle = gradient;
 
-  // Places element onto canvas as a circle.
-  drawCircle()
-  {
-    this.canvasObj.ctx.beginPath();
-    this.canvasObj.ctx.arc(
-      this.x + this.size / 2,
-      this.y + this.size / 2,
-      this.size / 2, 0,
-      2 * Math.PI,
-      false
-    );
-    // TEMPORARY FILL STYLE
-    this.canvasObj.ctx.fillStyle = "#000000";
-    this.canvasObj.ctx.fill();
+      // Use transformation relative position for character type.
+      this.canvasObj.ctx.fillRect(
+        this.pos,
+        0,
+        this.size,
+        this.size
+      );
+    } else
+    {
+      // TEMPORARY FILL STYLE
+      var gradient = this.canvasObj.ctx.createLinearGradient(this.x, this.y, this.x + this.size, this.y);
+      gradient.addColorStop(0, "blue");
+      gradient.addColorStop(1, "red");
+      this.canvasObj.ctx.fillStyle = gradient;
+
+      // Use tracked position (x,y) for all other element types.
+      this.canvasObj.ctx.fillRect(
+        this.x,
+        this.y,
+        this.size,
+        this.size
+      );
+    }
   }
 }
 
@@ -121,10 +137,10 @@ window.addEventListener('load', function () {
   storyCanvas.drawGrid();
 
   // TEMPORARY INITIALIZING OF CHARACTER AND STORY ELEMENTS
-  charCanvas.elements.push(new canvasElement(charCanvas, 0, 0));
+  charCanvas.elements.push(new canvasElement(charCanvas, 0, 0, "character"));
   charCanvas.elements[0].drawSquare();
 
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 450, 450));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 450, 450, "boundary"));
   storyCanvas.elements[0].drawSquare();
 });
 
@@ -132,13 +148,33 @@ window.addEventListener('load', function () {
  * MOVEMENT *
  ************/
 
+
+/**
+ * Sets character's tracked direction relative to canvas (from 0 to 2pi).
+ * @param char character object.
+ * @param angle angle addition to current direction.
+ */
+function trackDir(char, angle)
+{
+  // "Turn" current direction by angle parameter.
+  char.dir += angle;
+  // Keep bounded between 0 and 2pi.
+  if (char.dir > 3 * Math.PI / 2)
+  {
+    char.dir = 0;
+  } else if (char.dir < 0)
+  {
+    char.dir = 3 * Math.PI / 2;
+  }
+}
+
 /**
  * Rotates character in certain direction.
  * @param dir direction to rotate, 'L': Math.PI / 2 Radians, 'R': -Math.PI / 2 Radians.
  */
 function turn(dir)
 {
-  var character = charCanvas.elements[0];
+  var character = charCanvas.elements.find(element => element.type == "character");
   var angle = dir == 'L' ? Math.PI / 2
             : dir == 'R' ? -Math.PI / 2
             : 0;
@@ -147,17 +183,17 @@ function turn(dir)
   charCanvas.clear();
 
   // Translate to center of character.
-  charCanvas.ctx.translate(character.x + character.size/2, character.y + character.size/2);
+  charCanvas.ctx.translate(character.pos + character.size/2, character.size/2);
   // Invert (-) angle since canvas uses clockwise as positive.
   charCanvas.ctx.rotate(-angle);
   // Translate to initial position.
-  charCanvas.ctx.translate(-(character.x + character.size/2), -(character.y + character.size/2));
+  charCanvas.ctx.translate(-(character.pos + character.size/2), -character.size/2);
 
   // Draw new orientation on canvas.
   character.drawSquare();
 
-  // Set direction for future 
-  character.dir = dir;
+  // Set direction of character relative to canvas for later tracking position relative to canvas.
+  trackDir(character, angle);
 }
 
 /**
@@ -174,17 +210,51 @@ function turnRight()
 }
 
 /**
+ * Sets character's tracked position relative to canvas (x,y).
+ * @param char character object.
+ */
+function trackPos(char)
+{
+  // Based on direction motion is in, add/subtract from x or y position value.
+  switch (char.dir)
+  {
+    case 0:
+      // East
+      char.x += char.size;
+      break;
+    case Math.PI / 2:
+      // North
+      char.y -= char.size;
+      break;
+    case Math.PI:
+      // West
+      char.x -= char.size;
+      break;
+    case 3 * Math.PI / 2:
+      // South
+      char.y += char.size;
+      break;
+    default:
+      console.log("An error occured while identifying character's direction!");
+      break;
+  }
+}
+
+/**
  * Moves character forward one space.
  * Note: direction is automatically taken into account.
  */
 function moveForward()
 {
-  var character = charCanvas.elements[0];
+  var character = charCanvas.elements.find(element => element.type == "character");
+
+  // Track position relative to canvas using direction relative to canvas.
+  trackPos(character);
 
   // Clear previous position from canvas.
   charCanvas.clear();
 
   // Move character.
-  character.x += character.size;
+  character.pos += character.size;
   character.drawSquare();
 }
