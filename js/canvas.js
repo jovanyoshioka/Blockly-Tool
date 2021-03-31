@@ -1,3 +1,12 @@
+/*************
+ * CONSTANTS *
+ *************/
+const GRID_DOT_SIZE = 5;
+const GRID_DOT_COLOR = "#666666";
+
+/***********
+ * CLASSES *
+ ***********/
 class canvasContainer
 {
   constructor(canvasID)
@@ -9,6 +18,11 @@ class canvasContainer
 
     this.ctx.canvas.width = canvasElement.offsetWidth;
     this.ctx.canvas.height = canvasElement.offsetHeight;
+
+    // Number of units per grid row or grid column.
+    this.unitsPerLine = 15;
+    // Size of each grid unit.
+    this.unitSize = this.ctx.canvas.width / this.unitsPerLine;
 
     // Character, Story Elements, Grid Dots
     this.elements = [];
@@ -26,21 +40,43 @@ class canvasContainer
     // Restore the transformations.
     this.ctx.restore();
   }
+
+  // Draws dotted grid layout based on canvas size.
+  drawGrid()
+  {
+    // Loop through each row of grid.
+    for (var i = 0; i < this.unitsPerLine; i++)
+    {
+      // Loop through each column of grid.
+      for (var j = 0; j < this.unitsPerLine; j++)
+      {
+        // Draw dot for current grid unit.
+        this.ctx.beginPath();
+        this.ctx.arc(
+          (this.unitSize * j) + this.unitSize / 2,
+          (this.unitSize * i) + this.unitSize / 2,
+          GRID_DOT_SIZE / 2, 
+          0, 2 * Math.PI, false
+        );
+        this.ctx.fillStyle = GRID_DOT_COLOR;
+        this.ctx.fill();
+      }
+    }
+  }
 }
 
 class canvasElement
 {
-  constructor(x, y, canvasObj)
+  constructor(canvasObj, x, y)
   {
+    // Canvas of which this element belongs to.
+    this.canvasObj = canvasObj;
+
     // Element properties.
     this.x = x;
     this.y = y;
     this.dir = 0;
-    // TEMPORARY: SET SIZE DYNAMICALLY BASED ON CANVAS SIZE
-    this.size = 75;
-
-    // Canvas of which this element belongs to.
-    this.canvasObj = canvasObj;
+    this.size = this.canvasObj.unitSize;
   }
 
   // Places element onto canvas as a square.
@@ -82,14 +118,19 @@ window.addEventListener('load', function () {
   // Instantiate canvas objects for character and other story elements.
   charCanvas = new canvasContainer("charCanvas");
   storyCanvas = new canvasContainer("storyCanvas");
+  storyCanvas.drawGrid();
 
   // TEMPORARY INITIALIZING OF CHARACTER AND STORY ELEMENTS
-  charCanvas.elements.push(new canvasElement(0, 0, charCanvas));
+  charCanvas.elements.push(new canvasElement(charCanvas, 0, 0));
   charCanvas.elements[0].drawSquare();
 
-  storyCanvas.elements.push(new canvasElement(450, 450, storyCanvas));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 450, 450));
   storyCanvas.elements[0].drawSquare();
 });
+
+/************
+ * MOVEMENT *
+ ************/
 
 /**
  * Rotates character in certain direction.
