@@ -1,4 +1,5 @@
 var workspace;
+var executor;
 
 window.addEventListener('load', function () {
   // Inject workspace into DOM.
@@ -57,23 +58,17 @@ function runCode()
   var code = getTranslatedCode(workspace);
   var jsInterpreter = new Interpreter(code, initApi);
   
-  /**
-   * Steps through code utilizing JS-Interpreter.
-   */
-  function nextStep()
-  {
-    if (jsInterpreter.step())
+  // Steps through code utilizing JS-Interpreter.
+  executor = setInterval(function() {
+    if (!jsInterpreter.step())
     {
-      // Execute next available semantic unit.
-      setTimeout(nextStep, 100);
-    } else
-    {
-      // End of program
+      // No more lines of code, end program.
       // Remove all highlighting.
       workspace.highlightBlock(null);
       // Enable run button.
       document.getElementById("run").disabled = false;
+
+      clearInterval(executor);
     }
-  }
-  nextStep();
+  }, 50);
 }

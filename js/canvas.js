@@ -20,7 +20,7 @@ class canvasContainer
     this.ctx.canvas.height = canvasElement.offsetHeight;
 
     // Number of units per grid row or grid column.
-    this.unitsPerLine = 15;
+    this.unitsPerLine = 10;
     // Size of each grid unit.
     this.unitSize = this.ctx.canvas.width / this.unitsPerLine;
 
@@ -112,10 +112,7 @@ class canvasElement
     } else
     {
       // TEMPORARY FILL STYLE
-      var gradient = this.canvasObj.ctx.createLinearGradient(this.x, this.y, this.x + this.size, this.y);
-      gradient.addColorStop(0, "blue");
-      gradient.addColorStop(1, "red");
-      this.canvasObj.ctx.fillStyle = gradient;
+      this.canvasObj.ctx.fillStyle = "#000000";
 
       // Use tracked position (x,y) for all other element types.
       this.canvasObj.ctx.fillRect(
@@ -140,14 +137,38 @@ window.addEventListener('load', function () {
   charCanvas.elements.push(new canvasElement(charCanvas, 0, 0, "character"));
   charCanvas.elements[0].drawSquare();
 
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 450, 450, "boundary"));
+  // TEMPORARY DEMO MAZE
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 0, 67.5, "boundary"));
   storyCanvas.elements[0].drawSquare();
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 67.5, 67.5, "boundary"));
+  storyCanvas.elements[1].drawSquare();
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 135, 67.5, "boundary"));
+  storyCanvas.elements[2].drawSquare();
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 202.5, 67.5, "boundary"));
+  storyCanvas.elements[3].drawSquare();
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 270, 67.5, "boundary"));
+  storyCanvas.elements[4].drawSquare();
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 337.5, 67.5, "boundary"));
+  storyCanvas.elements[5].drawSquare();
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 472.5, 67.5, "boundary"));
+  storyCanvas.elements[6].drawSquare();
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 472.5, 0, "boundary"));
+  storyCanvas.elements[7].drawSquare();
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 337.5, 135, "boundary"));
+  storyCanvas.elements[8].drawSquare();
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 472.5, 135, "boundary"));
+  storyCanvas.elements[9].drawSquare();
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 405, 202.5, "boundary"));
+  storyCanvas.elements[10].drawSquare();
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 337.5, 202.5, "boundary"));
+  storyCanvas.elements[11].drawSquare();
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 472.5, 202.5, "boundary"));
+  storyCanvas.elements[12].drawSquare();
 });
 
 /************
  * MOVEMENT *
  ************/
-
 
 /**
  * Sets character's tracked direction relative to canvas (from 0 to 2pi).
@@ -241,8 +262,61 @@ function trackPos(char)
 }
 
 /**
+ * Moves character after verifying final position of moveForward() is a valid space.
+ * A valid space is one that is not occupied by a boundary or is not outside the canvas.
+ * @param char character object
+ */
+function moveWithValidator(char)
+{
+  var isValid = true;
+
+  // Verify character is within canvas bounds.
+  if (char.x < 0 || char.x > charCanvas.ctx.canvas.width ||
+      char.y < 0 || char.y > charCanvas.ctx.canvas.height)
+  {
+    isValid = false;
+  }
+
+  // Verify space is not occupied by a boundary.
+  // First check if character is within canvas bounds; no need to check space if already invalid.
+  if (isValid)
+  {
+    var element;
+    // Loop through each boundary canvas element and determine if canvas-relative positions match.
+    for (var i = 0; i < storyCanvas.elements.length; i++)
+    {
+      element = storyCanvas.elements[i];
+      if (element.type == "boundary" &&
+          element.x == char.x && element.y == char.y)
+      {
+        // Space is occupied by a boundary.
+        isValid = false;
+        break;
+      }
+    }
+  }
+
+  // Move character if space is valid. Otherwise, stop program and alert user.
+  if (isValid)
+  {
+    // Clear previous position from canvas.
+    charCanvas.clear();
+    // Move by one grid unit, i.e. size of character.
+    char.pos += char.size;
+    char.drawSquare();
+  } else
+  {
+    // Stop line-by-line execution of program by clearing interval of jsInterpreter loop in blockly.js.
+    clearInterval(executor);
+
+    // Notify user.
+    alert("You ran into something!");
+  }
+}
+
+/**
  * Moves character forward one space.
- * Note: direction is automatically taken into account.
+ * Note: direction is automatically taken into account with transformations.
  */
 function moveForward()
 {
@@ -251,10 +325,6 @@ function moveForward()
   // Track position relative to canvas using direction relative to canvas.
   trackPos(character);
 
-  // Clear previous position from canvas.
-  charCanvas.clear();
-
-  // Move character.
-  character.pos += character.size;
-  character.drawSquare();
+  // Move character if space is valid.
+  moveWithValidator(character);
 }
