@@ -3,6 +3,15 @@
  *************/
 const GRID_DOT_SIZE  = 5;
 const GRID_DOT_COLOR = "#666666";
+const CHARACTER_ID   = "character";
+const BOUNDARY_ID    = "boundary";
+const GOAL_ID        = "goal";
+
+/***********
+ * GLOBALS *
+ ***********/
+var charCanvas;
+var storyCanvas;
 
 /***********
  * CLASSES *
@@ -18,6 +27,9 @@ class canvasContainer
 
     this.ctx.canvas.width = canvasElement.offsetWidth;
     this.ctx.canvas.height = canvasElement.offsetHeight;
+
+    // Clear canvas element of any prior drawings.
+    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
     // Number of units per grid row or grid column.
     this.unitsPerLine = 10;
@@ -94,7 +106,7 @@ class canvasElement
   drawSquare()
   {
     // Character element undergoes transformations, so position used to draw is different.
-    if (this.type == "character")
+    if (this.type == CHARACTER_ID)
     {
       // TEMPORARY FILL STYLE
       var gradient = this.canvasObj.ctx.createLinearGradient(this.pos, 0, this.pos + this.size, 0);
@@ -125,51 +137,64 @@ class canvasElement
   }
 }
 
-var charCanvas, storyCanvas;
-
-window.addEventListener('load', function () {
+/*******************
+ * MAZE GENERATION *
+ *******************/
+/**
+ * Generates maze using given attributes to be traversed by user.
+ * @param mazeAttr attributes of maze to be generated (e.g., one turn, two move forwards, etc.)
+ */
+function generateMaze()
+{
   // Instantiate canvas objects for character and other story elements.
   charCanvas = new canvasContainer("charCanvas");
   storyCanvas = new canvasContainer("storyCanvas");
   storyCanvas.drawGrid();
 
+  /**
+   * FOLLOWING IS TEMPORARY WHILE MAZE GENERATION ALGORITHM IS STILL BEING CONSTRUCTED.
+   */
+
   // TEMPORARY INITIALIZING OF CHARACTER AND STORY ELEMENTS
-  charCanvas.elements.push(new canvasElement(charCanvas, 0, 0, "character"));
+  charCanvas.elements.push(new canvasElement(charCanvas, 0, 0, CHARACTER_ID));
   charCanvas.elements[0].drawSquare();
 
   // TEMPORARY DEMO MAZE
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 0, 67.5, "boundary"));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 0, 67.5, BOUNDARY_ID));
   storyCanvas.elements[0].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 67.5, 67.5, "boundary"));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 67.5, 67.5, BOUNDARY_ID));
   storyCanvas.elements[1].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 135, 67.5, "boundary"));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 135, 67.5, BOUNDARY_ID));
   storyCanvas.elements[2].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 202.5, 67.5, "boundary"));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 202.5, 67.5, BOUNDARY_ID));
   storyCanvas.elements[3].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 270, 67.5, "boundary"));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 270, 67.5, BOUNDARY_ID));
   storyCanvas.elements[4].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 337.5, 67.5, "boundary"));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 337.5, 67.5, BOUNDARY_ID));
   storyCanvas.elements[5].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 472.5, 67.5, "boundary"));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 472.5, 67.5, BOUNDARY_ID));
   storyCanvas.elements[6].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 472.5, 0, "boundary"));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 472.5, 0, BOUNDARY_ID));
   storyCanvas.elements[7].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 337.5, 135, "boundary"));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 337.5, 135, BOUNDARY_ID));
   storyCanvas.elements[8].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 472.5, 135, "boundary"));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 472.5, 135, BOUNDARY_ID));
   storyCanvas.elements[9].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 405, 202.5, "boundary"));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 405, 202.5, BOUNDARY_ID));
   storyCanvas.elements[10].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 337.5, 202.5, "boundary"));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 337.5, 202.5, BOUNDARY_ID));
   storyCanvas.elements[11].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 472.5, 202.5, "boundary"));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 472.5, 202.5, BOUNDARY_ID));
   storyCanvas.elements[12].drawSquare();
+}
+
+window.addEventListener('load', function () {
+  generateMaze();
 });
 
 /************
  * MOVEMENT *
  ************/
-
 /**
  * Sets character's tracked direction relative to canvas (from 0 to 2pi).
  * @param char character object.
@@ -195,7 +220,7 @@ function trackDir(char, angle)
  */
 function turn(dir)
 {
-  var character = charCanvas.elements.find(element => element.type == "character");
+  var character = charCanvas.elements.find(element => element.type == CHARACTER_ID);
   var angle = dir == 'L' ? Math.PI / 2
             : dir == 'R' ? -Math.PI / 2
             : 0;
@@ -286,7 +311,7 @@ function moveWithValidator(char)
     for (var i = 0; i < storyCanvas.elements.length; i++)
     {
       element = storyCanvas.elements[i];
-      if (element.type == "boundary" &&
+      if (element.type == BOUNDARY_ID &&
           element.x == char.x && element.y == char.y)
       {
         // Space is occupied by a boundary.
@@ -320,7 +345,7 @@ function moveWithValidator(char)
  */
 function moveForward()
 {
-  var character = charCanvas.elements.find(element => element.type == "character");
+  var character = charCanvas.elements.find(element => element.type == CHARACTER_ID);
 
   // Track position relative to canvas using direction relative to canvas.
   trackPos(character);

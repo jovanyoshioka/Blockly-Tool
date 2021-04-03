@@ -1,3 +1,6 @@
+/***********
+ * GLOBALS *
+ ***********/
 var workspace;
 var executor;
 
@@ -47,6 +50,20 @@ function updateJS()
 }
 
 /**
+ * Actions to take when program is ended.
+ * Program ended if all code ran, failed maze, or clicked reset button.
+ */
+function endProgram()
+{
+  // Remove all highlighting.
+  workspace.highlightBlock(null);
+  // Enable run button.
+  document.getElementById("run").disabled = false;
+  // Stop code execution loop.
+  clearInterval(executor);
+}
+
+/**
  * Runs translated code.
  */
 function runCode()
@@ -63,12 +80,19 @@ function runCode()
     if (!jsInterpreter.step())
     {
       // No more lines of code, end program.
-      // Remove all highlighting.
-      workspace.highlightBlock(null);
-      // Enable run button.
-      document.getElementById("run").disabled = false;
-
-      clearInterval(executor);
+      endProgram();
     }
   }, 50);
+}
+
+/**
+ * Resets simulation (code execution and canvas).
+ */
+function resetSim()
+{
+  // Initiate end program actions.
+  endProgram();
+
+  // Reset canvas to initial view (using function from canvas.js)
+  generateMaze();
 }
