@@ -102,7 +102,7 @@ class canvasElement
     // Images for character, boundary, and goal elements.
     // TEMPORARY: This will later be set by user input.
     this.charImgSrc = "assets/caterpillar.png";
-    this.boundImgSrc = "assets/leaves.png";
+    this.boundImgSrc = "assets/leaves.PNG";
     this.goalImgSrc = "assets/apple.png";
   }
 
