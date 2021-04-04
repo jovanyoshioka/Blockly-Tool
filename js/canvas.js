@@ -343,3 +343,23 @@ function moveForward()
   // Move character if space is valid.
   moveWithValidator(character);
 }
+
+/*******************
+ * MAZE COMPLETION *
+ *******************/
+/**
+ * Determine if maze was traversed successfully, i.e., character and goal coordinates are equal.
+ * If so, notify user.
+ */
+function checkCompletion()
+{
+  var character = charCanvas.elements.find(element => element.type == CHARACTER_ID);
+  var goal = storyCanvas.elements.find(element => element.type == GOAL_ID);
+
+  // Check if character and goal coordinates are the same.
+  if (character.x == goal.x && character.y == goal.y)
+  {
+    // User successfully traversed maze, notify user.
+    alert("You successfully completed the maze!");
+  }
+}

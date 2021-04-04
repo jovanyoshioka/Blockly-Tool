@@ -77,8 +77,12 @@ function runCode()
   executor = setInterval(function() {
     if (!jsInterpreter.step())
     {
-      // No more lines of code, end program.
+      // No more lines of code, end of program reached.
+      // Initiate end program actions.
       endProgram();
+      
+      // Check and take actions if user successfully completed maze (using function from canvas.js).
+      checkCompletion();
     }
   }, 50);
 }
