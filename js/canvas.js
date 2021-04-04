@@ -1,11 +1,11 @@
 /*************
  * CONSTANTS *
  *************/
-const GRID_DOT_SIZE  = 5;
-const GRID_DOT_COLOR = "#666666";
-const CHARACTER_ID   = "character";
-const BOUNDARY_ID    = "boundary";
-const GOAL_ID        = "goal";
+const GRID_DOT_SCALER = 0.075;
+const GRID_DOT_COLOR  = "#FFFFFF";
+const CHARACTER_ID    = "character";
+const BOUNDARY_ID     = "boundary";
+const GOAL_ID         = "goal";
 
 /***********
  * GLOBALS *
@@ -32,7 +32,7 @@ class canvasContainer
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
     // Number of units per grid row or grid column.
-    this.unitsPerLine = 10;
+    this.unitsPerLine = 5;
     // Size of each grid unit.
     this.unitSize = this.ctx.canvas.width / this.unitsPerLine;
 
@@ -67,7 +67,7 @@ class canvasContainer
         this.ctx.arc(
           (this.unitSize * j) + this.unitSize / 2,
           (this.unitSize * i) + this.unitSize / 2,
-          GRID_DOT_SIZE / 2, 
+          (this.unitSize * GRID_DOT_SCALER) / 2, 
           0, 2 * Math.PI, false
         );
         this.ctx.fillStyle = GRID_DOT_COLOR;
@@ -95,9 +95,15 @@ class canvasElement
     // Each element's size is equivalent to one grid unit size.
     this.size = this.canvasObj.unitSize;
 
-    // Differentiates between: character, boundary, goal
+    // Differentiates between: character, boundary, goal.
     // Specific actions, mostly related to movement, only for specific types.
     this.type = type;
+
+    // Images for character, boundary, and goal elements.
+    // TEMPORARY: This will later be set by user input.
+    this.charImgSrc = "assets/caterpillar.png";
+    this.boundImgSrc = "assets/leaves.png";
+    this.goalImgSrc = "assets/apple.png";
   }
 
   /**
@@ -105,35 +111,23 @@ class canvasElement
    */
   drawSquare()
   {
-    // Character element undergoes transformations, so position used to draw is different.
-    if (this.type == CHARACTER_ID)
-    {
-      // TEMPORARY FILL STYLE
-      var gradient = this.canvasObj.ctx.createLinearGradient(this.pos, 0, this.pos + this.size, 0);
-      gradient.addColorStop(0, "blue");
-      gradient.addColorStop(1, "red");
-      this.canvasObj.ctx.fillStyle = gradient;
+    var img = new Image(this.size, this.size);
+    img.src = this.type == CHARACTER_ID ? this.charImgSrc
+            : this.type == BOUNDARY_ID  ? this.boundImgSrc
+            : this.type == GOAL_ID      ? this.goalImgSrc
+            : null;
 
-      // Use transformation relative position for character type.
-      this.canvasObj.ctx.fillRect(
-        this.pos,
-        0,
-        this.size,
-        this.size
-      );
-    } else
-    {
-      // TEMPORARY FILL STYLE
-      this.canvasObj.ctx.fillStyle = "#000000";
-
-      // Use tracked position (x,y) for all other element types.
-      this.canvasObj.ctx.fillRect(
-        this.x,
-        this.y,
-        this.size,
-        this.size
-      );
-    }
+    // Draw element when specified image is done loading.
+    img.addEventListener("load", e => {
+      // Character and Boundary/Goal elements drawn different due to transformations on character canvas.
+      if (this.type == CHARACTER_ID)
+      {
+        this.canvasObj.ctx.drawImage(img, this.pos, 0, this.size, this.size);
+      } else
+      {
+        this.canvasObj.ctx.drawImage(img, this.x, this.y, this.size, this.size);
+      }
+    });
   }
 }
 
@@ -159,33 +153,29 @@ function generateMaze()
   charCanvas.elements.push(new canvasElement(charCanvas, 0, 0, CHARACTER_ID));
   charCanvas.elements[0].drawSquare();
 
-  // TEMPORARY DEMO MAZE
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 0, 67.5, BOUNDARY_ID));
+  // VERY HUNGRY CATERPILLAR DEMO MAZE
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 0, 135, BOUNDARY_ID));
   storyCanvas.elements[0].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 67.5, 67.5, BOUNDARY_ID));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 135, 135, BOUNDARY_ID));
   storyCanvas.elements[1].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 135, 67.5, BOUNDARY_ID));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 540, 135, BOUNDARY_ID));
   storyCanvas.elements[2].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 202.5, 67.5, BOUNDARY_ID));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 270, 135, BOUNDARY_ID));
   storyCanvas.elements[3].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 270, 67.5, BOUNDARY_ID));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 540, 270, BOUNDARY_ID));
   storyCanvas.elements[4].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 337.5, 67.5, BOUNDARY_ID));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 540, 0, BOUNDARY_ID));
   storyCanvas.elements[5].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 472.5, 67.5, BOUNDARY_ID));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 540, 405, BOUNDARY_ID));
   storyCanvas.elements[6].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 472.5, 0, BOUNDARY_ID));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 405, 405, BOUNDARY_ID));
   storyCanvas.elements[7].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 337.5, 135, BOUNDARY_ID));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 270, 405, BOUNDARY_ID));
   storyCanvas.elements[8].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 472.5, 135, BOUNDARY_ID));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 270, 270, BOUNDARY_ID));
   storyCanvas.elements[9].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 405, 202.5, BOUNDARY_ID));
+  storyCanvas.elements.push(new canvasElement(storyCanvas, 405, 270, GOAL_ID));
   storyCanvas.elements[10].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 337.5, 202.5, BOUNDARY_ID));
-  storyCanvas.elements[11].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 472.5, 202.5, BOUNDARY_ID));
-  storyCanvas.elements[12].drawSquare();
 }
 
 window.addEventListener('load', function () {

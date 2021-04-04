@@ -28,7 +28,8 @@ div#story canvas#charCanvas {
 }
 div#story canvas#storyCanvas {
   z-index: 1;
-  background-color: #48CC2D;
+  background-image: url("../assets/background.png");
+  background-size: cover;
 }
 
 div#story div {

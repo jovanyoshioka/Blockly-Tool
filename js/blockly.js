@@ -57,8 +57,6 @@ function endProgram()
 {
   // Remove all highlighting.
   workspace.highlightBlock(null);
-  // Enable run button.
-  document.getElementById("run").disabled = false;
   // Stop code execution loop.
   clearInterval(executor);
 }
@@ -93,6 +91,9 @@ function resetSim()
   // Initiate end program actions.
   endProgram();
 
-  // Reset canvas to initial view (using function from canvas.js)
+  // Reset canvas to initial view (using function from canvas.js).
   generateMaze();
+
+  // Enable run button.
+  document.getElementById("run").disabled = false;
 }
