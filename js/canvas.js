@@ -180,6 +180,11 @@ function generateMaze()
 
 window.addEventListener('load', function () {
   generateMaze();
+
+  setTimeout(function() {
+    document.getElementById("blackScreen").style.display = "none";
+    document.getElementById("storyPic").classList.remove("storyAnimation");
+  }, 5250)
 });
 
 /************
@@ -360,6 +365,11 @@ function checkCompletion()
   if (character.x == goal.x && character.y == goal.y)
   {
     // User successfully traversed maze, notify user.
-    alert("You successfully completed the maze!");
+    document.getElementById("blackScreen").style.opacity = "0.0";
+    document.getElementById("blackScreen").style.display = "block";
+    document.getElementById("blackScreen").style.animation = "fade 0.75s linear 0.25s reverse forwards, fade 0.75s linear 4.25s forwards";
+    document.getElementById("storyPic").src = "assets/page.png";
+    document.getElementById("storyPic").classList.add("storyAnimation");
   }
+  // Do not output anything if user did not reach goal.
 }

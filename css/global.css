@@ -49,16 +49,47 @@ xml#toolbox {
   display: none;
 }
 
-/* main section textarea#jsCode {
+@keyframes fade {
+  from { opacity: 1.0; }
+  to   { opacity: 0.0; }
+}
+@keyframes slideFromLeft {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
+@keyframes slideToRight {
+  from { transform: translateX(0); }
+  to   { transform: translateX(100%); }
+}
+div#blackScreen {
   width: 100%;
   height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #000000;
+  z-index: 998;
+  /* On page load animations. */
+  opacity: 1.0;
+  animation: fade 0.75s linear 4.5s forwards;
 }
-button#run {
-  font-size: 2em;
-  border: none;
-  background-color: #FFFFFF;
-  color: #FF8200;
+img#storyPic {
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  z-index: 999;
+  /* On page load animations. */
+  opacity: 0.0;
+  transform: translateX(-100%);
+  display: none;
 }
-button#run:hover {
-  cursor: pointer;
-} */
+img.storyAnimation {
+  display: block !important;
+  animation: slideFromLeft 1.5s ease-out 0.25s         forwards,
+             fade          0.5s linear   1s    reverse forwards,
+             slideToRight  1.5s ease-in  3s            forwards,
+             fade          0.5s linear   3.75s         forwards;
+}
