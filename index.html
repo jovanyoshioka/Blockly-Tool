@@ -27,7 +27,12 @@
       <canvas id="storyCanvas"></canvas>
       <!-- Story subtitles -->
       <div>
+        <select id="storySelector" onchange="loadStory(this.value)">
+          <option value="the_very_hungry_caterpillar">The Very Hungry Caterpillar</option>
+          <option value="green_eggs_and_ham">Green Eggs and Ham</option>
+        </select>
         <!-- JavaScript output text box -->
+        <br>
         <textarea id="jsCode"></textarea>
         <!-- Run button -->
         <br>
@@ -42,18 +47,14 @@
         <block type="movement_move_forward"></block>
         <block type="movement_turn_lr"></block>
       </category>
-      <category name="Temporary" colour="300">
+      <category name="Loops" colour="300">
         <block type="controls_repeat_ext"></block>
-        <block type="logic_compare"></block>
         <block type="math_number"></block>
-        <block type="math_arithmetic"></block>
-        <block type="text"></block>
-        <block type="text_print"></block>
       </category>
     </xml>
 
     <div id="blackScreen"></div>
-    <img id="storyPic" class="storyAnimation" src="assets/cover.png" />
+    <img id="storyPic" class="storyAnimation" />
 
     <!-- Allows for controlled execution of block code -->
     <script src="js/interpreter/acorn_interpreter.js"></script>

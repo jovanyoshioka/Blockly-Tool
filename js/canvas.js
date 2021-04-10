@@ -6,17 +6,23 @@ const GRID_DOT_COLOR  = "#FFFFFF";
 const CHARACTER_ID    = "character";
 const BOUNDARY_ID     = "boundary";
 const GOAL_ID         = "goal";
+// TEMPORARY
+const STORIES_DATA    = [
+  {title: "the_very_hungry_caterpillar", numLevels: 5, pages:[1,1,1,1,1]},
+  {title: "green_eggs_and_ham", numLevels: 6, pages:[2,2,1,2,2,3]}
+];
 
 /***********
  * GLOBALS *
  ***********/
 var charCanvas;
 var storyCanvas;
+var storyObj;
 
 /***********
  * CLASSES *
  ***********/
-class canvasContainer
+class CanvasContainer
 {
   constructor(canvasID)
   {
@@ -32,7 +38,7 @@ class canvasContainer
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
     // Number of units per grid row or grid column.
-    this.unitsPerLine = 5;
+    this.unitsPerLine = storyObj.levels[storyObj.currLevel-1].gridSize;
     // Size of each grid unit.
     this.unitSize = this.ctx.canvas.width / this.unitsPerLine;
 
@@ -77,33 +83,32 @@ class canvasContainer
   }
 }
 
-class canvasElement
+class CanvasElement
 {
-  constructor(canvasObj, x, y, type)
+  constructor(canvasObj, unitsX, unitsY, type)
   {
     // Canvas of which this element belongs to.
     this.canvasObj = canvasObj;
 
     // Element properties.
+    // Each element's size is equivalent to one grid unit size.
+    this.size = this.canvasObj.unitSize;
     // Tracks element's position relative to canvas.
-    this.x = x;
-    this.y = y;
+    this.x = unitsX * this.size;
+    this.y = unitsY * this.size;
     // Tracks element's position relative to transformation.
     this.pos = 0;
     // Tracks element's direction relative to canvas (from 0 to 2pi).
     this.dir = 0;
-    // Each element's size is equivalent to one grid unit size.
-    this.size = this.canvasObj.unitSize;
 
     // Differentiates between: character, boundary, goal.
     // Specific actions, mostly related to movement, only for specific types.
     this.type = type;
 
     // Images for character, boundary, and goal elements.
-    // TEMPORARY: This will later be set by user input.
-    this.charImgSrc = "assets/caterpillar.png";
-    this.boundImgSrc = "assets/leaves.PNG";
-    this.goalImgSrc = "assets/apple.png";
+    this.charImgSrc = storyObj.charImgSrc;
+    this.boundImgSrc = storyObj.boundImgSrc;
+    this.goalImgSrc = storyObj.levels[storyObj.currLevel-1].goalImgSrc;
   }
 
   /**
@@ -131,9 +136,64 @@ class canvasElement
   }
 }
 
+class Story
+{
+  constructor(title)
+  {
+    this.title = title;
+
+    this.charImgSrc = "assets/" + this.title + "/character.png";
+    this.boundImgSrc = "assets/" + this.title + "/boundary.png";
+
+    this.currLevel = 1;
+
+    this.levels = getLevelsData(this.title);
+    
+  }
+}
+
 /*******************
  * MAZE GENERATION *
  *******************/
+/**
+ * Gets specified story's levels data and formats it into an array.
+ * @param title story of which to load levels in formatted array.
+ * @returns formatted array of levels data (goal, grid size, pages).
+ */
+function getLevelsData(title)
+{
+  var story = STORIES_DATA.find(element => element.title == title);
+  var pages = [];
+  var levels = [];
+
+  // Loop through each level and format data.
+  for (var i = 1; i <= story.numLevels; i++)
+  {
+    pages = [];
+    // Loop through each page of current level and format source.
+    for (var j = 1; j <= story.pages[i-1]; j++)
+    {
+      // Page Image Format: "pages_[level]_[pageNum].jpg"
+      pages.push("assets/" + title + "/pages_" + i + "_" + j + ".jpg");
+    }
+    
+    // Compile level's data into array.
+    // Goal Image Format: "goal_[level].jpg"
+    levels.push({
+      goalImgSrc: "assets/" + title + "/goal_" + i + ".png",
+      gridSize: i + 4,
+      pageImgSrcs: pages
+    });
+  }
+
+  return levels;
+}
+function loadStory(title)
+{
+  storyObj = new Story(title);
+
+  generateMaze();
+}
 /**
  * Generates maze using given attributes to be traversed by user.
  * @param mazeAttr attributes of maze to be generated (e.g., one turn, two move forwards, etc.)
@@ -141,8 +201,8 @@ class canvasElement
 function generateMaze()
 {
   // Instantiate canvas objects for character and other story elements.
-  charCanvas = new canvasContainer("charCanvas");
-  storyCanvas = new canvasContainer("storyCanvas");
+  charCanvas = new CanvasContainer("charCanvas");
+  storyCanvas = new CanvasContainer("storyCanvas");
   storyCanvas.drawGrid();
 
   /**
@@ -150,41 +210,43 @@ function generateMaze()
    */
 
   // TEMPORARY INITIALIZING OF CHARACTER AND STORY ELEMENTS
-  charCanvas.elements.push(new canvasElement(charCanvas, 0, 0, CHARACTER_ID));
+  charCanvas.elements.push(new CanvasElement(charCanvas, 0, 0, CHARACTER_ID));
   charCanvas.elements[0].drawSquare();
 
   // VERY HUNGRY CATERPILLAR DEMO MAZE
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 0, 135, BOUNDARY_ID));
+  storyCanvas.elements.push(new CanvasElement(storyCanvas, 0, 1, BOUNDARY_ID));
   storyCanvas.elements[0].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 135, 135, BOUNDARY_ID));
+  storyCanvas.elements.push(new CanvasElement(storyCanvas, 1, 1, BOUNDARY_ID));
   storyCanvas.elements[1].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 540, 135, BOUNDARY_ID));
+  storyCanvas.elements.push(new CanvasElement(storyCanvas, 2, 1, BOUNDARY_ID));
   storyCanvas.elements[2].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 270, 135, BOUNDARY_ID));
+  storyCanvas.elements.push(new CanvasElement(storyCanvas, 2, 2, BOUNDARY_ID));
   storyCanvas.elements[3].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 540, 270, BOUNDARY_ID));
+  storyCanvas.elements.push(new CanvasElement(storyCanvas, 2, 3, BOUNDARY_ID));
   storyCanvas.elements[4].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 540, 0, BOUNDARY_ID));
+  storyCanvas.elements.push(new CanvasElement(storyCanvas, 3, 3, BOUNDARY_ID));
   storyCanvas.elements[5].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 540, 405, BOUNDARY_ID));
+  storyCanvas.elements.push(new CanvasElement(storyCanvas, 4, 3, BOUNDARY_ID));
   storyCanvas.elements[6].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 405, 405, BOUNDARY_ID));
+  storyCanvas.elements.push(new CanvasElement(storyCanvas, 4, 2, BOUNDARY_ID));
   storyCanvas.elements[7].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 270, 405, BOUNDARY_ID));
+  storyCanvas.elements.push(new CanvasElement(storyCanvas, 4, 1, BOUNDARY_ID));
   storyCanvas.elements[8].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 270, 270, BOUNDARY_ID));
+  storyCanvas.elements.push(new CanvasElement(storyCanvas, 4, 0, BOUNDARY_ID));
   storyCanvas.elements[9].drawSquare();
-  storyCanvas.elements.push(new canvasElement(storyCanvas, 405, 270, GOAL_ID));
+  storyCanvas.elements.push(new CanvasElement(storyCanvas, 3, 2, GOAL_ID));
   storyCanvas.elements[10].drawSquare();
+
+  document.getElementById("storyCanvas").style.backgroundImage = "url('assets/" + storyObj.title + "/background.jpg')";
 }
 
 window.addEventListener('load', function () {
-  generateMaze();
+  loadStory(document.getElementById("storySelector").value);
 
-  setTimeout(function() {
-    document.getElementById("blackScreen").style.display = "none";
-    document.getElementById("storyPic").classList.remove("storyAnimation");
-  }, 5250)
+  // setTimeout(function() {
+  //   document.getElementById("blackScreen").style.display = "none";
+  //   document.getElementById("storyPic").classList.remove("storyAnimation");
+  // }, 5250);
 });
 
 /************
@@ -365,11 +427,11 @@ function checkCompletion()
   if (character.x == goal.x && character.y == goal.y)
   {
     // User successfully traversed maze, notify user.
-    document.getElementById("blackScreen").style.opacity = "0.0";
-    document.getElementById("blackScreen").style.display = "block";
-    document.getElementById("blackScreen").style.animation = "fade 0.75s linear 0.25s reverse forwards, fade 0.75s linear 4.25s forwards";
-    document.getElementById("storyPic").src = "assets/page.png";
-    document.getElementById("storyPic").classList.add("storyAnimation");
+    // document.getElementById("blackScreen").style.opacity = "0.0";
+    // document.getElementById("blackScreen").style.display = "block";
+    // document.getElementById("blackScreen").style.animation = "fade 0.75s linear 0.25s reverse forwards, fade 0.75s linear 4.25s forwards";
+    // document.getElementById("storyPic").src = "assets/page.png";
+    // document.getElementById("storyPic").classList.add("storyAnimation");
   }
   // Do not output anything if user did not reach goal.
 }

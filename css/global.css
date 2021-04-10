@@ -28,7 +28,6 @@ div#story canvas#charCanvas {
 }
 div#story canvas#storyCanvas {
   z-index: 1;
-  background-image: url("../assets/background.png");
   background-size: cover;
 }
 
@@ -48,7 +47,7 @@ div#workspace {
 xml#toolbox {
   display: none;
 }
-
+/*
 @keyframes fade {
   from { opacity: 1.0; }
   to   { opacity: 0.0; }
@@ -69,7 +68,7 @@ div#blackScreen {
   left: 0;
   background-color: #000000;
   z-index: 998;
-  /* On page load animations. */
+  /* On page load animations. *//*
   opacity: 1.0;
   animation: fade 0.75s linear 4.5s forwards;
 }
@@ -81,7 +80,7 @@ img#storyPic {
   right: 0;
   margin: 0 auto;
   z-index: 999;
-  /* On page load animations. */
+  /* On page load animations. *//*
   opacity: 0.0;
   transform: translateX(-100%);
   display: none;
