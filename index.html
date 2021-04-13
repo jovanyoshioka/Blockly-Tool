@@ -53,15 +53,25 @@
       </category>
     </xml>
 
-    <div id="blackScreen"></div>
-    <img id="storyPic" class="storyAnimation" />
+    <div id="cutsceneWrapper">
+      <div id="cutsceneScreen"></div>
+      <img id="cutsceneImgA" class="cutsceneImg" />
+      <img id="cutsceneImgB" class="cutsceneImg" />
+      <button id="cutsceneBtn" disabled>
+        <h1>></h1>
+      </button>
+    </div>
 
     <!-- Allows for controlled execution of block code -->
     <script src="js/interpreter/acorn_interpreter.js"></script>
     <!-- JS-Interpreter API to handle external actions -->
     <script src="js/interpreterAPI.js"></script>
+    <!-- Global -->
+    <script src="js/main.js"></script>
     <!-- Using blockly library -->
     <script src="js/blockly.js"></script>
+    <!-- Handles stories' cutscenes -->
+    <script src="js/story.js"></script>
     <!-- Controls canvas initialization and manipulation -->
     <script src="js/canvas.js"></script>
   </body>

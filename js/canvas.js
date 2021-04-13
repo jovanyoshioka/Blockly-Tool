@@ -6,18 +6,6 @@ const GRID_DOT_COLOR  = "#FFFFFF";
 const CHARACTER_ID    = "character";
 const BOUNDARY_ID     = "boundary";
 const GOAL_ID         = "goal";
-// TEMPORARY
-const STORIES_DATA    = [
-  {title: "the_very_hungry_caterpillar", numLevels: 5, pages:[1,1,1,1,1]},
-  {title: "green_eggs_and_ham", numLevels: 6, pages:[2,2,1,2,2,3]}
-];
-
-/***********
- * GLOBALS *
- ***********/
-var charCanvas;
-var storyCanvas;
-var storyObj;
 
 /***********
  * CLASSES *
@@ -38,7 +26,7 @@ class CanvasContainer
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
     // Number of units per grid row or grid column.
-    this.unitsPerLine = storyObj.levels[storyObj.currLevel-1].gridSize;
+    this.unitsPerLine = storyObj.levels[storyObj.currLevel].gridSize;
     // Size of each grid unit.
     this.unitSize = this.ctx.canvas.width / this.unitsPerLine;
 
@@ -108,7 +96,7 @@ class CanvasElement
     // Images for character, boundary, and goal elements.
     this.charImgSrc = storyObj.charImgSrc;
     this.boundImgSrc = storyObj.boundImgSrc;
-    this.goalImgSrc = storyObj.levels[storyObj.currLevel-1].goalImgSrc;
+    this.goalImgSrc = storyObj.levels[storyObj.currLevel].goalImgSrc;
   }
 
   /**
@@ -136,64 +124,9 @@ class CanvasElement
   }
 }
 
-class Story
-{
-  constructor(title)
-  {
-    this.title = title;
-
-    this.charImgSrc = "assets/" + this.title + "/character.png";
-    this.boundImgSrc = "assets/" + this.title + "/boundary.png";
-
-    this.currLevel = 1;
-
-    this.levels = getLevelsData(this.title);
-    
-  }
-}
-
 /*******************
  * MAZE GENERATION *
  *******************/
-/**
- * Gets specified story's levels data and formats it into an array.
- * @param title story of which to load levels in formatted array.
- * @returns formatted array of levels data (goal, grid size, pages).
- */
-function getLevelsData(title)
-{
-  var story = STORIES_DATA.find(element => element.title == title);
-  var pages = [];
-  var levels = [];
-
-  // Loop through each level and format data.
-  for (var i = 1; i <= story.numLevels; i++)
-  {
-    pages = [];
-    // Loop through each page of current level and format source.
-    for (var j = 1; j <= story.pages[i-1]; j++)
-    {
-      // Page Image Format: "pages_[level]_[pageNum].jpg"
-      pages.push("assets/" + title + "/pages_" + i + "_" + j + ".jpg");
-    }
-    
-    // Compile level's data into array.
-    // Goal Image Format: "goal_[level].jpg"
-    levels.push({
-      goalImgSrc: "assets/" + title + "/goal_" + i + ".png",
-      gridSize: i + 4,
-      pageImgSrcs: pages
-    });
-  }
-
-  return levels;
-}
-function loadStory(title)
-{
-  storyObj = new Story(title);
-
-  generateMaze();
-}
 /**
  * Generates maze using given attributes to be traversed by user.
  * @param mazeAttr attributes of maze to be generated (e.g., one turn, two move forwards, etc.)
@@ -239,15 +172,6 @@ function generateMaze()
 
   document.getElementById("storyCanvas").style.backgroundImage = "url('assets/" + storyObj.title + "/background.jpg')";
 }
-
-window.addEventListener('load', function () {
-  loadStory(document.getElementById("storySelector").value);
-
-  // setTimeout(function() {
-  //   document.getElementById("blackScreen").style.display = "none";
-  //   document.getElementById("storyPic").classList.remove("storyAnimation");
-  // }, 5250);
-});
 
 /************
  * MOVEMENT *
@@ -426,12 +350,8 @@ function checkCompletion()
   // Check if character and goal coordinates are the same.
   if (character.x == goal.x && character.y == goal.y)
   {
-    // User successfully traversed maze, notify user.
-    // document.getElementById("blackScreen").style.opacity = "0.0";
-    // document.getElementById("blackScreen").style.display = "block";
-    // document.getElementById("blackScreen").style.animation = "fade 0.75s linear 0.25s reverse forwards, fade 0.75s linear 4.25s forwards";
-    // document.getElementById("storyPic").src = "assets/page.png";
-    // document.getElementById("storyPic").classList.add("storyAnimation");
+    // User successfully traversed current level's maze, show next cutscene (story.js) and proceed to next level.
+    initCutscene();
   }
   // Do not output anything if user did not reach goal.
 }

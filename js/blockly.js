@@ -1,9 +1,3 @@
-/***********
- * GLOBALS *
- ***********/
-var workspace;
-var executor;
-
 window.addEventListener('load', function () {
   // Inject workspace into DOM.
   workspace = Blockly.inject("workspace",
