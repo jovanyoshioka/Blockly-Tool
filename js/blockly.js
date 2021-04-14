@@ -40,7 +40,7 @@ function updateJS()
   });
   code = lines.join('\n');
   // Display filtered JavaScript code.
-  document.getElementById("jsCode").value = code;
+  // document.getElementById("jsCode").value = code;
 }
 
 /**

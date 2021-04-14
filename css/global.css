@@ -1,5 +1,6 @@
 :root {
   --canvasSize: 675px;
+  /* Colors */
   --tnOrange: #FF8200;
   --lightOrange: #F2A44F;
   --darkOrange: #C36300;
@@ -13,38 +14,115 @@ html, body {
   overflow: hidden;
 }
 
-div#story {
+/********************************************************************
+ * SIMULATION: STORY SELECTOR, LEVELS INDICATORS, CANVAS, RUN/RESET *
+ ********************************************************************/
+div#simContainer {
   width: var(--canvasSize);
   height: 100%;
   position: relative;
+  display: flex;
+  flex-flow: column;
   float: left;
 }
 
-div#story canvas {
+/* Story Selector */
+div#simContainer header {
+  background-color: var(--smokey);
+  text-align: center;
+}
+div#simContainer header select {
+  margin: 10px 0 5px 0;
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--tnOrange);
+  color: #FFFFFF;
+  font-size: 1em;
+  font-weight: bold;
+}
+div#simContainer header select:focus {
+  outline: none;
+}
+
+/* Levels Indicators */
+div#simContainer div#levelsContainer {
+  background-color: var(--smokey);
+  border-bottom: 7.5px solid var(--tnOrange);
+  text-align: center;
+}
+div#simContainer div#levelsContainer button {
+  width: 35px;
+  height: 35px;
+  margin: 7.5px 5px;
+  border: none;
+  border-radius: 25px;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #FFFFFF;
+  background-color: var(--tnOrange);
+}
+div#simContainer div#levelsContainer button.complete {
+  background-color: #A5DD24;
+}
+div#simContainer div#levelsContainer button.active {
+  background-color: var(--lightOrange);
+}
+
+/* Canvas */
+div#simContainer div#canvasWrapper {
   width: var(--canvasSize);
   height: var(--canvasSize);
+  position: relative;
+}
+div#simContainer canvas {
+  width: 100%;
+  height: 100%;
   position: absolute;
   top: 0;
   left: 0;
 }
-div#story canvas#charCanvas {
+div#simContainer canvas#charCanvas {
   z-index: 2;
 }
-div#story canvas#storyCanvas {
+div#simContainer canvas#storyCanvas {
   z-index: 1;
   background-size: cover;
 }
 
-div#story div {
-  width: 100%;
-  height: calc(100% - (15px + var(--canvasSize)));
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  border-top: 15px solid var(--tnOrange);
+/* Play/Pause Buttons */
+div#simContainer div#btns {
+  flex-grow: 1;
+  border-top: 7.5px solid var(--tnOrange);
   background-color: var(--smokey);
 }
+div#simContainer div#btns button {
+  margin: 7.5px 5px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.25em;
+  font-weight: bold;
+  color: #FFFFFF;
+  background-color: var(--tnOrange);
+  transition: background-color 0.5s;
+  float: right;
+}
+div#simContainer div#btns button:hover {
+  cursor: pointer;
+  background-color: var(--lightOrange);
+}
+div#simContainer div#btns button:focus {
+  outline: none;
+}
+div#simContainer div#btns button:disabled {
+  cursor: not-allowed;
+  background-color: var(--darkOrange);
+}
 
+/************************************************
+ * WORKSPACE: INSTRUCTIONS, TOOLBOX, CODE SPACE *
+ ************************************************/
 div#wsContainer {
   width: calc(100% - var(--canvasSize));
   height: 100%;
@@ -52,39 +130,26 @@ div#wsContainer {
   flex-flow: column;
 }
 
-div#wsContainer div#levelsContainer {
-  width: 100%;
+/* Instructions */
+div#wsContainer div#instructions {
+  height: 150px;
   background-color: var(--smokey);
   border-bottom: 7.5px solid var(--tnOrange);
-  text-align: center;
-}
-div#wsContainer div#levelsContainer button {
-  width: 35px;
-  height: 35px;
-  border: none;
-  border-radius: 25px;
-  margin: 7.5px 5px;
-  font-size: 1.5em;
-  font-weight: bold;
-  color: #FFFFFF;
-  background-color: var(--tnOrange);
-  transition: background-color 0.5s;
-}
-div#wsContainer div#levelsContainer button.complete {
-  background-color: #A5DD24;
-}
-div#wsContainer div#levelsContainer button.active {
-  background-color: var(--lightOrange);
+  border-left: 7.5px solid var(--tnOrange);
 }
 
+/* Tool Box & Code Space */
 div#wsContainer div#workspace {
-  width: 100%;
   flex-grow: 1;
 }
 xml#toolbox {
   display: none;
 }
 
+/*************
+ * CUTSCENES *
+ *************/
+/* Init/End Animations */
 @keyframes slideIn {
   from { transform: translateX(-100%); }
   to   { transform: translateX(0); }
@@ -94,16 +159,19 @@ xml#toolbox {
   to   { transform: translateX(100%); }
 }
 
+/* Prevent cutscene elements from blocking app content. */
 div#cutsceneWrapper {
   pointer-events: none;
 }
 
+/* Triggers fade transition-based animation. */
 div#cutsceneScreen.show,
 img.cutsceneImg.show,
 button#cutsceneBtn.show {
   opacity: 1.0;
 }
 
+/* Black Transition Background */
 div#cutsceneScreen {
   width: 100%;
   height: 100%;
@@ -116,6 +184,7 @@ div#cutsceneScreen {
   z-index: 996;
 }
 
+/* Cutscene Images and Animations */
 img.cutsceneImg {
   height: 100%;
   position: absolute;
@@ -139,6 +208,7 @@ img.cutsceneImg.slideOut {
   animation: slideOut 1.25s ease-in forwards;
 }
 
+/* Advance Cutscene Button */
 button#cutsceneBtn {
   position: absolute;
   bottom: 20px;

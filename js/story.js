@@ -152,8 +152,11 @@ function goNextLvl()
     // Increment level tracking counter.
     storyObj.currLevel++;
 
-    // Generate next level's maze.
-    generateMaze();
+    // Reset simulation and generate next level's maze (blockly.js).
+    resetSim();
+
+    // Clear previous level's code blocks from workspace.
+    workspace.clear();
   } else
   {
     // TEMPORARY

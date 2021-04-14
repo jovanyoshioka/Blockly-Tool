@@ -19,33 +19,36 @@
     <!-- Custom blocks -->
     <script src="js/movement_blocks.js"></script>
 
-    <!-- Story canvas and subtitles container -->
-    <div id="story">
-      <!-- Character and other elements canvas -->
-      <!-- Note: Separate because applying transformations to character; can not do this with one canvas. -->
-      <canvas id="charCanvas"></canvas>
-      <canvas id="storyCanvas"></canvas>
-      <!-- Story subtitles -->
-      <div>
+    <!-- Instructions, Story Canvas, and Run/Reset container -->
+    <div id="simContainer">
+      <header>
         <select id="storySelector" onchange="loadStory(this.value)">
           <option value="the_very_hungry_caterpillar">The Very Hungry Caterpillar</option>
           <option value="green_eggs_and_ham">Green Eggs and Ham</option>
         </select>
-        <!-- JavaScript output text box -->
-        <br>
-        <textarea id="jsCode"></textarea>
-        <!-- Run button -->
-        <br>
-        <button id="run" onclick="runCode()">Run</button>
-        <button id="reset" onclick="resetSim()">Reset</button>
-      </div>
-    </div>
-    <!-- Blockly workspace: container holding toolbox and block code -->
-    <div id="wsContainer">
+      </header>
       <div id="levelsContainer">
         <!-- Default contents; levels should be filled with JavaScript. -->
         <button>0</button>
       </div>
+      <!-- Character and other elements canvas -->
+      <!-- Note: Separate because applying transformations to character; can not do this with one canvas. -->
+      <div id="canvasWrapper">
+        <canvas id="charCanvas"></canvas>
+        <canvas id="storyCanvas"></canvas>
+      </div>
+      <!-- Story subtitles -->
+      <div id="btns">
+        <!-- JavaScript output text box -->
+        <!-- <textarea id="jsCode"></textarea> -->
+        <!-- Run button -->
+        <button id="reset" onclick="resetSim()">Reset</button>
+        <button id="run" onclick="runCode()">Run</button>
+      </div>
+    </div>
+    <!-- Blockly workspace: container holding toolbox and block code -->
+    <div id="wsContainer">
+      <div id="instructions"></div>
       <!-- Blockly Coding Space -->
       <div id="workspace"></div>
       <xml id="toolbox">
