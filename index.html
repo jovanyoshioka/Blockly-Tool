@@ -41,17 +41,24 @@
       </div>
     </div>
     <!-- Blockly workspace: container holding toolbox and block code -->
-    <div id="workspace"></div>
-    <xml id="toolbox">
-      <category name="Movement" colour="180">
-        <block type="movement_move_forward"></block>
-        <block type="movement_turn_lr"></block>
-      </category>
-      <category name="Loops" colour="300">
-        <block type="controls_repeat_ext"></block>
-        <block type="math_number"></block>
-      </category>
-    </xml>
+    <div id="wsContainer">
+      <div id="levelsContainer">
+        <!-- Default contents; levels should be filled with JavaScript. -->
+        <button>0</button>
+      </div>
+      <!-- Blockly Coding Space -->
+      <div id="workspace"></div>
+      <xml id="toolbox">
+        <category name="Movement" colour="180">
+          <block type="movement_move_forward"></block>
+          <block type="movement_turn_lr"></block>
+        </category>
+        <category name="Loops" colour="300">
+          <block type="controls_repeat_ext"></block>
+          <block type="math_number"></block>
+        </category>
+      </xml>
+    </div>
 
     <div id="cutsceneWrapper">
       <div id="cutsceneScreen"></div>

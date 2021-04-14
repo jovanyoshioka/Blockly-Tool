@@ -1,5 +1,9 @@
 :root {
   --canvasSize: 675px;
+  --tnOrange: #FF8200;
+  --lightOrange: #F2A44F;
+  --darkOrange: #C36300;
+  --smokey: #58595B;
 }
 
 html, body {
@@ -33,16 +37,49 @@ div#story canvas#storyCanvas {
 
 div#story div {
   width: 100%;
-  height: calc(100% - var(--canvasSize));
+  height: calc(100% - (15px + var(--canvasSize)));
   position: absolute;
   bottom: 0;
   left: 0;
-  background-color: #BBBBBB;
+  border-top: 15px solid var(--tnOrange);
+  background-color: var(--smokey);
 }
 
-div#workspace {
-  width: 100%;
+div#wsContainer {
+  width: calc(100% - var(--canvasSize));
   height: 100%;
+  display: flex;
+  flex-flow: column;
+}
+
+div#wsContainer div#levelsContainer {
+  width: 100%;
+  background-color: var(--smokey);
+  border-bottom: 7.5px solid var(--tnOrange);
+  text-align: center;
+}
+div#wsContainer div#levelsContainer button {
+  width: 35px;
+  height: 35px;
+  border: none;
+  border-radius: 25px;
+  margin: 7.5px 5px;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #FFFFFF;
+  background-color: var(--tnOrange);
+  transition: background-color 0.5s;
+}
+div#wsContainer div#levelsContainer button.complete {
+  background-color: #A5DD24;
+}
+div#wsContainer div#levelsContainer button.active {
+  background-color: var(--lightOrange);
+}
+
+div#wsContainer div#workspace {
+  width: 100%;
+  flex-grow: 1;
 }
 xml#toolbox {
   display: none;
@@ -106,7 +143,7 @@ button#cutsceneBtn {
   position: absolute;
   bottom: 20px;
   right: 20px;
-  background-color: #FF8200;
+  background-color: var(--tnOrange);
   border: none;
   border-radius: 5px;
   z-index: 999;
@@ -115,14 +152,14 @@ button#cutsceneBtn {
 }
 button#cutsceneBtn:hover {
   cursor: pointer;
-  background-color: #F48F22;
+  background-color: var(--lightOrange);
 }
 button#cutsceneBtn:focus {
   outline: none;
 }
 button#cutsceneBtn:disabled {
   cursor: not-allowed;
-  background-color: #C36300;
+  background-color: var(--darkOrange);
 }
 button#cutsceneBtn h1 {
   font-size: 4em;

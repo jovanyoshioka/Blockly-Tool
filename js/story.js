@@ -1,6 +1,8 @@
 /*************
  * CONSTANTS *
  *************/
+// Time (ms) until content no longer visible (due to cutscene).
+const SLIDE_IN_DUR = 1750;
 // TEMPORARY
 // Note: pages array size does not match numLevels because one index for opening pages (cover/intro).
 const STORIES_DATA    = [
@@ -22,7 +24,7 @@ class Story
 
     this.currLevel = 0;
 
-    this.levels = getLevelsData(this.title);
+    this.levels = getLvlsData(this.title);
     
   }
 }
@@ -30,6 +32,11 @@ class Story
 function loadStory(title)
 {
   storyObj = new Story(title);
+
+  // Instantiate level indicators after content is no longer visible (hidden by cutscene).
+  setTimeout(function() {
+    initLvlsIndis();
+  }, SLIDE_IN_DUR);
 
   // Show initial cutscene with cover and introduction.
   initCutscene();
@@ -43,7 +50,7 @@ function loadStory(title)
  * @param title story of which to load levels in formatted array.
  * @returns formatted array of levels data (goal, grid size, pages).
  */
-function getLevelsData(title)
+function getLvlsData(title)
 {
   var story = STORIES_DATA.find(element => element.title == title);
   var pages = [];
@@ -83,21 +90,76 @@ function getLevelsData(title)
 }
 
 /**
- * Proceeds to next level, if one exists.
+ * Instantiates levels indicators, i.e. buttons above workspace showing levels progression.
  */
-function goNextLevel()
+function initLvlsIndis()
 {
-  // Verify another level exists. If not, user completed story.
-  if (storyObj.levels.length-1 > storyObj.currLevel)
+  var lvlsContainer = document.getElementById("levelsContainer");
+
+  // Verify no levels present from previously loaded stories by removing container content.
+  lvlsContainer.innerHTML = "";
+
+  // Instantiate number of level indicators as levels present.
+  var btnNode, textNode;
+  for (var i = 1; i < storyObj.levels.length; i++)
   {
+    btnNode = document.createElement("BUTTON");
+    textNode = document.createTextNode(i);
+    btnNode.appendChild(textNode);
+    btnNode.disabled = true;
+    lvlsContainer.appendChild(btnNode);
+  }
+}
+
+/**
+ * Updates levels indicators to reflect completed and current levels.
+ */
+function updateLvlsIndis(nextLvlExists)
+{
+  var lvlsContainer = document.getElementById("levelsContainer");
+
+  // Change level indicator for completed level to completed color.
+  if (storyObj.currLevel != 0)
+  {
+    lvlsContainer.children[storyObj.currLevel-1].classList.add("complete");
+  }
+
+  // Switch active level indicator to next level, if one exists.
+  if (nextLvlExists)
+  {
+    if (storyObj.currLevel != 0)
+    {
+      lvlsContainer.children[storyObj.currLevel-1].classList.remove("active");
+    }
+    lvlsContainer.children[storyObj.currLevel].classList.add("active");
+  }
+}
+
+/**
+ * Prepares and proceeds to next level, if one exists.
+ */
+function goNextLvl()
+{
+  // Determine if there is another level for the user to complete.
+  var nextLvlExists = storyObj.levels.length-1 > storyObj.currLevel;
+
+  // Update levels indicators.
+  updateLvlsIndis(nextLvlExists);
+
+  // Advance to next level if one exists. If not, user completed story.
+  if (nextLvlExists)
+  {
+    // Increment level tracking counter.
     storyObj.currLevel++;
+
+    // Generate next level's maze.
     generateMaze();
   } else
   {
     // TEMPORARY
     setTimeout(function() {
       alert("USER COMPLETED STORY! GO BACK TO STORY SELECTOR OR LOBBY?");
-    }, 1750);
+    }, SLIDE_IN_DUR);
   }
 }
 
@@ -156,7 +218,6 @@ function initCutscene()
   showingImg.classList.add("slideIn");
 
   // Show and enable proceed to next button once cover has slid into view.
-  const SLIDE_IN_DUR = 1750;
   setTimeout(function() {
     btn.classList.add("show");
     btn.disabled = false;
@@ -254,5 +315,5 @@ function endCutscene(numShown)
     wrapper.style.pointerEvents = "none";
   }, SCREEN_FADE_DUR);
 
-  goNextLevel();
+  goNextLvl();
 }
