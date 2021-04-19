@@ -132,10 +132,22 @@ div#wsContainer {
 
 /* Instructions */
 div#wsContainer div#instructions {
-  height: 150px;
+  height: 135px;
+  padding: 15px;
   background-color: var(--smokey);
   border-bottom: 7.5px solid var(--tnOrange);
   border-left: 7.5px solid var(--tnOrange);
+  overflow-y: auto;
+}
+div#wsContainer div#instructions h1,
+div#wsContainer div#instructions h2 {
+  margin: 0;
+  padding: 0;
+  color: #FFFFFF;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+div#wsContainer div#instructions h1 {
+  padding-bottom: 10px;
 }
 
 /* Tool Box & Code Space */

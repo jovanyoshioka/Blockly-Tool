@@ -151,6 +151,11 @@ function goNextLvl()
 
     // Clear previous level's code blocks from workspace.
     workspace.clear();
+
+    // TEMPORARY: Change instructions to reflect correct goal and boundary.
+    document.getElementById("charName").innerHTML = STORIES_DATA.find(element => element.title == storyObj.title).character;
+    document.getElementById("goalName").innerHTML = STORIES_DATA.find(element => element.title == storyObj.title).goals[storyObj.currLevel-1];
+    document.getElementById("boundName").innerHTML = STORIES_DATA.find(element => element.title == storyObj.title).boundary;
   } else
   {
     // TEMPORARY
