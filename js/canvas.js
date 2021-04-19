@@ -12,7 +12,7 @@ const GOAL_ID         = "goal";
  ***********/
 class CanvasContainer
 {
-  constructor(canvasID)
+  constructor(canvasID, unitsPerLine)
   {
     var canvasElement = document.getElementById(canvasID);
 
@@ -26,7 +26,7 @@ class CanvasContainer
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
     // Number of units per grid row or grid column.
-    this.unitsPerLine = storyObj.levels[storyObj.currLevel].gridSize;
+    this.unitsPerLine = unitsPerLine;
     // Size of each grid unit.
     this.unitSize = this.ctx.canvas.width / this.unitsPerLine;
 
@@ -78,25 +78,49 @@ class CanvasElement
     // Canvas of which this element belongs to.
     this.canvasObj = canvasObj;
 
+    // Differentiates between: character, boundary, goal.
+    // Specific actions, mostly related to movement, only for specific types.
+    this.type = type;
+
     // Element properties.
     // Each element's size is equivalent to one grid unit size.
     this.size = this.canvasObj.unitSize;
     // Tracks element's position relative to canvas.
     this.x = unitsX * this.size;
     this.y = unitsY * this.size;
+
     // Tracks element's position relative to transformation.
     this.pos = 0;
+    if (this.type == CHARACTER_ID)
+    {
+      // Initialize transformation-relative starting position, i.e. convert passed x and y to pos.
+      this.pos = this.x;
+      this.rotate(-Math.PI / 2);
+      this.pos += this.y;
+      this.rotate(Math.PI / 2);
+    }
+
     // Tracks element's direction relative to canvas (from 0 to 2pi).
     this.dir = 0;
-
-    // Differentiates between: character, boundary, goal.
-    // Specific actions, mostly related to movement, only for specific types.
-    this.type = type;
 
     // Images for character, boundary, and goal elements.
     this.charImgSrc = storyObj.charImgSrc;
     this.boundImgSrc = storyObj.boundImgSrc;
     this.goalImgSrc = storyObj.levels[storyObj.currLevel].goalImgSrc;
+  }
+
+  /**
+   * Rotates canvas relative to this element, giving illusion of rotating element itself.
+   * @param angle angle value to rotate canvas, and this element, to.
+   */
+  rotate(angle)
+  {
+    // Translate to center of this element (to rotate canvas relative to element).
+    this.canvasObj.ctx.translate(this.pos + this.size/2, this.size/2);
+    // Invert (-) angle since canvas uses clockwise as positive.
+    this.canvasObj.ctx.rotate(-angle);
+    // Translate back to initial position.
+    this.canvasObj.ctx.translate(-(this.pos + this.size/2), -this.size/2);
   }
 
   /**
@@ -133,44 +157,55 @@ class CanvasElement
  */
 function generateMaze()
 {
+  // Get current level's maze data.
+  var levelData = MAZES_DATA.find(element => element.title == storyObj.title).levels[storyObj.currLevel-1];
+
+  // Determine size of canvas, i.e. canvas.unitsPerLine, by finding largest upper bound, either of x or y.
+  var gridSize = 0;
+  levelData.forEach(function(item) {
+    for (var i = 0; i < item.coords.length; i++)
+    {
+      gridSize = item.coords[i][0] > gridSize ? item.coords[i][0] : gridSize;
+      gridSize = item.coords[i][1] > gridSize ? item.coords[i][1] : gridSize;
+    }
+  });
+  // Coordinate system starts at 0, so 1 needs to be added for size of grid.
+  gridSize++;
+
   // Instantiate canvas objects for character and other story elements.
-  charCanvas = new CanvasContainer("charCanvas");
-  storyCanvas = new CanvasContainer("storyCanvas");
+  // This also effectively clears the canvas.
+  charCanvas = new CanvasContainer("charCanvas", gridSize);
+  storyCanvas = new CanvasContainer("storyCanvas", gridSize);
   storyCanvas.drawGrid();
 
-  /**
-   * FOLLOWING IS TEMPORARY WHILE MAZE GENERATION ALGORITHM IS STILL BEING CONSTRUCTED.
-   */
+  // Instantiate and draw elements of each element type defined in level data.
+  // Note: Level data is split up based on element type, i.e. character in one array, goal(s) in another, boundaries in another.
+  levelData.forEach(instElements);
 
-  // TEMPORARY INITIALIZING OF CHARACTER AND STORY ELEMENTS
-  charCanvas.elements.push(new CanvasElement(charCanvas, 0, 0, CHARACTER_ID));
-  charCanvas.elements[0].drawSquare();
-
-  // VERY HUNGRY CATERPILLAR DEMO MAZE
-  storyCanvas.elements.push(new CanvasElement(storyCanvas, 0, 1, BOUNDARY_ID));
-  storyCanvas.elements[0].drawSquare();
-  storyCanvas.elements.push(new CanvasElement(storyCanvas, 1, 1, BOUNDARY_ID));
-  storyCanvas.elements[1].drawSquare();
-  storyCanvas.elements.push(new CanvasElement(storyCanvas, 2, 1, BOUNDARY_ID));
-  storyCanvas.elements[2].drawSquare();
-  storyCanvas.elements.push(new CanvasElement(storyCanvas, 2, 2, BOUNDARY_ID));
-  storyCanvas.elements[3].drawSquare();
-  storyCanvas.elements.push(new CanvasElement(storyCanvas, 2, 3, BOUNDARY_ID));
-  storyCanvas.elements[4].drawSquare();
-  storyCanvas.elements.push(new CanvasElement(storyCanvas, 3, 3, BOUNDARY_ID));
-  storyCanvas.elements[5].drawSquare();
-  storyCanvas.elements.push(new CanvasElement(storyCanvas, 4, 3, BOUNDARY_ID));
-  storyCanvas.elements[6].drawSquare();
-  storyCanvas.elements.push(new CanvasElement(storyCanvas, 4, 2, BOUNDARY_ID));
-  storyCanvas.elements[7].drawSquare();
-  storyCanvas.elements.push(new CanvasElement(storyCanvas, 4, 1, BOUNDARY_ID));
-  storyCanvas.elements[8].drawSquare();
-  storyCanvas.elements.push(new CanvasElement(storyCanvas, 4, 0, BOUNDARY_ID));
-  storyCanvas.elements[9].drawSquare();
-  storyCanvas.elements.push(new CanvasElement(storyCanvas, 3, 2, GOAL_ID));
-  storyCanvas.elements[10].drawSquare();
-
+  // Display story background.
   document.getElementById("storyCanvas").style.backgroundImage = "url('assets/" + storyObj.title + "/background.jpg')";
+
+  // Instantiates and draws elements of current element type, as defined by item.type
+  // Note: An element is defined by a type and an x and y starting coordinate.
+  function instElements(item)
+  {
+    for (var i = 0; i < item.coords.length; i++)
+    {
+      if (item.type == CHARACTER_ID)
+      {
+        // Instantiate character element within character canvas.
+        charCanvas.elements.push(new CanvasElement(charCanvas, item.coords[i][0], item.coords[i][1], item.type));
+        // Draw recently pushed character element.
+        charCanvas.elements[charCanvas.elements.length-1].drawSquare();
+      } else
+      {
+        // Instantiate element of other type (i.e. goal(s) and boundaries) within story canvas.
+        storyCanvas.elements.push(new CanvasElement(storyCanvas, item.coords[i][0], item.coords[i][1], item.type));
+        // Draw recently pushed element.
+        storyCanvas.elements[storyCanvas.elements.length-1].drawSquare();
+      }
+    }
+  }
 }
 
 /************
@@ -186,13 +221,9 @@ function trackDir(char, angle)
   // "Turn" current direction by angle parameter.
   char.dir += angle;
   // Keep bounded between 0 and 2pi.
-  if (char.dir > 3 * Math.PI / 2)
-  {
-    char.dir = 0;
-  } else if (char.dir < 0)
-  {
-    char.dir = 3 * Math.PI / 2;
-  }
+  char.dir = char.dir > 3 * Math.PI / 2 ? 0
+           : char.dir < 0               ? 3 * Math.PI / 2
+           : char.dir;
 }
 
 /**
@@ -209,12 +240,8 @@ function turn(dir)
   // Clear previous orientation from canvas.
   charCanvas.clear();
 
-  // Translate to center of character.
-  charCanvas.ctx.translate(character.pos + character.size/2, character.size/2);
-  // Invert (-) angle since canvas uses clockwise as positive.
-  charCanvas.ctx.rotate(-angle);
-  // Translate to initial position.
-  charCanvas.ctx.translate(-(character.pos + character.size/2), -character.size/2);
+  // Rotate character in specified direction.
+  character.rotate(angle);
 
   // Draw new orientation on canvas.
   character.drawSquare();
@@ -277,8 +304,8 @@ function moveWithValidator(char)
   var isValid = true;
 
   // Verify character is within canvas bounds.
-  if (char.x < 0 || char.x > charCanvas.ctx.canvas.width ||
-      char.y < 0 || char.y > charCanvas.ctx.canvas.height)
+  if (char.x < 0 || char.x >= charCanvas.ctx.canvas.width ||
+      char.y < 0 || char.y >= charCanvas.ctx.canvas.height)
   {
     isValid = false;
   }
@@ -347,11 +374,22 @@ function checkCompletion()
   var character = charCanvas.elements.find(element => element.type == CHARACTER_ID);
   var goal = storyCanvas.elements.find(element => element.type == GOAL_ID);
 
-  // Check if character and goal coordinates are the same.
-  if (character.x == goal.x && character.y == goal.y)
+  // Check if character and goal coordinates are the same, i.e. maze is completed.
+  // Rounding issues may cause character.x/y and goal.x/y to be VERY slightly off when maze is actually completed,
+  // round values to the nearest thousandth to counteract this.
+  if (round(character.x) == round(goal.x) && round(character.y) == round(goal.y))
   {
     // User successfully traversed current level's maze, show next cutscene (story.js) and proceed to next level.
     initCutscene();
   }
   // Do not output anything if user did not reach goal.
+
+  /**
+   * Rounds passed value to the nearest thousandth.
+   * @return rounded value.
+   */
+  function round(num)
+  {
+    return Math.round(1000 * num) / 1000;
+  }
 }

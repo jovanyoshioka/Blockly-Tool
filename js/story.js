@@ -3,12 +3,6 @@
  *************/
 // Time (ms) until content no longer visible (due to cutscene).
 const SLIDE_IN_DUR = 1750;
-// TEMPORARY
-// Note: pages array size does not match numLevels because one index for opening pages (cover/intro).
-const STORIES_DATA    = [
-  {title: "the_very_hungry_caterpillar", numLevels: 5, pages:[2,1,1,1,1,1]},
-  {title: "green_eggs_and_ham", numLevels: 6, pages:[3,2,2,1,2,2,3]}
-];
 
 /***********
  * CLASSES *
@@ -22,6 +16,7 @@ class Story
     this.charImgSrc = "assets/" + this.title + "/character.png";
     this.boundImgSrc = "assets/" + this.title + "/boundary.png";
 
+    // Initialize at 0 for initial cutscene.
     this.currLevel = 0;
 
     this.levels = getLvlsData(this.title);
@@ -80,7 +75,6 @@ function getLvlsData(title)
     {
       levels.push({
         goalImgSrc: "assets/" + title + "/goal_" + i + ".png",
-        gridSize: i + 4,
         pageImgSrcs: pages
       });
     }

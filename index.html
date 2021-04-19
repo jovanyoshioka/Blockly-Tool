@@ -41,7 +41,7 @@
       <div id="btns">
         <!-- JavaScript output text box -->
         <!-- <textarea id="jsCode"></textarea> -->
-        <!-- Run button -->
+        <button onclick="initCutscene()" style="float: left;">Skip (Demo)</button>
         <button id="reset" onclick="resetSim()">Reset</button>
         <button id="run" onclick="runCode()">Run</button>
       </div>
@@ -76,6 +76,8 @@
     <script src="js/interpreter/acorn_interpreter.js"></script>
     <!-- JS-Interpreter API to handle external actions -->
     <script src="js/interpreterAPI.js"></script>
+    <!-- TEMPORARY: Story/Maze Data -->
+    <script src="js/data.js"></script>
     <!-- Global -->
     <script src="js/main.js"></script>
     <!-- Using blockly library -->
