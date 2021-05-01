@@ -7,8 +7,20 @@ const GOALX_ID         = "goal";
 
 // Note: pages array size does not match numLevels because one index for opening pages (cover/intro).
 const STORIES_DATA = [
-  {title: "the_very_hungry_caterpillar", numLevels: 5, pages:[2,1,1,1,1,1], character:"the caterpillar", goals:["apple","pears","plums","strawberries","oranges"], boundary:"leaves"},
-  {title: "green_eggs_and_ham", numLevels: 6, pages:[3,2,2,1,2,2,3], character:"Sam", goals:["house","box","car","train","boat","green eggs and ham"], boundary:"yellow trees"}
+  {
+    title: "the_very_hungry_caterpillar",
+    pages: [2,1,1,1,1,1],
+    character: "the caterpillar",
+    goals: ["apple","pears","plums","strawberries","oranges"],
+    boundary: "leaves"
+  },
+  {
+    title: "green_eggs_and_ham", 
+    pages: [3,2,2,1,2,2,3], 
+    character: "Sam",
+    goals: ["house","box","car","train","boat","green eggs and ham"], 
+    boundary: "yellow trees"
+  }
 ];
 
 const MAZES_DATA = [

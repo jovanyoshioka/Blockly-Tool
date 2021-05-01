@@ -13,14 +13,13 @@ class Story
   {
     this.title = title;
 
-    this.charImgSrc = "assets/" + this.title + "/character.png";
-    this.boundImgSrc = "assets/" + this.title + "/boundary.png";
+    this.charImgSrc = ASSETS_PATH + this.title + "/character.png";
+    this.boundImgSrc = ASSETS_PATH + this.title + "/boundary.png";
 
     // Initialize at 0 for initial cutscene.
     this.currLevel = 0;
 
     this.levels = getLvlsData(this.title);
-    
   }
 }
 
@@ -48,19 +47,20 @@ function loadStory(title)
 function getLvlsData(title)
 {
   var story = STORIES_DATA.find(element => element.title == title);
+  var numLevels = MAZES_DATA.find(element => element.title == title).levels.length;
   var pages = [];
   var levels = [];
 
   // Loop through each level and format data.
   // Also format data for cover/intro cutscene pages, i.e. index 0.
-  for (var i = 0; i <= story.numLevels; i++)
+  for (var i = 0; i <= numLevels; i++)
   {
     pages = [];
     // Loop through each page of current level and format source.
     for (var j = 1; j <= story.pages[i]; j++)
     {
       // Page Image Format: "pages_[level]_[pageNum].jpg"
-      pages.push("assets/" + title + "/page_" + i + "_" + j + ".jpg");
+      pages.push(ASSETS_PATH + title + "/page_" + i + "_" + j + ".jpg");
     }
     
     // Compile level's data into array.
@@ -74,7 +74,7 @@ function getLvlsData(title)
     } else
     {
       levels.push({
-        goalImgSrc: "assets/" + title + "/goal_" + i + ".png",
+        goalImgSrc: ASSETS_PATH + title + "/goal_" + i + ".png",
         pageImgSrcs: pages
       });
     }

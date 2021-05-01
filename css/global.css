@@ -1,10 +1,15 @@
+/***********
+ * GLOBALS *
+ ***********/
 :root {
   --canvasSize: 675px;
   /* Colors */
   --tnOrange: #FF8200;
   --lightOrange: #F2A44F;
   --darkOrange: #C36300;
-  --smokey: #58595B;
+  --smokeyGray: #58595B;
+  /* Font */
+  --gothic: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 html, body {
@@ -14,10 +19,197 @@ html, body {
   overflow: hidden;
 }
 
+/* Navigation Bar */
+nav.navbar {
+  height: 65px;
+  padding: 0 15px 0 25px;
+  background-color: #333333;
+  border-bottom: 3px solid #FFFFFF;
+  display: flex;
+  align-items: center;
+}
+/* Navigation Bar, Left/Right Groups of Links */
+nav.navbar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+nav.navbar ul:nth-of-type(2) {
+  margin-left: auto;
+}
+/* Navigation Bar, Links */
+nav.navbar ul:nth-of-type(1) li {
+  display: inline-block;
+  margin: 0 25px 0 0;
+}
+nav.navbar ul li a {
+  font-size: 2em;
+  padding: 10px 5px;
+  font-family: var(--gothic);
+  text-decoration: none;
+  color: #FFFFFF;
+  transition: color 0.5s;
+}
+nav.navbar ul li a:hover {
+  color: var(--tnOrange);
+}
+/* Navigation Bar, Dropdowns */
+nav.navbar ul div.dropdown {
+  width: auto;
+  display: inline-block;
+}
+nav.navbar ul div.dropdown:hover li a {
+  color: var(--tnOrange);
+  cursor: context-menu;
+}
+/* Navigation Bar, Content of Dropdowns */
+nav.navbar ul div.dropdown div.dropdownContent {
+  min-width: 175px;
+  margin: 10px 0 0 5px;
+  position: absolute;
+  background-color: var(--smokeyGray);
+  display: none;
+  z-index: 995;
+}
+nav.navbar ul div.dropdown:hover div.dropdownContent {
+  display: block;
+}
+nav.navbar ul div.dropdown div.dropdownContent a {
+  font-size: 1.75em;
+  padding: 10px;
+  font-family: var(--gothic);
+  text-decoration: none;
+  color: #FFFFFF;
+  display: block;
+  transition: background-color 0.5s;
+}
+nav.navbar ul div.dropdown div.dropdownContent a:hover {
+  background-color: #797A7D;
+}
+
+
+/* Orange Button */
+.orangeBtn {
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  color: #FFFFFF;
+  background-color: var(--tnOrange);
+  transition: background-color 0.5s;
+}
+.orangeBtn:hover {
+  cursor: pointer;
+  background-color: var(--lightOrange);
+}
+.orangeBtn:focus {
+  outline: none;
+}
+.orangeBtn:disabled {
+  cursor: not-allowed;
+  background-color: var(--darkOrange);
+}
+
+/* Tint for Images */
+.tint {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #000000;
+  opacity: 0.4;
+}
+
+/*******************
+ * PAGE: login.php *
+ *******************/
+
+body#login {
+  background-color: var(--smokeyGray);
+}
+body#login div.wrapper {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  text-align: center;
+}
+body#login div.wrapper h1 {
+  margin: 0;
+  padding: 0 0 20px 0;
+  font-size: 3.5em;
+  color: #FFFFFF;
+  font-family: var(--gothic);
+}
+body#login div.wrapper div {
+  padding: 20px;
+  display: inline-block;
+  border-radius: 10px;
+}
+body#login div.wrapper input[type=text] {
+  font-size: 2em;
+  padding: 10px;
+  text-align: center;
+  font-family: var(--gothic);
+}
+body#login div.wrapper input[type=submit] {
+  font-size: 1.75em;
+  margin: 15px 0 0 0;
+  padding: 10px 20px;
+}
+
+/***********************
+ * PAGE: generator.php *
+ ***********************/
+
+body#generator {
+  background-color: var(--smokeyGray);
+}
+/* "Choose a story" or "Make your own story" Selectors */
+body#generator div.modeBtnWrapper {
+  width: 100%;
+  height: calc(100% - 65px);
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+body#generator div.modeBtnWrapper button.modeBtn {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  border: none;
+  overflow: hidden;
+}
+body#generator div.modeBtnWrapper button.modeBtn:hover {
+  cursor: pointer;
+}
+body#generator div.modeBtnWrapper button.modeBtn img {
+  min-width: 100%;
+  min-height: 100%;
+  transition: transform 0.5s;
+}
+body#generator div.modeBtnWrapper button.modeBtn:hover img {
+  transform: scale(1.25,1.25);
+}
+body#generator div.modeBtnWrapper button.modeBtn h1 {
+  width: 100%;
+  font-size: 8vw;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -85%);
+  font-family: var(--gothic);
+  color: #FFFFFF;
+}
+
+/*****************
+ * PAGE: app.php *
+ *****************/
+
 /********************************************************************
  * SIMULATION: STORY SELECTOR, LEVELS INDICATORS, CANVAS, RUN/RESET *
  ********************************************************************/
-div#simContainer {
+body#app div#simContainer {
   width: var(--canvasSize);
   height: 100%;
   position: relative;
@@ -27,11 +219,11 @@ div#simContainer {
 }
 
 /* Story Selector */
-div#simContainer header {
-  background-color: var(--smokey);
+body#app div#simContainer header {
+  background-color: var(--smokeyGray);
   text-align: center;
 }
-div#simContainer header select {
+body#app div#simContainer header select {
   margin: 10px 0 5px 0;
   padding: 5px;
   border: none;
@@ -41,17 +233,17 @@ div#simContainer header select {
   font-size: 1em;
   font-weight: bold;
 }
-div#simContainer header select:focus {
+body#app div#simContainer header select:focus {
   outline: none;
 }
 
 /* Levels Indicators */
-div#simContainer div#levelsContainer {
-  background-color: var(--smokey);
+body#app div#simContainer div#levelsContainer {
+  background-color: var(--smokeyGray);
   border-bottom: 7.5px solid var(--tnOrange);
   text-align: center;
 }
-div#simContainer div#levelsContainer button {
+body#app div#simContainer div#levelsContainer button {
   width: 35px;
   height: 35px;
   margin: 7.5px 5px;
@@ -62,68 +254,52 @@ div#simContainer div#levelsContainer button {
   color: #FFFFFF;
   background-color: var(--tnOrange);
 }
-div#simContainer div#levelsContainer button.complete {
+body#app div#simContainer div#levelsContainer button.complete {
   background-color: #A5DD24;
 }
-div#simContainer div#levelsContainer button.active {
+body#app div#simContainer div#levelsContainer button.active {
   background-color: var(--lightOrange);
 }
 
 /* Canvas */
-div#simContainer div#canvasWrapper {
+body#app div#simContainer div#canvasWrapper {
   width: var(--canvasSize);
   height: var(--canvasSize);
   position: relative;
 }
-div#simContainer canvas {
+body#app div#simContainer canvas {
   width: 100%;
   height: 100%;
   position: absolute;
   top: 0;
   left: 0;
 }
-div#simContainer canvas#charCanvas {
+body#app div#simContainer canvas#charCanvas {
   z-index: 2;
 }
-div#simContainer canvas#storyCanvas {
+body#app div#simContainer canvas#storyCanvas {
   z-index: 1;
   background-size: cover;
 }
 
 /* Play/Pause Buttons */
-div#simContainer div#btns {
+body#app div#simContainer div#btns {
   flex-grow: 1;
   border-top: 7.5px solid var(--tnOrange);
-  background-color: var(--smokey);
+  background-color: var(--smokeyGray);
 }
-div#simContainer div#btns button {
+body#app div#simContainer div#btns button.orangeBtn {
   margin: 7.5px 5px;
   padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
   font-size: 1.25em;
-  font-weight: bold;
-  color: #FFFFFF;
-  background-color: var(--tnOrange);
-  transition: background-color 0.5s;
   float: right;
 }
-div#simContainer div#btns button:hover {
-  cursor: pointer;
-  background-color: var(--lightOrange);
-}
-div#simContainer div#btns button:focus {
-  outline: none;
-}
-div#simContainer div#btns button:disabled {
-  cursor: not-allowed;
-  background-color: var(--darkOrange);
-}
+
 
 /************************************************
  * WORKSPACE: INSTRUCTIONS, TOOLBOX, CODE SPACE *
  ************************************************/
-div#wsContainer {
+body#app div#wsContainer {
   width: calc(100% - var(--canvasSize));
   height: 100%;
   display: flex;
@@ -131,30 +307,30 @@ div#wsContainer {
 }
 
 /* Instructions */
-div#wsContainer div#instructions {
+body#app div#wsContainer div#instructions {
   height: 135px;
   padding: 15px;
-  background-color: var(--smokey);
+  background-color: var(--smokeyGray);
   border-bottom: 7.5px solid var(--tnOrange);
   border-left: 7.5px solid var(--tnOrange);
   overflow-y: auto;
 }
-div#wsContainer div#instructions h1,
-div#wsContainer div#instructions h2 {
+body#app div#wsContainer div#instructions h1,
+body#app div#wsContainer div#instructions h2 {
   margin: 0;
   padding: 0;
   color: #FFFFFF;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family: var(--gothic);
 }
-div#wsContainer div#instructions h1 {
+body#app div#wsContainer div#instructions h1 {
   padding-bottom: 10px;
 }
 
 /* Tool Box & Code Space */
-div#wsContainer div#workspace {
+body#app div#wsContainer div#workspace {
   flex-grow: 1;
 }
-xml#toolbox {
+body#app xml#toolbox {
   display: none;
 }
 
@@ -172,19 +348,19 @@ xml#toolbox {
 }
 
 /* Prevent cutscene elements from blocking app content. */
-div#cutsceneWrapper {
+body#app div#cutsceneWrapper {
   pointer-events: none;
 }
 
 /* Triggers fade transition-based animation. */
-div#cutsceneScreen.show,
-img.cutsceneImg.show,
-button#cutsceneBtn.show {
+body#app div#cutsceneScreen.show,
+body#app img.cutsceneImg.show,
+body#app button#cutsceneBtn.show {
   opacity: 1.0;
 }
 
 /* Black Transition Background */
-div#cutsceneScreen {
+body#app div#cutsceneScreen {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -197,7 +373,7 @@ div#cutsceneScreen {
 }
 
 /* Cutscene Images and Animations */
-img.cutsceneImg {
+body#app img.cutsceneImg {
   height: 100%;
   position: absolute;
   top: 0;
@@ -208,20 +384,20 @@ img.cutsceneImg {
   transition: opacity 1s;
   z-index: 997;
 }
-img.cutsceneImg.slideIn {
+body#app img.cutsceneImg.slideIn {
   /* Note: Animation will not properly play on page load without transform transition. */
   transition: opacity 0.5s linear 1s, transform 1.25s ease-out 0.5s;
   opacity: 1.0;
   transform: translateX(-100%);
   animation: slideIn 1.25s ease-out 0.5s forwards;
 }
-img.cutsceneImg.slideOut {
+body#app img.cutsceneImg.slideOut {
   transition: opacity 0.5s linear 0.25s;
   animation: slideOut 1.25s ease-in forwards;
 }
 
 /* Advance Cutscene Button */
-button#cutsceneBtn {
+body#app button#cutsceneBtn {
   position: absolute;
   bottom: 20px;
   right: 20px;
@@ -232,18 +408,18 @@ button#cutsceneBtn {
   opacity: 0.0;
   transition: 0.25s background-color, 0.5s opacity;
 }
-button#cutsceneBtn:hover {
+body#app button#cutsceneBtn:hover {
   cursor: pointer;
   background-color: var(--lightOrange);
 }
-button#cutsceneBtn:focus {
+body#app button#cutsceneBtn:focus {
   outline: none;
 }
-button#cutsceneBtn:disabled {
+body#app button#cutsceneBtn:disabled {
   cursor: not-allowed;
   background-color: var(--darkOrange);
 }
-button#cutsceneBtn h1 {
+body#app button#cutsceneBtn h1 {
   font-size: 4em;
   margin: 0;
   padding: 0 10px;

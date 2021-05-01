@@ -73,7 +73,7 @@ class CanvasContainer
 
 class CanvasElement
 {
-  constructor(canvasObj, unitsX, unitsY, type)
+  constructor(canvasObj, unitsX, unitsY, type, imgSrc)
   {
     // Canvas of which this element belongs to.
     this.canvasObj = canvasObj;
@@ -103,10 +103,8 @@ class CanvasElement
     // Tracks element's direction relative to canvas (from 0 to 2pi).
     this.dir = 0;
 
-    // Images for character, boundary, and goal elements.
-    this.charImgSrc = storyObj.charImgSrc;
-    this.boundImgSrc = storyObj.boundImgSrc;
-    this.goalImgSrc = storyObj.levels[storyObj.currLevel].goalImgSrc;
+    // Image of element.
+    this.imgSrc = imgSrc;
   }
 
   /**
@@ -129,10 +127,7 @@ class CanvasElement
   drawSquare()
   {
     var img = new Image(this.size, this.size);
-    img.src = this.type == CHARACTER_ID ? this.charImgSrc
-            : this.type == BOUNDARY_ID  ? this.boundImgSrc
-            : this.type == GOAL_ID      ? this.goalImgSrc
-            : null;
+    img.src = this.imgSrc;
 
     // Draw element when specified image is done loading.
     img.addEventListener("load", e => {
@@ -160,17 +155,8 @@ function generateMaze()
   // Get current level's maze data.
   var levelData = MAZES_DATA.find(element => element.title == storyObj.title).levels[storyObj.currLevel-1];
 
-  // Determine size of canvas, i.e. canvas.unitsPerLine, by finding largest upper bound, either of x or y.
-  var gridSize = 0;
-  levelData.forEach(function(item) {
-    for (var i = 0; i < item.coords.length; i++)
-    {
-      gridSize = item.coords[i][0] > gridSize ? item.coords[i][0] : gridSize;
-      gridSize = item.coords[i][1] > gridSize ? item.coords[i][1] : gridSize;
-    }
-  });
-  // Coordinate system starts at 0, so 1 needs to be added for size of grid.
-  gridSize++;
+  // Determine size of grid based on input coordinates.
+  var gridSize = calcGridSize();
 
   // Instantiate canvas objects for character and other story elements.
   // This also effectively clears the canvas.
@@ -183,24 +169,51 @@ function generateMaze()
   levelData.forEach(instElements);
 
   // Display story background.
-  document.getElementById("storyCanvas").style.backgroundImage = "url('assets/" + storyObj.title + "/background.jpg')";
+  document.getElementById("storyCanvas").style.backgroundImage = "url('" + ASSETS_PATH + storyObj.title + "/background.jpg')";
 
-  // Instantiates and draws elements of current element type, as defined by item.type
-  // Note: An element is defined by a type and an x and y starting coordinate.
+  /**
+   * Calculate size of canvas, i.e. canvas.unitsPerLine, by finding largest upper bound, either of x or y.
+   */
+  function calcGridSize()
+  {
+    var size = 0;
+    // Get largest coordinate, either in x or y direction.
+    levelData.forEach(function(item) {
+      for (var i = 0; i < item.coords.length; i++)
+      {
+        size = item.coords[i][0] > size ? item.coords[i][0] : size;
+        size = item.coords[i][1] > size ? item.coords[i][1] : size;
+      }
+    });
+    // Coordinate system starts at 0, so 1 needs to be added for size of grid.
+    return size + 1;
+  }
+
+  /**
+   * Instantiates and draws elements of current element type, as defined by item.type
+   * Note: An element is defined by a type and an x and y starting coordinate.
+   * @param item an array containing coordinates for a specific type of canvas elements.
+   */
   function instElements(item)
   {
-    for (var i = 0; i < item.coords.length; i++)
+    var numElements = item.coords.length;
+    var imgSrc = item.type == CHARACTER_ID ? storyObj.charImgSrc
+               : item.type == BOUNDARY_ID  ? storyObj.boundImgSrc
+               : item.type == GOAL_ID      ? storyObj.levels[storyObj.currLevel].goalImgSrc
+               : null;
+    
+    for (var i = 0; i < numElements; i++)
     {
       if (item.type == CHARACTER_ID)
       {
         // Instantiate character element within character canvas.
-        charCanvas.elements.push(new CanvasElement(charCanvas, item.coords[i][0], item.coords[i][1], item.type));
+        charCanvas.elements.push(new CanvasElement(charCanvas, item.coords[i][0], item.coords[i][1], item.type, imgSrc));
         // Draw recently pushed character element.
         charCanvas.elements[charCanvas.elements.length-1].drawSquare();
       } else
       {
         // Instantiate element of other type (i.e. goal(s) and boundaries) within story canvas.
-        storyCanvas.elements.push(new CanvasElement(storyCanvas, item.coords[i][0], item.coords[i][1], item.type));
+        storyCanvas.elements.push(new CanvasElement(storyCanvas, item.coords[i][0], item.coords[i][1], item.type, imgSrc));
         // Draw recently pushed element.
         storyCanvas.elements[storyCanvas.elements.length-1].drawSquare();
       }
