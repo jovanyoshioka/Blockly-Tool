@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="css/global.css">
   </head>
-  <body>
+  <body id="app">
     <!-- Import blockly libraries -->
     <script src="js/blockly/blockly_compressed.js"></script> <!-- Core -->
     <script src="js/blockly/javascript_compressed.js"></script> <!-- Translates block to JS -->
@@ -41,9 +41,9 @@
       <div id="btns">
         <!-- JavaScript output text box -->
         <!-- <textarea id="jsCode"></textarea> -->
-        <button onclick="initCutscene()" style="float: left;">Skip (Demo)</button>
-        <button id="reset" onclick="resetSim()">Reset</button>
-        <button id="run" onclick="runCode()">Run</button>
+        <button class="orangeBtn" onclick="initCutscene()" style="float: left;">Skip (Demo)</button>
+        <button id="reset" class="orangeBtn" onclick="resetSim()">Reset</button>
+        <button id="run" class="orangeBtn" onclick="runCode()">Run</button>
       </div>
     </div>
     <!-- Blockly workspace: container holding toolbox and block code -->
