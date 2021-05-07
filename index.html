@@ -91,5 +91,12 @@
     <script src="js/story.js"></script>
     <!-- Controls canvas initialization and manipulation -->
     <script src="js/canvas.js"></script>
+
+    <script type="text/javascript">
+      window.addEventListener('load', function () {
+        // Load story when app page loaded.
+        loadStory(document.getElementById("storySelector").value);
+      });
+    </script>
   </body>
 </html>

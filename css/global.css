@@ -8,6 +8,7 @@
   --lightOrange: #F2A44F;
   --darkOrange: #C36300;
   --smokeyGray: #58595B;
+  --limestone: #F0EDE3;
   /* Font */
   --gothic: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
@@ -17,6 +18,7 @@ html, body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  background-color: var(--smokeyGray);
 }
 
 /* Navigation Bar */
@@ -67,7 +69,7 @@ nav.navbar ul div.dropdown div.dropdownContent {
   min-width: 175px;
   margin: 10px 0 0 5px;
   position: absolute;
-  background-color: var(--smokeyGray);
+  background-color: #797A7D;
   display: none;
   z-index: 995;
 }
@@ -84,7 +86,7 @@ nav.navbar ul div.dropdown div.dropdownContent a {
   transition: background-color 0.5s;
 }
 nav.navbar ul div.dropdown div.dropdownContent a:hover {
-  background-color: #797A7D;
+  background-color: #929396;
 }
 
 
@@ -159,40 +161,54 @@ body#login div.wrapper input[type=submit] {
 }
 
 /***********************
+ * PAGE: dashboard.php *
+ ***********************/
+body#dashboard {
+  color: #FFFFFF;
+  font-family: var(--gothic);
+}
+
+/***********************
  * PAGE: generator.php *
  ***********************/
 
-body#generator {
-  background-color: var(--smokeyGray);
-}
 /* "Choose a story" or "Make your own story" Selectors */
-body#generator div.modeBtnWrapper {
-  width: 100%;
+body#generator button.modeBtn {
+  width: 50%;
   height: calc(100% - 65px);
-  display: grid;
-  grid-template-columns: 50% 50%;
-}
-body#generator div.modeBtnWrapper button.modeBtn {
-  height: 100%;
   margin: 0;
   padding: 0;
-  position: relative;
-  border: none;
+  position: absolute;
   overflow: hidden;
+  border: none;
+  background-color: transparent;
+  transition: width 0.75s ease;
 }
-body#generator div.modeBtnWrapper button.modeBtn:hover {
+body#generator button.modeBtn:hover {
   cursor: pointer;
 }
-body#generator div.modeBtnWrapper button.modeBtn img {
-  min-width: 100%;
+body#generator button.modeBtn:nth-of-type(1) {
+  left: 0;
+  border-right: 1.5px solid #FFFFFF;
+}
+body#generator button.modeBtn:nth-of-type(2) {
+  right: 0;
+  border-left: 1.5px solid #FFFFFF;
+}
+body#generator button.modeBtn img {
+  min-width: 100vw;
   min-height: 100%;
+  position: absolute;
+  top: 0;
   transition: transform 0.5s;
 }
-body#generator div.modeBtnWrapper button.modeBtn:hover img {
-  transform: scale(1.25,1.25);
+body#generator button.modeBtn:hover img {
+  transform: scale(1.1,1.1);
 }
-body#generator div.modeBtnWrapper button.modeBtn h1 {
-  width: 100%;
+body#generator button.modeBtn:nth-of-type(1) img { left: 0; }
+body#generator button.modeBtn:nth-of-type(2) img { right: 0; }
+body#generator button.modeBtn h1 {
+  width: 40vw;
   font-size: 8vw;
   position: absolute;
   top: 50%;
@@ -200,6 +216,35 @@ body#generator div.modeBtnWrapper button.modeBtn h1 {
   transform: translate(-50%, -85%);
   font-family: var(--gothic);
   color: #FFFFFF;
+}
+
+/* Form Container */
+body#generator section {
+  width: 100%;
+  height: calc(100vh - 65px);
+  position: absolute;
+  transform: translateY(100%);
+  background-color: var(--smokeyGray);
+  color: #FFFFFF;
+  font-family: var(--gothic);
+  transition: transform 0.75s;
+  z-index: 3;
+}
+
+/*******************
+ * PAGE: class.php *
+ *******************/
+ body#class {
+  color: #FFFFFF;
+  font-family: var(--gothic);
+}
+
+/*********************
+ * PAGE: contact.php *
+ *********************/
+ body#contact {
+  color: #FFFFFF;
+  font-family: var(--gothic);
 }
 
 /*****************
