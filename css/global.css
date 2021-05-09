@@ -8,9 +8,15 @@
   --lightOrange: #F2A44F;
   --darkOrange: #C36300;
   --smokeyGray: #58595B;
+  --lightGray: #797A7D;
+  --lighterGray: #929396;
+  --darkGray: #424343;
   --limestone: #F0EDE3;
+  --rock: #A7A9AC;
   /* Font */
   --gothic: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  /* Global Values */
+  --navHeight: 65px;
 }
 
 html, body {
@@ -23,7 +29,7 @@ html, body {
 
 /* Navigation Bar */
 nav.navbar {
-  height: 65px;
+  height: var(--navHeight);
   padding: 0 15px 0 25px;
   background-color: #333333;
   border-bottom: 3px solid #FFFFFF;
@@ -69,7 +75,7 @@ nav.navbar ul div.dropdown div.dropdownContent {
   min-width: 175px;
   margin: 10px 0 0 5px;
   position: absolute;
-  background-color: #797A7D;
+  background-color: var(--lightGray);
   display: none;
   z-index: 995;
 }
@@ -86,9 +92,8 @@ nav.navbar ul div.dropdown div.dropdownContent a {
   transition: background-color 0.5s;
 }
 nav.navbar ul div.dropdown div.dropdownContent a:hover {
-  background-color: #929396;
+  background-color: var(--lighterGray);
 }
-
 
 /* Orange Button */
 .orangeBtn {
@@ -120,6 +125,69 @@ nav.navbar ul div.dropdown div.dropdownContent a:hover {
   left: 0;
   background-color: #000000;
   opacity: 0.4;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 20px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  background-color: var(--smokeyGray);
+  border: 2px solid var(--lighterGray);
+  border-radius: 5px;
+  opacity: 0.0;
+  transform: translateY(-100%);
+  transition: opacity 0.5s, transform 0.5s;
+  pointer-events: none;
+  z-index: 999;
+}
+.modal.show {
+  opacity: 1.0;
+  transform: translateY(0);
+  pointer-events: all;
+}
+.modal header {
+  width: 100%;
+  background-color: var(--darkGray);
+}
+.modal header h1 {
+  font-size: 2.25em;
+  margin: 0;
+  padding: 5px 0 10px 10px;
+  color: #FFFFFF;
+  font-family: var(--gothic);
+  display: inline-block;
+}
+.modal header button {
+  font-size: 2.25em;
+  margin: 0 5px 0 0;
+  color: #FFFFFF;
+  transition: color 0.25s;
+  background-color: transparent;
+  border: none;
+  float: right;
+}
+.modal header button:hover {
+  color: var(--rock);
+  cursor: pointer;
+}
+.modalBackground {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #000000;
+  opacity: 0.0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+  z-index: 998;
+}
+.modalBackground.show {
+  opacity: 0.75;
+  pointer-events: all;
 }
 
 /*******************
@@ -163,6 +231,7 @@ body#login div.wrapper input[type=submit] {
 /***********************
  * PAGE: dashboard.php *
  ***********************/
+
 body#dashboard {
   color: #FFFFFF;
   font-family: var(--gothic);
@@ -172,10 +241,10 @@ body#dashboard {
  * PAGE: generator.php *
  ***********************/
 
-/* "Choose a story" or "Make your own story" Selectors */
+/* "Choose a story" or "Make your own story" Mode Selection Buttons */
 body#generator button.modeBtn {
   width: 50%;
-  height: calc(100% - 65px);
+  height: calc(100% - var(--navHeight));
   margin: 0;
   padding: 0;
   position: absolute;
@@ -218,17 +287,153 @@ body#generator button.modeBtn h1 {
   color: #FFFFFF;
 }
 
-/* Form Container */
-body#generator section {
+/* Maze Generation Modals */
+/* TEMPORARY */
+body#generator .modal {
+  width: 600px;
+}
+body#generator .modal section h1 {
+  color: #FFFFFF;
+  font-family: var(--gothic);
+}
+
+/* Maze Generation Form Container */
+body#generator section.formContainer {
   width: 100%;
-  height: calc(100vh - 65px);
+  height: calc(100vh - var(--navHeight));
   position: absolute;
   transform: translateY(100%);
   background-color: var(--smokeyGray);
   color: #FFFFFF;
   font-family: var(--gothic);
   transition: transform 0.75s;
-  z-index: 3;
+  display: none;
+  overflow-y: auto;
+  z-index: 3; /* above mode buttons */
+}
+/* Container Header Text */
+body#generator section.formContainer h1 {
+  font-size: 3em;
+  text-align: center;
+  margin: 20px 0 0 0;
+  padding: 0;
+}
+body#generator section.formContainer h2 {
+  font-size: 2.25em;
+  text-align: center;
+  margin: 0 0 20px 0;
+  padding: 0;
+}
+/* Maze Generation Form */
+body#generator section.formContainer form {
+  width: 800px;
+  font-size: 1.5em;
+  margin: 0 auto;
+  text-align: center;
+}
+body#generator section.formContainer form label {
+  font-size: 1.25em;
+}
+body#generator section.formContainer form input[type="checkbox"] {
+  width: 2em;
+  height: 2em;
+  vertical-align: middle
+}
+body#generator section.formContainer form select {
+  margin: 10px 0 15px 0;
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--tnOrange);
+  color: #FFFFFF;
+  font-size: 1em;
+  font-weight: bold;
+}
+body#generator section.formContainer form select:focus {
+  outline: none;
+}
+body#generator section.formContainer form div.actions input[type="button"],
+body#generator section.formContainer form div.actions input[type="submit"] {
+  font-size: 1em;
+  margin: 0 7.5px 20px 0;
+  padding: 7.5px 12.5px;
+}
+/* Initially, only "Generate" btn is shown */
+/* After maze generated once, show "Preview" maze, "Regenerate" maze, or "Save and Exit" btns */
+body#generator section.formContainer form div.actions input[type="button"]:not(:nth-of-type(1)),
+body#generator section.formContainer form div.actions input[type="submit"] {
+  display: none;
+}
+
+/* "Choose a story" Generator Elements */
+/* Elements to Hide When Story is Not Selected */
+body#generator section#chooseAStoryForm .showWhenSelected {
+  display: none;
+}
+/* Search Bar for Table of Pre-existing Stories */
+body#generator section#chooseAStoryForm form input[type="search"] {
+  width: 300px;
+  font-size: 0.75em;
+  float: left;
+  margin: 5px 0;
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+  font-family: var(--gothic);
+}
+/* Table of Pre-existing Stories */
+body#generator section#chooseAStoryForm form table {
+  width: 100%;
+}
+body#generator section#chooseAStoryForm form table th,
+body#generator section#chooseAStoryForm form table td {
+  border-bottom: 2px solid #FFFFFF;
+}
+body#generator section#chooseAStoryForm form table th {
+  padding: 0 0 7.5px 0;
+}
+body#generator section#chooseAStoryForm form table td {
+  padding: 5px 10px;
+}
+body#generator section#chooseAStoryForm form table td input[type="button"] {
+  font-size: 0.85em;
+  margin: 0;
+  padding: 5px 7.5px;
+}
+body#generator section#chooseAStoryForm form table td input[type="button"]:nth-of-type(1) {
+  margin-bottom: 5px;
+}
+/* Table Navigation: depending on number of pre-existing stories, there may be several "pages" to a table */
+/* Note: nav container is right after the table element */
+body#generator section#chooseAStoryForm form table + div {
+  width: 100%;
+  margin: 5px 0 20px 0;
+  position: relative;
+  float: left;
+}
+/* Previous/Next Buttons */
+body#generator section#chooseAStoryForm form table + div input[type="button"] {
+  font-size: 1em;
+  padding: 5px 10px;
+}
+body#generator section#chooseAStoryForm form table + div input[type="button"]:nth-of-type(1) {
+  float: left;
+}
+body#generator section#chooseAStoryForm form table + div input[type="button"]:nth-of-type(2) {
+  float: right;
+}
+/* "Page" Number Buttons */
+body#generator section#chooseAStoryForm form table + div p {
+  pointer-events: none; /* unblocks nav buttons */
+  position: absolute;
+  top: 5px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+body#generator section#chooseAStoryForm form table + div p a {
+  pointer-events: all;
+  color: #FFFFFF;
 }
 
 /*******************

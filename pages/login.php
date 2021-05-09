@@ -24,7 +24,7 @@
   </head>
   <body id="login">
     <div class="wrapper">
-      <h1>Literary Maze Tool</h1>
+      <h1>Code a Story</h1>
       <form action="../php/login.php" method="POST">
         <input type="text" id="loginID" name="loginID" placeholder="Your ID"><br>
         <input class="orangeBtn" type="submit" value="Login">
