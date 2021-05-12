@@ -53,31 +53,27 @@
         <!-- Pre-existing stories searchable table -->
         <input type="search" class="hideWhenSelected" placeholder="Search" />
         <table id="stories">
-          <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Uploader</th>
-            <th></th>
-          </tr>
-          <?php include('../php/getStories.php'); ?>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Uploader</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data from displayStories(x); -->
+          </tbody>
         </table>
         <!-- Table navigation -->
         <div>
           <!-- For multiple "pages" -->
-          <div class="hideWhenSelected">
-            <input type="button" class="orangeBtn" value="&#10094; Previous" />
-            <p>
-              <a href="">1</a> 
-              <a href="">2</a> 
-              <a href="">3</a> 
-              . . . 
-              <a href="">5</a>
-            </p>
-            <input type="button" class="orangeBtn" value="Next &#10095;" />
+          <div id="tableNav" class="hideWhenSelected">
+            <!-- Data from displayStories(x); -->
           </div>
           <!-- For unselecting a story -->
           <div class="showWhenSelected">
-            <input type="button" onclick="unselectStory()" class="orangeBtn" value="&#10094; Back" />
+            <input type="button" onclick="unselectStory()" class="orangeBtn back" value="&#10094; Back" />
           </div>
         </div>
         <!-- Enable/disable cutscenes -->
@@ -112,5 +108,15 @@
     </section>
 
     <script src="../js/generator.js"></script>
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+        
+        // Displays first "page" of table/table nav.
+        // Note: "Default" stories take precedence, newest stories display first.
+        displayStories(1);
+
+      });
+    </script>
   </body>
 </html>

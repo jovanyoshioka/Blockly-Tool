@@ -24,27 +24,34 @@ function selectMode(btnNode)
 }
 
 /**
- * TODO: GENERATE MAZE.
+ * Gets total number of stories and displays five based on current "page" of table.
+ * @param page number of table specifying which five stories to display.
  */
-function generateMaze(btnNode)
+function displayStories(page)
 {
-  btnNode.nextElementSibling.style.display = "inline-block";
-  btnNode.nextElementSibling.nextElementSibling.style.display = "inline-block";
-  btnNode.nextElementSibling.nextElementSibling.nextElementSibling.style.display = "inline-block";
-  btnNode.style.display = "none";
+  $.post("../php/getStories.php", { page: page }, function(data) {
+    // Show specified page of stories in table.
+    document.querySelector("table#stories tbody").innerHTML = data.table;
+
+    // Update table navigation buttons.
+    document.getElementById("tableNav").innerHTML = data.nav;
+  }, "json")
+    .fail(function() {
+      alert("An error occured when fetching stories!");
+    })
 }
 
 /**
  * When user selects a story from table of pre-existing stories, show/hide appropriate elements and tag selected story.
  * @param selectedNode element to be tagged as selected.
  */
-function selectStory(selectedNode)
+function selectStory(selectedNode, storyID)
 {
   // Tag selected story (table row) as selected for when maze is to be generated.
   selectedNode.classList.add("selectedStory");
 
   // Hide all table rows (i.e. stories) except table header (i.e. title, author, uploader) and selected story table row.
-  var notSelectedNodes = document.getElementById("stories").querySelectorAll("tr:not(:nth-of-type(1)):not(.selectedStory)");
+  var notSelectedNodes = document.querySelector("table#stories tbody").querySelectorAll("tr:not(.selectedStory)");
   for (var i = 0; i < notSelectedNodes.length; i++)
   {
     notSelectedNodes[i].style.display = "none";
@@ -106,3 +113,30 @@ function unselectStory()
     }
   });
 }
+
+/**
+ * Preview a story.
+ */
+function previewStory(storyID)
+{
+  $.post("../php/resetPassword.php", { staffID: inputStaffID }, function(data, status) {
+    if (status === "success") {
+      document.getElementById("userInfo-Message").innerHTML = "<i class='fas fa-key'></i> Temp. Password: " + data + "</p>";
+    } else {
+      document.getElementById("userInfo-Message").innerHTML = "An error occured.";
+    }
+  });
+
+  openModal("previewModal");
+}
+
+/**
+ * TODO: GENERATE MAZE.
+ */
+ function generateMaze(btnNode)
+ {
+   btnNode.nextElementSibling.style.display = "inline-block";
+   btnNode.nextElementSibling.nextElementSibling.style.display = "inline-block";
+   btnNode.nextElementSibling.nextElementSibling.nextElementSibling.style.display = "inline-block";
+   btnNode.style.display = "none";
+ }
