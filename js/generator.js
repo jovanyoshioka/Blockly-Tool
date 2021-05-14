@@ -38,7 +38,7 @@ function displayStories(page)
   }, "json")
     .fail(function() {
       alert("An error occured when fetching stories!");
-    })
+    });
 }
 
 /**
@@ -115,17 +115,22 @@ function unselectStory()
 }
 
 /**
- * Preview a story.
+ * Gets images associated with specified story.
+ * @param storyID ID of story of which to retrieve images character, boundary, etc. images.
+ * @param title Title of story.
  */
-function previewStory(storyID)
+function previewStory(storyID, title)
 {
-  $.post("../php/resetPassword.php", { staffID: inputStaffID }, function(data, status) {
-    if (status === "success") {
-      document.getElementById("userInfo-Message").innerHTML = "<i class='fas fa-key'></i> Temp. Password: " + data + "</p>";
-    } else {
-      document.getElementById("userInfo-Message").innerHTML = "An error occured.";
-    }
-  });
+  $.post("../php/getStoriesImgs.php", { storyID: storyID }, function(data) {
+    // Set header of preview modal to specified title.
+    document.querySelector("#previewModal header h1").innerHTML = title + " Preview";
+
+    // Add formatted story content to preview modal.
+    document.querySelector("#previewModal div.body").innerHTML = data;
+  })
+    .fail(function() {
+      alert("An error occured when fetching the story's data!");
+    });
 
   openModal("previewModal");
 }

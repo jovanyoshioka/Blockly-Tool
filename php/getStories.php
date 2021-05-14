@@ -28,7 +28,7 @@
     ORDER BY
       FIELD(stories.UploaderID, 0) DESC,
       stories.ID DESC
-    LIMIT ".$storiesPerPage." OFFSET ".$offset."
+    LIMIT $storiesPerPage OFFSET $offset
   ");
   $sql->execute();
   $results = $sql->get_result();
@@ -43,7 +43,7 @@
         <td>'.$row["Author"].'</td>
         <td>'.$row["Uploader"].'</td>
         <td class="hideWhenSelected">
-          <input type="button" onclick="previewStory('.$row["ID"].')" class="orangeBtn" value="Preview" />
+          <input type="button" onclick="previewStory('.$row["ID"].',\''.$row["Title"].'\')" class="orangeBtn" value="Preview" />
           <input type="button" onclick="selectStory(this.parentElement.parentElement, '.$row["ID"].')" class="orangeBtn" value="Select" />
         </td>
         <td class="showWhenSelected">

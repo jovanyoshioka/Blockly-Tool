@@ -24,12 +24,12 @@
     <!-- Modal for previewing story images -->
     <div id="previewModal" class="modal">
       <header>
-        <h1>Story Preview</h1>
+        <h1><!-- Data from previewStory(x); --></h1>
         <button onclick="closeModal(this.parentElement.parentElement)">&#x2716;</button>
       </header>
-      <section>
-        <h1>Story Images/Instructions</h1>
-      </section>
+      <div class="body">
+        <!-- Data from previewStory(x); -->
+      </div>
     </div>
     <!-- Modal for editing a story -->
     <div id="editModal" class="modal">
@@ -37,9 +37,9 @@
         <h1>Story Editor</h1>
         <button onclick="closeModal(this.parentElement.parentElement)">&#x2716;</button>
       </header>
-      <section>
-        <h1>Story Editing Form</h1>
-      </section>
+      <div class="body">
+        <h1>Story Editing Form **Work in progress**</h1>
+      </div>
     </div>
     <!-- Dark background tint for modal -->
     <div class="modalBackground" onclick="closeModal(document.querySelector('.modal.show'))"></div>
@@ -76,6 +76,10 @@
             <input type="button" onclick="unselectStory()" class="orangeBtn back" value="&#10094; Back" />
           </div>
         </div>
+        <!-- Enable/disable decoy goals -->
+        <label for="decoyToggle">Include Decoy Goals: </label>
+        <input type="checkbox" name="decoyToggle" id="decoyToggle" />
+        <br>
         <!-- Enable/disable cutscenes -->
         <label for="cutsceneToggle">Include Cutscenes: </label>
         <input type="checkbox" name="cutsceneToggle" id="cutsceneToggle" />
@@ -105,6 +109,7 @@
       <!-- Header -->
       <h1>Maze Generator</h1>
       <h2>Make your own story</h2>
+      <h2>**Work in progress**</h2>
     </section>
 
     <script src="../js/generator.js"></script>

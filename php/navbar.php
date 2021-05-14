@@ -23,7 +23,7 @@
         <div class="dropdown">
           <li><a href="javascript:void(0);">Hello, '.$_SESSION['id'].' &#9660;</a></li>
           <div class="dropdownContent">
-            <a href="settings.php">Notifications</a>
+            <a href="notifications.php">Notifications</a>
             <a href="settings.php">Settings</a>
             <a href="../php/logout.php">Logout</a>
           </div>

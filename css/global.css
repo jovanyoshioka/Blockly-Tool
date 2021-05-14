@@ -129,8 +129,9 @@ nav.navbar ul div.dropdown div.dropdownContent a:hover {
 
 /* Modal */
 .modal {
+  max-height: 95vh;
   position: fixed;
-  top: 20px;
+  top: 2vh;
   left: 0;
   right: 0;
   margin: 0 auto;
@@ -141,6 +142,7 @@ nav.navbar ul div.dropdown div.dropdownContent a:hover {
   transform: translateY(-100%);
   transition: opacity 0.5s, transform 0.5s;
   pointer-events: none;
+  overflow-y: auto;
   z-index: 999;
 }
 .modal.show {
@@ -288,13 +290,53 @@ body#generator button.modeBtn h1 {
 }
 
 /* Maze Generation Modals */
-/* TEMPORARY */
 body#generator .modal {
-  width: 600px;
+  width: 800px;
 }
-body#generator .modal section h1 {
+body#generator .modal div.body {
+  padding: 10px;
+}
+body#generator .modal div.body h1,
+body#generator .modal div.body h2,
+body#generator .modal div.body p {
   color: #FFFFFF;
   font-family: var(--gothic);
+  margin: 0;
+  padding: 0;
+}
+
+/* Maze Generation Preview Story Modal */
+body#generator #previewModal div.body section {
+  padding: 0 0 10px 0;
+  border-bottom: 2px solid #FFFFFF;
+}
+body#generator #previewModal div.body section:last-of-type {
+  border-bottom: none;
+}
+body#generator #previewModal div.body section h1 {
+  padding: 10px 0;
+  font-size: 2.5em;
+  text-align: center;
+}
+body#generator #previewModal div.body section div.wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+body#generator #previewModal div.body section div.wrapper div {
+  text-align: center;
+}
+body#generator #previewModal div.body section div.wrapper div img {
+  width: 80%;
+  padding: 10px 0 0 0;
+}
+body#generator #previewModal div.body section div.wrapper div h2 {
+  padding: 0 0 5px 0;
+  border-bottom: 2px solid #FFFFFF;
+}
+body#generator #previewModal div.body section div.wrapper div p {
+  font-size: 1.25em;
+  padding: 5px 0 0 0;
 }
 
 /* Maze Generation Form Container */
@@ -337,6 +379,7 @@ body#generator section.formContainer form label {
 body#generator section.formContainer form input[type="checkbox"] {
   width: 2em;
   height: 2em;
+  margin: 5px 0;
   vertical-align: middle
 }
 body#generator section.formContainer form select {

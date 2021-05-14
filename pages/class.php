@@ -9,6 +9,8 @@
   <body id="class">
     <?php include('../php/navbar.php'); ?>
     <?php
+      echo '<h1>**Work in progress**</h1>';
+      echo '<hr />';
       if (isset($_GET['classID']))
       {
         // TODO: Verify user is teacher of class.

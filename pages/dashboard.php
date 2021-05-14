@@ -9,6 +9,10 @@
   <body id="dashboard">
     <?php include('../php/navbar.php'); ?>
     <?php
+      echo '<h1>**Work in progress**</h1>';
+
+      echo '<hr />';
+
       echo '<h1>If teacher, show classes (something like the following):</h1>';
       echo '<h2>1st Period: <a href="class.php?classID=161361723">Go</a></h2>';
       echo '<h2>2nd Period: <a href="class.php?classID=837105723">Go</a></h2>';
@@ -22,6 +26,7 @@
 
       echo '<h1>If student, show assigned mazes to complete (something like the following): </h1>';
       echo '<h2>The Very Hungry Caterpillar, Levels 1-3: <a href="app.php">Go</a></h2>';
+      echo '<h1>Note: Student\'s navigation bar will not include Generator, Classes, and Contact; these are only available for teacher accounts.</h1>';
     ?>
   </body>
 </html>
