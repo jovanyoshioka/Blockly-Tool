@@ -31,6 +31,7 @@
         <!-- Data from previewStory(x); -->
       </div>
     </div>
+
     <!-- Modal for editing a story -->
     <div id="editModal" class="modal">
       <header>
@@ -50,8 +51,11 @@
       <h1>Maze Generator</h1>
       <h2>Choose a story</h2>
       <form action="" method="POST">
-        <!-- Pre-existing stories searchable table -->
-        <input type="search" class="hideWhenSelected" placeholder="Search" />
+        <!-- Search bar for table of stories -->
+        <!-- Note: search bar input is not type="search" due to inability to reliably control "X" click, search event not yet universally supported -->
+        <input type="text" onkeydown="handleSearch(event,this)" onkeyup="handleSearch(event,this)" class="hideWhenSelected search" placeholder="Search" />
+        <input type="button" onclick="displayStories(1,this.previousElementSibling.value)" class="hideWhenSelected orangeBtn" value="Search" />
+        <!-- Table of pre-existing published stories -->
         <table id="stories">
           <thead>
             <tr>
@@ -121,6 +125,12 @@
         // Note: "Default" stories take precedence, newest stories display first.
         displayStories(1);
 
+        // Disable submitting form via enter due to users' inclination to press enter in search bar.
+        $("form").on('keydown', function (event) {
+          if (event.keyCode === 13) {
+            event.preventDefault();
+          }
+        });
       });
     </script>
   </body>

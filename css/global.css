@@ -413,8 +413,8 @@ body#generator section.formContainer form div.actions input[type="submit"] {
 body#generator section#chooseAStoryForm .showWhenSelected {
   display: none;
 }
-/* Search Bar for Table of Pre-existing Stories */
-body#generator section#chooseAStoryForm form input[type="search"] {
+/* Search Bar for Table of Stories */
+body#generator section#chooseAStoryForm form input[type="text"].search {
   width: 300px;
   font-size: 0.75em;
   float: left;
@@ -423,6 +423,13 @@ body#generator section#chooseAStoryForm form input[type="search"] {
   border: none;
   border-radius: 5px;
   font-family: var(--gothic);
+}
+/* Button Executing Search Using Search Bar Contents */
+body#generator section#chooseAStoryForm form input[type="text"].search + input[type="button"] {
+  float: left;
+  font-size: 0.85em;
+  margin: 2.5px 0 0 10px;
+  padding: 5px 7.5px;
 }
 /* Table of Pre-existing Stories */
 body#generator section#chooseAStoryForm form table {
@@ -450,6 +457,7 @@ body#generator section#chooseAStoryForm form table td input[type="button"]:nth-o
 /* Note: nav container is right after the table element */
 body#generator section#chooseAStoryForm form table + div {
   width: 100%;
+  min-height: 35px;
   margin: 5px 0 20px 0;
   position: relative;
   float: left;

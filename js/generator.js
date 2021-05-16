@@ -25,25 +25,45 @@ function selectMode(btnNode)
 
 /**
  * Gets total number of stories and displays five based on current "page" of table.
- * @param page number of table specifying which five stories to display.
+ * @param page Number of table specifying which five stories to display.
+ * @param search Term used to find specific title, author, or uploader. Default: ""
  */
-function displayStories(page)
+function displayStories(page, search = "")
 {
-  $.post("../php/getStories.php", { page: page }, function(data) {
+  $.post("../php/getStories.php", { page: page, search: search }, function(data) {
     // Show specified page of stories in table.
     document.querySelector("table#stories tbody").innerHTML = data.table;
 
     // Update table navigation buttons.
     document.getElementById("tableNav").innerHTML = data.nav;
   }, "json")
-    .fail(function() {
-      alert("An error occured when fetching stories!");
+    .fail(function(jqXHR, status, error) {
+      alert("An error occured when fetching stories: " + error);
     });
 }
 
 /**
+ * Handles search bar user interaction: pressing enter & backspacing, i.e. deleting contents.
+ * @param e Event of input-user interaction.
+ * @param inputNode Search bar DOM input object.
+ */
+function handleSearch(e, inputNode)
+{
+  if (e.type === "keydown" && e.keyCode === 13)
+  {
+    // Enter key (13) pressed while in search box, so execute search.
+    displayStories(1,inputNode.value);
+  } else if (e.type === "keyup" && inputNode.value.length == 0)
+  {
+    // Search bar was cleared, so revert to displaying all published stories.
+    displayStories(1);
+  }
+  // Ignore all other events.
+}
+
+/**
  * When user selects a story from table of pre-existing stories, show/hide appropriate elements and tag selected story.
- * @param selectedNode element to be tagged as selected.
+ * @param selectedNode Element to be tagged as selected.
  */
 function selectStory(selectedNode, storyID)
 {
@@ -128,8 +148,8 @@ function previewStory(storyID, title)
     // Add formatted story content to preview modal.
     document.querySelector("#previewModal div.body").innerHTML = data;
   })
-    .fail(function() {
-      alert("An error occured when fetching the story's data!");
+    .fail(function(jqXHR, status, error) {
+      alert("An error occured when fetching the story's data: " + error);
     });
 
   openModal("previewModal");
