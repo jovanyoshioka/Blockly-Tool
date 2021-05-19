@@ -59,7 +59,7 @@
         <td>'.$row["Uploader"].'</td>
         <td class="hideWhenSelected">
           <input type="button" onclick="previewStory('.$row["ID"].', &quot;'.$row["Title"].'&quot;)" class="orangeBtn" value="Preview" />
-          <input type="button" onclick="selectStory(this.parentElement.parentElement, '.$row["ID"].')" class="orangeBtn" value="Select" />
+          <input type="button" onclick="selectStory(this.parentElement.parentElement, '.$row["ID"].', &quot;'.$row["Title"].'&quot;)" class="orangeBtn" value="Select" />
         </td>
         <td class="showWhenSelected">
           <input type="button" onclick="openModal(\'editModal\')" class="orangeBtn" value="Edit" />

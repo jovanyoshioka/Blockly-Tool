@@ -135,13 +135,13 @@ function unselectStory()
 }
 
 /**
- * Gets images associated with specified story.
- * @param storyID ID of story of which to retrieve images character, boundary, etc. images.
+ * Gets content, e.g. images and instructions, associated with specified story. Appends to #previewModal.
+ * @param storyID ID of story of which to retrieve content from.
  * @param title Title of story.
  */
 function previewStory(storyID, title)
 {
-  $.post("../php/getStoriesImgs.php", { storyID: storyID }, function(data) {
+  $.post("../php/getStoryPreview.php", { storyID: storyID }, function(data) {
     // Set header of preview modal to specified title.
     document.querySelector("#previewModal header h1").innerHTML = title + " Preview";
 
@@ -156,12 +156,27 @@ function previewStory(storyID, title)
 }
 
 /**
- * TODO: GENERATE MAZE.
+ * Gets content, e.g. images and instructions, associated with specified story and displays in an editable fashion. Appends to #editModal.
+ * @param storyID ID of story of which to retrieve content from.
  */
- function generateMaze(btnNode)
- {
-   btnNode.nextElementSibling.style.display = "inline-block";
-   btnNode.nextElementSibling.nextElementSibling.style.display = "inline-block";
-   btnNode.nextElementSibling.nextElementSibling.nextElementSibling.style.display = "inline-block";
-   btnNode.style.display = "none";
- }
+function displayStoryEditor(storyID)
+{
+  $.post("../php/getStoryEditor.php", { storyID: storyID }, function(data) {
+    alert(data);
+  })
+    .fail(function(jqXHR, status, error) {
+      alert("An error occured when fetching the story's data: " + error);
+    });
+}
+
+/**
+ * Generates mazes for all levels with specified attributes.
+ * @formObj Form of which to retrieve maze attributes from.
+ */
+function generateMaze(formObj)
+{
+  var includeDecoys = formObj.elements["decoyToggle"].checked;
+  var difficulty = formObj.elements["difficulty"].value;
+
+  
+}

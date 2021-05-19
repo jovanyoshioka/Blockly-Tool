@@ -129,9 +129,8 @@ nav.navbar ul div.dropdown div.dropdownContent a:hover {
 
 /* Modal */
 .modal {
-  max-height: 95vh;
   position: fixed;
-  top: 2vh;
+  top: 20px;
   left: 0;
   right: 0;
   margin: 0 auto;
@@ -142,7 +141,6 @@ nav.navbar ul div.dropdown div.dropdownContent a:hover {
   transform: translateY(-100%);
   transition: opacity 0.5s, transform 0.5s;
   pointer-events: none;
-  overflow-y: auto;
   z-index: 999;
 }
 .modal.show {
@@ -152,9 +150,12 @@ nav.navbar ul div.dropdown div.dropdownContent a:hover {
 }
 .modal header {
   width: 100%;
+  max-height: 100px;
+  overflow-y: auto;
   background-color: var(--darkGray);
 }
 .modal header h1 {
+  width: 90%;
   font-size: 2.25em;
   margin: 0;
   padding: 5px 0 10px 10px;
@@ -174,6 +175,48 @@ nav.navbar ul div.dropdown div.dropdownContent a:hover {
 .modal header button:hover {
   color: var(--rock);
   cursor: pointer;
+}
+.modal div.body {
+  max-height: calc(100vh - 260px); /* top/bottom margin, header/footer heights  */
+  overflow-y: auto;
+}
+.modal div.body h1,
+.modal div.body h2,
+.modal div.body p {
+  color: #FFFFFF;
+  font-family: var(--gothic);
+  margin: 0;
+  padding: 0;
+}
+.modal footer {
+  width: 100%;
+  max-height: 100px;
+  position: relative;
+  overflow-y: auto;
+  background-color: var(--darkGray);
+}
+.modal footer button {
+  font-size: 1.5em;
+  margin: 10px;
+  padding: 5px 7.5px;
+}
+.modal footer button.left {
+  float: left;
+}
+.modal footer button.right {
+  float: right;
+}
+.modal footer p {
+  font-size: 1.75em;
+  position: absolute;
+  top: 12.5px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  text-align: center;
+  pointer-events: none; /* unblocks nav buttons */
+  color: #FFFFFF;
+  font-family: var(--gothic);
 }
 .modalBackground {
   width: 100vw;
@@ -296,47 +339,102 @@ body#generator .modal {
 body#generator .modal div.body {
   padding: 10px;
 }
-body#generator .modal div.body h1,
-body#generator .modal div.body h2,
-body#generator .modal div.body p {
-  color: #FFFFFF;
-  font-family: var(--gothic);
-  margin: 0;
-  padding: 0;
-}
 
-/* Maze Generation Preview Story Modal */
-body#generator #previewModal div.body section {
+/* Maze Generation Preview/Edit Story Modals */
+body#generator .storyModal div.body section {
   padding: 0 0 10px 0;
   border-bottom: 2px solid #FFFFFF;
 }
-body#generator #previewModal div.body section:last-of-type {
+body#generator .storyModal div.body section:last-of-type {
   border-bottom: none;
 }
-body#generator #previewModal div.body section h1 {
+body#generator .storyModal div.body section h1 {
   padding: 10px 0;
   font-size: 2.5em;
   text-align: center;
 }
-body#generator #previewModal div.body section div.wrapper {
+body#generator .storyModal div.body section div.wrapper {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 15px;
 }
-body#generator #previewModal div.body section div.wrapper div {
+body#generator .storyModal div.body section div.wrapper div {
   text-align: center;
 }
-body#generator #previewModal div.body section div.wrapper div img {
+body#generator .storyModal div.body section div.wrapper div img {
   width: 80%;
-  padding: 10px 0 0 0;
+  margin: 10px 0 0 0;
 }
-body#generator #previewModal div.body section div.wrapper div h2 {
+body#generator .storyModal div.body section div.wrapper div h2 {
   padding: 0 0 5px 0;
   border-bottom: 2px solid #FFFFFF;
 }
-body#generator #previewModal div.body section div.wrapper div p {
+body#generator .storyModal div.body section div.wrapper div p {
   font-size: 1.25em;
   padding: 5px 0 0 0;
+}
+
+/* Maze Generation Edit Story Modal */
+body#generator #editModal div.body form {
+  font-size: 1.25em;
+  font-family: var(--gothic);
+  color: #FFFFFF;
+}
+/* Delete Button for Cutscene Images */
+body#generator #editModal div.body form section div.wrapper div h2 input[type="button"] {
+  margin: 0 0 0 7.5px;
+  padding: 0;
+}
+body#generator #editModal div.body form section div.wrapper div input[type="url"] {
+  width: 65%;
+  font-size: 0.85em;
+  margin: 0 auto;
+  display: inline-block;
+}
+body#generator #editModal div.body form section div.wrapper div input[type="button"] {
+  width: 13%;
+  font-size: 1em;
+  margin: 12.5px 0 0 0;
+  padding: 3.5px 0;
+  border: none;
+  display: inline-block;
+}
+body#generator #editModal div.body form section div.wrapper div input[type="button"].pencil {
+  padding: 0 0 3.5px 0;
+}
+body#generator #editModal div.body form section div.wrapper div input[type="button"].arrow {
+  padding: 3.5px 0;
+}
+body#generator #editModal div.body form section div.wrapper div label {
+  font-size: 1em;
+}
+body#generator #editModal div.body form section div.wrapper div input[type="checkbox"] {
+  width: 1.5em;
+  height: 1.5em;
+  margin: 5px 0 0 0;
+  vertical-align: bottom;
+}
+body#generator #editModal div.body form section div.wrapper div img.goal {
+  margin: 35px 0 0 0; /* aligning to images with "Apply to all levels" option */
+}
+body#generator #editModal div.body form section div.wrapper div textarea {
+  width: 90%;
+  height: 215px;
+  font-size: 1.1em;
+  margin: 10px auto 0 auto;
+  padding: 5px 7.5px;
+  display: block;
+  font-family: var(--gothic);
+  resize: none;
+}
+body#generator #editModal div.body form section div.wrapper div textarea ~ label,
+body#generator #editModal div.body form section div.wrapper div textarea ~ input[type="checkbox"] {
+  margin: 10px 0 0 5px;
+  float: left;
+}
+body#generator #editModal div.body form section div.wrapper div textarea ~ input[type="button"] {
+  margin: 5px 5px 0 0;
+  float: right;
 }
 
 /* Maze Generation Form Container */
@@ -366,23 +464,30 @@ body#generator section.formContainer h2 {
   margin: 0 0 20px 0;
   padding: 0;
 }
-/* Maze Generation Form */
+/* Maze Generation General Form Styling */
 body#generator section.formContainer form {
   width: 800px;
   font-size: 1.5em;
   margin: 0 auto;
   text-align: center;
 }
-body#generator section.formContainer form label {
+body#generator form label {
   font-size: 1.25em;
 }
-body#generator section.formContainer form input[type="checkbox"] {
+body#generator form input[type="text"],
+body#generator form input[type="url"] {
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+  font-family: var(--gothic);
+}
+body#generator form input[type="checkbox"] {
   width: 2em;
   height: 2em;
   margin: 5px 0;
-  vertical-align: middle
+  vertical-align: middle;
 }
-body#generator section.formContainer form select {
+body#generator form select {
   margin: 10px 0 15px 0;
   padding: 5px;
   border: none;
@@ -392,23 +497,23 @@ body#generator section.formContainer form select {
   font-size: 1em;
   font-weight: bold;
 }
-body#generator section.formContainer form select:focus {
+body#generator form select:focus {
   outline: none;
 }
-body#generator section.formContainer form div.actions input[type="button"],
-body#generator section.formContainer form div.actions input[type="submit"] {
+body#generator form div.actions input[type="button"],
+body#generator form div.actions input[type="submit"] {
   font-size: 1em;
   margin: 0 7.5px 20px 0;
   padding: 7.5px 12.5px;
 }
 /* Initially, only "Generate" btn is shown */
 /* After maze generated once, show "Preview" maze, "Regenerate" maze, or "Save and Exit" btns */
-body#generator section.formContainer form div.actions input[type="button"]:not(:nth-of-type(1)),
-body#generator section.formContainer form div.actions input[type="submit"] {
+body#generator form div.actions input[type="button"]:not(:nth-of-type(1)),
+body#generator form div.actions input[type="submit"] {
   display: none;
 }
 
-/* "Choose a story" Generator Elements */
+/* "Choose a Story" Generator Elements */
 /* Elements to Hide When Story is Not Selected */
 body#generator section#chooseAStoryForm .showWhenSelected {
   display: none;
@@ -419,10 +524,6 @@ body#generator section#chooseAStoryForm form input[type="text"].search {
   font-size: 0.75em;
   float: left;
   margin: 5px 0;
-  padding: 5px;
-  border: none;
-  border-radius: 5px;
-  font-family: var(--gothic);
 }
 /* Button Executing Search Using Search Bar Contents */
 body#generator section#chooseAStoryForm form input[type="text"].search + input[type="button"] {
@@ -482,10 +583,6 @@ body#generator section#chooseAStoryForm form table + div p {
   left: 0;
   right: 0;
   margin: 0 auto;
-}
-body#generator section#chooseAStoryForm form table + div p a {
-  pointer-events: all;
-  color: #FFFFFF;
 }
 
 /*******************

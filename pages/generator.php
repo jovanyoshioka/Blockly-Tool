@@ -22,7 +22,7 @@
     </button>
 
     <!-- Modal for previewing story images -->
-    <div id="previewModal" class="modal">
+    <div id="previewModal" class="modal storyModal">
       <header>
         <h1><!-- Data from previewStory(x); --></h1>
         <button onclick="closeModal(this.parentElement.parentElement)">&#x2716;</button>
@@ -33,15 +33,24 @@
     </div>
 
     <!-- Modal for editing a story -->
-    <div id="editModal" class="modal">
+    <div id="editModal" class="modal storyModal">
       <header>
-        <h1>Story Editor</h1>
+        <h1>The Very Hungry Caterpillar Editor</h1>
         <button onclick="closeModal(this.parentElement.parentElement)">&#x2716;</button>
       </header>
       <div class="body">
-        <h1>Story Editing Form **Work in progress**</h1>
+        <form action="" method="POST">
+          <!-- TEMPORARY -->
+          <?php include('../php/getStoryEditor.php'); ?>
+        </form>
       </div>
+      <footer>
+        <button class="orangeBtn left">&#10094; Level 1</button>
+        <p>Level 2 of 5</p>
+        <button class="orangeBtn right">Level 3 &#10095;</button>
+      </footer>
     </div>
+
     <!-- Dark background tint for modal -->
     <div class="modalBackground" onclick="closeModal(document.querySelector('.modal.show'))"></div>
 
@@ -99,7 +108,7 @@
         <!-- Container for buttons that perform actions, i.e. generate, preview, and save maze -->
         <div class="actions">
           <!-- Initial option -->
-          <input type="button" onclick="generateMaze(this)" class="orangeBtn" value="Generate" />
+          <input type="button" onclick="generateMaze(this.form)" class="orangeBtn" value="Generate" />
           <!-- Options after generated once -->
           <input type="button" class="orangeBtn" value="Preview" />
           <input type="button" class="orangeBtn" value="Regenerate" />
