@@ -177,6 +177,4 @@ function generateMaze(formObj)
 {
   var includeDecoys = formObj.elements["decoyToggle"].checked;
   var difficulty = formObj.elements["difficulty"].value;
-
-  
 }
