@@ -4,9 +4,9 @@
 
   // Login user if ID present in URL.
   // Although not very secure, this allows for easy, automatic login for students.
-  if (isset($_GET["id"]))
+  if (isset($_GET['id']))
   {
-    $_SESSION['id'] = $_GET["id"];
+    $_SESSION['id'] = $_GET['id'];
   }
 
   // Redirect to dashboard if user is logged in, either by URL or form.

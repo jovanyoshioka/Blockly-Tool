@@ -58,6 +58,7 @@ nav.navbar ul li a {
   color: #FFFFFF;
   transition: color 0.5s;
 }
+nav.navbar ul li a.active,
 nav.navbar ul li a:hover {
   color: var(--tnOrange);
 }

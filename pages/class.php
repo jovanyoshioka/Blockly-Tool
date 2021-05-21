@@ -1,5 +1,11 @@
-<?php 
+<?php
   session_start();
+
+  // Used for authorizing  user and highlighting link on navigation bar.
+  $currPage = "class";
+
+  // Verify user is logged in and authorized.
+  include('../php/verifyAuthorization.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
