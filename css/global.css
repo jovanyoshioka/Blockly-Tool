@@ -97,6 +97,7 @@ nav.navbar ul div.dropdown div.dropdownContent a:hover {
 }
 
 /* Orange Button */
+/* Font-Size, Margin, Padding Specific to Scenario */
 .orangeBtn {
   border: none;
   border-radius: 5px;
@@ -149,6 +150,7 @@ nav.navbar ul div.dropdown div.dropdownContent a:hover {
   transform: translateY(0);
   pointer-events: all;
 }
+/* Modal Header */
 .modal header {
   width: 100%;
   max-height: 100px;
@@ -177,6 +179,7 @@ nav.navbar ul div.dropdown div.dropdownContent a:hover {
   color: var(--rock);
   cursor: pointer;
 }
+/* Modal Body */
 .modal div.body {
   max-height: calc(100vh - 260px); /* top/bottom margin, header/footer heights  */
   overflow-y: auto;
@@ -189,6 +192,7 @@ nav.navbar ul div.dropdown div.dropdownContent a:hover {
   margin: 0;
   padding: 0;
 }
+/* Modal Footer */
 .modal footer {
   width: 100%;
   max-height: 100px;
@@ -219,6 +223,7 @@ nav.navbar ul div.dropdown div.dropdownContent a:hover {
   color: #FFFFFF;
   font-family: var(--gothic);
 }
+/* Modal Tint Background */
 .modalBackground {
   width: 100vw;
   height: 100vh;
@@ -243,32 +248,66 @@ nav.navbar ul div.dropdown div.dropdownContent a:hover {
 body#login {
   background-color: var(--smokeyGray);
 }
+/* Centers Content */
 body#login div.wrapper {
   position: fixed;
-  top: 50%;
+  top: 40%;
   left: 50%;
-  transform: translate(-50%, -60%);
+  transform: translate(-50%, -100%);
   text-align: center;
 }
-body#login div.wrapper h1 {
-  margin: 0;
-  padding: 0 0 20px 0;
-  font-size: 3.5em;
+body#login div.wrapper h1,
+body#login div.wrapper h2 {
   color: #FFFFFF;
   font-family: var(--gothic);
 }
-body#login div.wrapper div {
-  padding: 20px;
-  display: inline-block;
-  border-radius: 10px;
+/* "Code a Story" Header */
+body#login div.wrapper h1 {
+  font-size: 4.5em;
+  margin: 0 0 20px 0;
+  padding: 0;
 }
-body#login div.wrapper input[type=text] {
+/* Button "Label" and Button Outside of <form> */
+body#login div.wrapper h2 {
+  font-size: 2.5em;
+  margin: 0;
+  padding: 0;
+}
+body#login div.wrapper button {
+  font-size: 2.5em;
+  width: 80%;
+  margin: 12.5px auto;
+  padding: 10px 7.5px;
+  display: block;
+}
+/* Positions forms below "Code a Story" header */
+body#login div.forms {
+  position: relative;
+}
+/* Login Forms: Method Selection, Student Login, Teacher Login */
+body#login div.forms div#loginSelector,
+body#login div.forms form {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  transition: opacity 0.5s, transform 0.5s; /* For slide animation */
+}
+/* Initially Hidden Forms */
+body#login div.forms form {
+  opacity: 0.0;
+  transform: translateX(-100%);
+  pointer-events: none;
+}
+/* Form Fields/Buttons */
+body#login div.forms form input[type=text] {
   font-size: 2em;
   padding: 10px;
   text-align: center;
   font-family: var(--gothic);
 }
-body#login div.wrapper input[type=submit] {
+body#login div.forms form input[type=submit] {
   font-size: 1.75em;
   margin: 15px 0 0 0;
   padding: 10px 20px;
