@@ -24,20 +24,20 @@
       stories.Author,
       CASE
         WHEN stories.UploaderID = 0 THEN 'Default'
-        ELSE CONCAT(users.FName, ' ', users.LName, ', ', users.School)
+        ELSE CONCAT(teachers.FName, ' ', teachers.LName, ', ', teachers.School)
       END AS Uploader
     FROM
       stories,
-      users
+      teachers
     WHERE
       stories.Published = 1 AND
-      (stories.UploaderID = 0 OR stories.UploaderID = users.ID) AND
+      (stories.UploaderID = 0 OR stories.UploaderID = teachers.ID) AND
       (
         stories.Title LIKE '%$search%' OR 
         stories.Author LIKE '%$search%' OR 
         CASE
           WHEN stories.UploaderID = 0 THEN 'Default'
-          ELSE CONCAT(users.FName, ' ', users.LName, ', ', users.School)
+          ELSE CONCAT(teachers.FName, ' ', teachers.LName, ', ', teachers.School)
         END LIKE '%$search%'
       )
     ORDER BY
@@ -74,16 +74,16 @@
       COUNT(DISTINCT stories.ID) AS Total
     FROM
       stories,
-      users
+      teachers
     WHERE
       stories.Published = 1 AND
-      (stories.UploaderID = 0 OR stories.UploaderID = users.ID) AND
+      (stories.UploaderID = 0 OR stories.UploaderID = teachers.ID) AND
       (
         stories.Title LIKE '%$search%' OR 
         stories.Author LIKE '%$search%' OR 
         CASE
           WHEN stories.UploaderID = 0 THEN 'Default'
-          ELSE CONCAT(users.FName, ' ', users.LName, ', ', users.School)
+          ELSE CONCAT(teachers.FName, ' ', teachers.LName, ', ', teachers.School)
         END LIKE '%$search%'
       )
   ");

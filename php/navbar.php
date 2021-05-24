@@ -24,7 +24,7 @@
           </ul>
           <ul>
             <div class="dropdown">
-              <li><a href="javascript:void(0);">Hello, '.$_SESSION['id'].' &#9660;</a></li>
+              <li><a href="javascript:void(0);">Hello, '.$_SESSION['fName'].' &#9660;</a></li>
               <div class="dropdownContent">
                 <a href="../php/logout.php">Logout</a>
               </div>
@@ -55,7 +55,7 @@
           </ul>
           <ul>
             <div class="dropdown">
-              <li><a href="javascript:void(0);">Hello, '.$_SESSION['id'].' &#9660;</a></li>
+              <li><a href="javascript:void(0);">Hello, '.$_SESSION['fName'].' &#9660;</a></li>
               <div class="dropdownContent">
                 <a href="../php/logout.php">Logout</a>
               </div>
