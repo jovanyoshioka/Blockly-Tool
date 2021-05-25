@@ -334,7 +334,7 @@ body#login div.forms form label {
 body#login div.forms form legend {
   margin: 5px 0 0 60px;
 }
-body#login div.forms form input:not([type=submit]) {
+body#login div.forms form input:not([type=submit]):not([type=button]) {
   font-size: 2em;
   margin: 5px 0;
   padding: 10px 15px;
@@ -342,10 +342,14 @@ body#login div.forms form input:not([type=submit]) {
   border: none;
   border-radius: 5px;
 }
+body#login div.forms form input[type=button],
 body#login div.forms form input[type=submit] {
   font-size: 1.75em;
   margin: 15px 0 0 0;
   padding: 10px 20px;
+}
+body#login div.forms form#pwdForm input[type=button] {
+  margin-right: 92.5px; /* abort and save buttons on opposite sides */
 }
 
 /***********************

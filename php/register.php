@@ -36,7 +36,7 @@
 
   // Add user to database.
   $sql = $conn->prepare("INSERT INTO users (Email,FName,LName,Password,Type,School) VALUES (?,?,?,?,?,?);");
-  $sql->bind_param("ssssis",$email,$fName,$lName,$encryptedPwd,$type,$school);
+  $sql->bind_param("ssssis", $email, $fName, $lName, $encryptedPwd, $type, $school);
   $success = $sql->execute();
   // Verify insertion was successful.
   if ($success)

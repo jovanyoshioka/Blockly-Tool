@@ -112,6 +112,7 @@ function trimFormFields(fields)
   }
 
   // Verifies input is not a password and subsequently trims.
+  // Note: not trimming password since leading/trailing spaces allowed.
   function trimField(field)
   {
     if (field.type.toUpperCase() != "PASSWORD")
@@ -128,6 +129,7 @@ function trimFormFields(fields)
  */
 function displayFormMsg(msgNode, msg, type = 0)
 {
+  // Change color and text of form message.
   msgNode.classList = type == 1 ? "msg success"
                     : type == 2 ? "msg fail"
                     : "msg";
@@ -172,25 +174,76 @@ function loginUser(e, formObj, type)
     // Output login success/fail message (with returned detailed message).
     if (data.success)
     {
-      displayFormMsg(msgNode, "Login successful!<br />Redirecting you momentarily.", 1);
-      // Login was successful, redirect to dashboard with delay so user can view success msg.
-      setTimeout(function() {
-        window.location.href = "dashboard.php";
-      }, 1000);
-    }
-    else
+      // Login was successful.
+      displayFormMsg(msgNode, "Login successful!<br />" + data.msg, 1);
+      if (data.msg == "")
+      {
+        // Teacher only: temporary password used, so must set new password; display form.
+        switchFormTabs("teacherForm","pwdForm");
+      } else
+      {
+        // Redirect to dashboard with delay so user can view success msg.
+        setTimeout(function() {
+          window.location.href = "dashboard.php";
+        }, 1000);
+      }
+    } else
     {
+      // Login was unsuccessful.
       displayFormMsg(msgNode, "Login unsuccessful!<br />" + data.msg, 2);
     }
   }, "json")
     .fail(function(jqXHR, status, error) {
+      // Something unexpected went wrong.
       displayFormMsg(msgNode, "Login unsuccessful!<br />Please try again later.", 2);
     });
 }
 /**
- * Verify fields of set password form and authenticate.
+ * Verify fields of password form and save new password.
+ * Note: Temporary password given to teachers upon registration, and must be changed upon first login.
+ * @param e Form submission event.
+ * @param formObj Object of password form.
  */
-function setPassword()
+function setPassword(e, formObj)
 {
-  
+  // Prevent form from refreshing page.
+  e.preventDefault();
+
+  var msgNode = formObj.querySelector("p.msg");
+
+  // Verify all fields were filled.
+  if (!verifyFormFields(formObj.elements))
+  {
+    displayFormMsg(msgNode, "Password change unsuccessful!<br />All required info not entered.", 2);
+    return;
+  }
+
+  // Verify passwords match.
+  if (formObj.elements["newPwd"].value != formObj.elements["rePwd"].value)
+  {
+    displayFormMsg(msgNode, "Password change unsuccessful!<br />Passwords do not match.", 2);
+    return;
+  }
+
+  // Previous checks passed, so remove temporary password and save new password.
+  $.post("../php/setPassword.php", $(formObj).serialize(), function(data) {
+    if (data.success)
+    {
+      // Password change was successful.
+      displayFormMsg(msgNode, "Password change successful!<br />" + data.msg, 1);
+
+      // Redirect to dashboard with delay so user can view success msg.
+      setTimeout(function() {
+        window.location.href = "dashboard.php";
+      }, 1000);
+    } else
+    {
+      // Password change was unsuccessful.
+      displayFormMsg(msgNode, "Password change unsuccessful!<br />" + data.msg, 2);
+    }
+  }, "json")
+    .fail(function(jqXHR, status, error) {
+      // Something unexpected went wrong.
+      displayFormMsg(msgNode, "Password change unsuccessful!<br />Please try again later." + error, 2);
+    });
 }
