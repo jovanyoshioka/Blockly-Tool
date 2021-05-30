@@ -13,8 +13,8 @@
   --darkGray:    #424343;
   --limestone:   #F0EDE3;
   --rock:        #A7A9AC;
-  --success:     #32CD32;
-  --fail:        #FF3131;
+  --green:       #32CD32;
+  --red:         #FF3131;
   /* Font */
   --gothic:      'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   /* Global Values */
@@ -94,8 +94,31 @@ nav.navbar ul div.dropdown div.dropdownContent a {
   display: block;
   transition: background-color 0.5s;
 }
+nav.navbar ul div.dropdown div.dropdownContent a:not(:last-of-type) {
+  border-bottom: 1px solid var(--lighterGray);
+}
 nav.navbar ul div.dropdown div.dropdownContent a:hover {
   background-color: var(--lighterGray);
+  cursor: pointer;
+}
+
+/* Page Banner Headers */
+header.banner {
+  margin: 20px 0;
+  padding: 15px 0 20px 0;
+  text-align: center;
+  background-color: var(--tnOrange);
+}
+header.banner h1,
+header.banner h2 {
+  margin: 0;
+  padding: 0;
+}
+header.banner h1 {
+  font-size: 3em;
+}
+header.banner h2 {
+  font-size: 2.25em;
 }
 
 /* Orange Button */
@@ -133,14 +156,51 @@ nav.navbar ul div.dropdown div.dropdownContent a:hover {
 
 /* Success/Fail Text */
 p.success {
-  color: var(--success) !important;
+  color: var(--green) !important;
 }
 p.fail {
-  color: var(--fail) !important;
+  color: var(--red) !important;
+}
+
+/* Tooltip */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+.tooltip .tooltipText {
+  width: 140px;
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  margin-left: -75px;
+  padding: 5px;
+  background-color: var(--darkGray);
+  color: #FFFFFF;
+  text-align: center;
+  border-radius: 5px;
+  opacity: 0.0;
+  transition: opacity 0.3s;
+  visibility: hidden;
+  z-index: 1;
+}
+.tooltip .tooltipText::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--darkGray) transparent transparent transparent;
+}
+.tooltip:hover .tooltipText {
+  visibility: visible;
+  opacity: 1;
 }
 
 /* Modal */
 .modal {
+  width: 800px; /* default */
   position: fixed;
   top: 20px;
   left: 0;
@@ -168,7 +228,7 @@ p.fail {
   background-color: var(--darkGray);
 }
 .modal header h1 {
-  width: 90%;
+  width: 90%; /* if text long, this ensures line break */
   font-size: 2.25em;
   margin: 0;
   padding: 5px 0 10px 10px;
@@ -530,19 +590,6 @@ body#generator section.formContainer {
   overflow-y: auto;
   z-index: 3; /* above mode buttons */
 }
-/* Container Header Text */
-body#generator section.formContainer h1 {
-  font-size: 3em;
-  text-align: center;
-  margin: 20px 0 0 0;
-  padding: 0;
-}
-body#generator section.formContainer h2 {
-  font-size: 2.25em;
-  text-align: center;
-  margin: 0 0 20px 0;
-  padding: 0;
-}
 /* Maze Generation General Form Styling */
 body#generator section.formContainer form {
   width: 800px;
@@ -670,6 +717,327 @@ body#generator section#chooseAStoryForm form table + div p {
  body#class {
   color: #FFFFFF;
   font-family: var(--gothic);
+  overflow-y: auto;
+}
+body#class h1,
+body#class h2,
+body#class h3,
+body#class p {
+  margin: 0;
+  padding: 0;
+}
+
+/* Header with Class Name and ID */
+body#class header h2 {
+  margin-right: 5px;
+  display: inline-block;
+}
+/* Copy Student Login Link Button */
+body#class header div.tooltip button {
+  font-size: 1.65em;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  vertical-align: bottom;
+}
+body#class header div.tooltip button:hover {
+  cursor: pointer;
+}
+/* Tooltip Text */
+body#class header div.tooltip span.tooltipText {
+  font-size: 0.65em;
+  font-family: var(--gothic);
+}
+
+/* Content Containers: Mazes, Students */
+body#class div.mazesContainer,
+body#class div.studentsContainer {
+  margin: 25px auto;
+}
+/* Headers' Text */
+body#class div.mazesContainer h1,
+body#class div.studentsContainer h1 {
+  font-size: 2.75em;
+}
+body#class div.mazesContainer h2,
+body#class div.studentsContainer h2 {
+  font-size: 2em;
+}
+/* Text Fields */
+body#class div.mazesContainer input[type="text"],
+body#class div.studentsContainer input[type="text"] {
+  padding: 5px;
+  font-size: 1.25em;
+  font-family: var(--gothic);
+  border: none;
+  border-radius: 5px;
+}
+
+/* Mazes Container: Assign/Unassign Mazes, View Student Progression */
+body#class div.mazesContainer {
+  width: 1100px;
+  height: 400px;
+  display: flex;
+}
+/* Sections: Story Information, Student Selection, Progress Analytics */
+body#class div.mazesContainer section {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+/* Story Information */
+body#class div.mazesContainer section:nth-of-type(1) {
+  width: 30%;
+  padding-right: 2%;
+  justify-content: center;
+  align-items: center;
+  border-right: 2px solid #FFFFFF;
+}
+/* Story Selector */
+body#class div.mazesContainer section:nth-of-type(1) select {
+  width: 90%;
+  margin: 0 0 10px 0;
+  padding: 5px;
+  font-size: 1.25em;
+  font-weight: bold;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--tnOrange);
+}
+/* Story Information Text */
+body#class div.mazesContainer section:nth-of-type(1) h2 {
+  margin-top: 5px;
+}
+body#class div.mazesContainer section:nth-of-type(1) p {
+  font-size: 1.5em;
+  margin: 30px 0;
+}
+body#class div.mazesContainer section:nth-of-type(1) p span {
+  color: var(--green);
+}
+/* Assign/Unassign Button */
+body#class div.mazesContainer section:nth-of-type(1) button {
+  font-size: 1.5em;
+  padding: 10px 10px;
+}
+
+/* Student Selection */
+body#class div.mazesContainer section:nth-of-type(2) {
+  width: 36.5%;
+  padding-left: 1.5%;
+}
+/* Currently Displayed Student Text */
+body#class div.mazesContainer section:nth-of-type(2) h1 {
+  margin: 10px 30px 0 30px;
+  padding: 0 0 5px 0;
+  border-bottom: 3px solid #FFFFFF;
+}
+/* Students Selectors Container */
+body#class div.mazesContainer section:nth-of-type(2) div {
+  flex: 1 1 auto;
+  margin: 15px 30px;
+  background-color: var(--lighterGray);
+  border-radius: 5px;
+  overflow-y: auto;
+}
+/* Students Selectors */
+body#class div.mazesContainer section:nth-of-type(2) div button {
+  width: 100%;
+  padding: 15px 0;
+  font-size: 2em;
+  font-family: var(--gothic);
+  background-color: var(--lightGray);
+  transition: background-color 0.25s;
+  color: #FFFFFF;
+  border: none;
+}
+body#class div.mazesContainer section:nth-of-type(2) div button:hover {
+  background-color: var(--lighterGray);
+  cursor: pointer;
+}
+body#class div.mazesContainer section:nth-of-type(2) div button:not(:last-of-type) {
+  border-bottom: 1px solid #FFFFFF;
+}
+/* Student Search Bar */
+body#class div.mazesContainer section:nth-of-type(2) input[type="text"] {
+  width: 65%;
+  margin: 0 auto 10px auto;
+}
+
+/* Progress Analytics */
+body#class div.mazesContainer section:nth-of-type(3) {
+  width: 27.5%;
+  padding-right: 2.5%;
+}
+body#class div.mazesContainer section:nth-of-type(3) h2 {
+  margin: 10px 0;
+}
+/* Progress Ring Containers */
+body#class div.mazesContainer section:nth-of-type(3) div.ringContainer {
+  flex: 1 1 auto;
+}
+body#class div.mazesContainer section:nth-of-type(3) div.ringContainer svg {
+  width: 100%;
+  height: 100%;
+}
+/* Progress Ring */
+body#class div.mazesContainer section:nth-of-type(3) div.ringContainer svg circle.filler {
+  transform: rotate(-90deg); /* starts at top instead of right side */
+  transform-origin: 50% 50%;
+  stroke-dasharray: 630;
+  stroke-dashoffset: 630;
+  transition: stroke-dashoffset 1s ease-in-out;
+}
+body#class div.mazesContainer section:nth-of-type(3) div.ringContainer svg text {
+  font-size: 3.75em;
+  fill: #FFFFFF;
+}
+/* Levels Completion Indicators Container */
+body#class div.mazesContainer section:nth-of-type(3) div.levelsContainer {
+  flex: 0 1 auto;
+  margin: 5px 0 0 0;
+  float: left;
+  border-radius: 5px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+/* Levels Completion Indicators */
+body#class div.mazesContainer section:nth-of-type(3) div.levelsContainer div.level {
+  width: 55px;
+  height: 55px;
+  margin: 5px 5px 7.5px 0;
+  font-size: 2em;
+  line-height: 55px;
+  display: inline-block;
+  border-radius: 50%;
+  background-color: var(--lighterGray);
+  transition: background-color 1s;
+}
+body#class div.mazesContainer section:nth-of-type(3) div.levelsContainer div.level:first-of-type {
+  margin-left: 10px;
+}
+body#class div.mazesContainer section:nth-of-type(3) div.levelsContainer div.level:last-of-type {
+  margin-right: 10px;
+}
+
+/* Students Container: Add/Edit/Remove Students */
+body#class div.studentsContainer {
+  width: 1000px;
+}
+/* Search Bar / Add Button */
+body#class div.studentsContainer div input[type="text"] {
+  width: 275px;
+  margin: 12.5px 0;
+}
+body#class div.studentsContainer div button {
+  font-size: 1.25em;
+  margin: 10px 0 0 0;
+  padding: 7.5px 10px;
+  float: right;
+}
+/* List of Students w/ Birthday and Edit/Delete Buttons */
+body#class div.studentsContainer table {
+  width: 100%;
+  text-align: left;
+}
+body#class div.studentsContainer table th,
+body#class div.studentsContainer table td {
+  padding: 5px 12.5px;
+}
+body#class div.studentsContainer table th {
+  font-size: 2em;
+  background-color: var(--lightGray);
+}
+body#class div.studentsContainer table td {
+  font-size: 1.65em;
+  background-color: var(--lighterGray);
+}
+body#class div.studentsContainer table td span {
+  font-style: italic;
+}
+body#class div.studentsContainer table td button {
+  font-size: 0.8em;
+  margin: 0;
+  padding: 7.5px 10px;
+}
+
+/* Student Management Modals: Add/Edit/Delete Student */
+body#class div.studentModal header {
+  padding: 7.5px 0;
+}
+body#class div.studentModal header h1 {
+  margin: 0 10px;
+  display: inline;
+}
+body#class div.studentModal header button {
+  margin-top: -5px;
+}
+
+/* Add Student(s) Modal */
+body#class div#addModal div.body h2 {
+  margin: 7.5px 0 0 7.5px;
+}
+body#class div#addModal div.body h3 {
+  margin: 2.5px 0 7.5px 20px;
+}
+body#class div#addModal div.body h3 span {
+  font-weight: 400;
+}
+/* Students' Names Text Field */
+body#class div#addModal div.body textarea {
+  width: 95%;
+  height: 250px;
+  margin: 0 0 0 17.5px;
+  font-size: 1.5em;
+  font-family: var(--gothic);
+}
+/* Successfully Parsed Students' Names */
+body#class div#addModal div.body div.foundContainer {
+  margin: 2.5px 17.5px 12.5px 17.5px;
+  font-size: 1.25em;
+}
+body#class div#addModal div.body div.foundContainer div {
+  margin: 2.5px 2.5px;
+  padding: 4px 5px;
+  display: inline-block;
+  background-color: var(--tnOrange);
+  border-radius: 2.5px;
+}
+
+/* Edit Student Modal */
+body#class div#editModal {
+  width: 450px;
+}
+/* Edit Form Labels/Fields */
+body#class div#editModal div.body form {
+  margin: 15px auto 20px auto;
+  display: table;
+}
+body#class div#editModal div.body form label {
+  font-size: 1.75em;
+  margin: 5px 0 0 0;
+}
+body#class div#editModal div.body form input {
+  font-size: 2em;
+  margin: 5px 0;
+  padding: 10px 15px;
+  font-family: var(--gothic);
+  border: none;
+  border-radius: 5px;
+}
+
+/* Delete Student Modal */
+body#class div#delModal {
+  width: 400px;
+}
+body#class div#delModal div.body h2 {
+  margin: 20px 0;
+  text-align: center;
 }
 
 /*********************

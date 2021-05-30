@@ -15,24 +15,46 @@
   <body id="dashboard">
     <?php include('../php/navbar.php'); ?>
     <?php
-      echo '<h1>**Work in progress**</h1>';
-
-      echo '<hr />';
-
-      echo '<h1>If teacher, show classes (something like the following):</h1>';
-      echo '<h2>1st Period: <a href="class.php?classID=161361723">Go</a></h2>';
-      echo '<h2>2nd Period: <a href="class.php?classID=837105723">Go</a></h2>';
-      echo '<h2>3rd Period: <a href="class.php?classID=982761236">Go</a>';
-      echo '<h2>4th Period: <a href="class.php?classID=419602151">Go</a>';
-      echo '<h1>Show generated mazes. Allow view/delete.</h1>';
-      echo '<h1>Show user\'s uploaded stories. Allow view/edit/publish or unpublish/delete.</h1>';
-      
-    
-      echo '<hr />';
-
-      echo '<h1>If student, show assigned mazes to complete (something like the following): </h1>';
-      echo '<h2>The Very Hungry Caterpillar, Levels 1-3: <a href="app.php">Go</a></h2>';
-      echo '<h1>Note: Student\'s navigation bar will not include Generator, Classes, and Contact; these are only available for teacher accounts.</h1>';
+      switch ($_SESSION['type'])
+      {
+        case 0:
+          echo '
+            <h1>Student Dashboard **Work in progress**</h1>
+            <h1>Show assigned mazes to complete (something like the following): </h1>
+            <h2>The Very Hungry Caterpillar, Levels 1-3: <a href="app.php">Go</a></h2>
+          ';
+          break;
+        case 1:
+          echo '
+            <h1>Teacher Dashboard **Work in progress**</h1>
+            <h1>Show classes (something like the following):</h1>
+            <h2>1st Period: <a href="class.php?classID=161361723">Go</a></h2>
+            <h2>2nd Period: <a href="class.php?classID=837105723">Go</a></h2>
+            <h2>3rd Period: <a href="class.php?classID=982761236">Go</a>
+            <h2>4th Period: <a href="class.php?classID=419602151">Go</a>
+            <h1>Show generated mazes. Allow view/delete.</h1>
+            <h1>Show user\'s uploaded stories. Allow view/edit/publish or unpublish/delete.</h1>
+            <!-- Modal for creating a new class -->
+            <div id="createClassModal" class="modal createClassModal">
+              <header>
+                <h1>Create a Class</h1>
+                <button onclick="closeModal(this.parentElement.parentElement)">&#x2716;</button>
+              </header>
+              <div class="body">
+                
+              </div>
+              <footer>
+                <button class="orangeBtn right">Save</button>
+              </footer>
+            </div>
+            <!-- Dark background tint for modal (one instance needed for all modals) -->
+            <div class="modalBackground" onclick="closeModal(document.querySelector(\'.modal.show\'))"></div>
+          ';
+          break;
+        case 2:
+          include('../php/adminDashboard.php');
+          break;
+      }
     ?>
   </body>
 </html>

@@ -12,6 +12,54 @@ var storyObj;
 
 const ASSETS_PATH = "../assets/";
 
+/***********
+ * TOOLTIP *
+ ***********/
+/**
+ * Copies specified text to clipboard and modifies associated tooltip's text.
+ * @param txtNode Tooltip text element.
+ * @param copyTxt Text to copy to clipboard.
+ */
+function copyText(txtNode, copyTxt)
+{
+  if (navigator.clipboard)
+  {
+    // Use supported Clipboard API to copy text.
+    navigator.clipboard.writeText(copyTxt).then(function() {
+      // Successfully copied text.
+      txtNode.innerHTML = "Copied!";
+    })
+      .catch(function() {
+        // Failed at copying text.
+        txtNode.innerHTML = "An error occured.";
+      });
+  } else
+  {
+    // Clipboard API not supported, use deprecated commandExec() method instead.
+    // Can only copy from input/textarea elements, so create temporary input to adhere to this.
+    var tempInput = document.createElement("input");
+    tempInput.value = copyTxt;
+    document.body.appendChild(tempInput);
+    // Select and copy text.
+    tempInput.select();
+    document.execCommand("copy");
+    // Delete temporary input element.
+    document.body.removeChild(tempInput);
+    
+    // Change text of tooltip to reflect success.
+    txtNode.innerHTML = "Copied!";
+  }
+}
+/**
+ * Changes specified tooltip's text.
+ * @param txtNode Tooltip text element.
+ * @param newTxt Text to change tooltip to.
+ */
+function changeTooltipText(txtNode, newTxt)
+{
+  txtNode.innerHTML = newTxt;
+}
+
 /*********
  * MODAL *
  *********/
@@ -32,6 +80,99 @@ function closeModal(modalNode)
 {
   document.querySelector(".modalBackground").classList.remove("show");
   modalNode.classList.remove("show");
+}
+
+/**********
+ * SEARCH *
+ **********/
+/**
+ * Search container of elements for those matching specified search term.
+ * @param term Term to search by.
+ * @param container Container of elements to search.
+ */
+function searchElements(term, container)
+{
+  var elementTxt;
+  var displayAttr;
+
+  // Element's text and search term compared case-insensitive.
+  term = term.toUpperCase();
+
+  for (element of container.children)
+  {
+    elementTxt = element.innerHTML.toUpperCase();
+
+    // If element matches search term, show. Otherwise, hide.
+    displayAttr = elementTxt.includes(term) ? "block" : "none";
+    element.style.display = displayAttr;
+  }
+}
+/**
+ * Search table for rows matching specified search term.
+ * @param term Term to search by.
+ * @param table Table to search.
+ * @param toSearch Indicates which columns to search. Ex: [true, false] -> Search col1, not col2.
+ */
+function searchTable(term, table, toSearch)
+{
+  var rowTxt;
+  var displayAttr;
+
+  // Row's text and search term compared case-insensitive.
+  term = term.toUpperCase();
+
+  // Compare each row's content to search term.
+  // Ignore header row, i.e. first row.
+  for (row of table.querySelectorAll("tr:not(:first-of-type)"))
+  {
+    // To compare each row, need to compare each row's columns' content to search term.
+    rowTxt = "";
+    for (var i = 0; i < row.children.length; i++)
+    {
+      // Append column's text to cumulative row text variable that is compared to search term.
+      rowTxt = toSearch[i] ? rowTxt + " " + row.children[i].textContent.toUpperCase() : rowTxt;
+    }
+    // Compare cumulative row text to search term. If matches, show. Otherwise, hide.
+    displayAttr = rowTxt.includes(term) ? "table-row" : "none";
+    row.style.display = displayAttr;
+  }
+}
+
+/*****************
+ * PROGRESS RING *
+ *****************/
+/**
+ * Initializes progress ring fill animation with percentage text.
+ * @param id ID of progress ring SVG element.
+ * @param percentage Amount to fill ring to.
+ */
+function initProgressRing(id, percentage)
+{
+  var ringNode = document.getElementById(id).querySelector("circle.filler");
+
+  // Set progress ring to fill to specified percentage.
+  var maxStrokeOffset = parseInt(
+    window.getComputedStyle(ringNode).getPropertyValue("stroke-dasharray")
+  );
+  var strokeOffset = maxStrokeOffset - (maxStrokeOffset * (percentage / 100));
+  ringNode.style.strokeDashoffset = strokeOffset
+
+  var textNode = document.getElementById(id).querySelector("text");
+  var currPercent = parseInt(textNode.innerHTML);
+  var newPercent;
+
+  // Calculate time per iteration for counter to reach new percentage in one second (duration of SVG drawing animation).
+  var counterDuration = 1000 / Math.abs(percentage - currPercent);
+  // Count from initial to new percentage.
+  var counter = setInterval(function() {
+    // Calculate and display next percentage.
+    currPercent = parseInt(textNode.innerHTML);
+    newPercent = currPercent > percentage ? currPercent - 1 : currPercent + 1;
+    textNode.innerHTML = newPercent + "%";
+    
+    // Stop counter once specified percentage reached.
+    if (newPercent == percentage) clearInterval(counter);
+  }, counterDuration);
 }
 
 /********
@@ -246,4 +387,85 @@ function setPassword(e, formObj)
       // Something unexpected went wrong.
       displayFormMsg(msgNode, "Password change unsuccessful!<br />Please try again later." + error, 2);
     });
+}
+
+/***********
+ * CLASSES *
+ ***********/
+/**
+ * Sets color of level completion indicators. Supports cumulative and individual data.
+ * @param intensities Array of color saturation intensities (0.0 to 2.0) for each level indicator.
+ */
+function setProgressColors(intensities)
+{
+  var r, g, b;
+
+  var levelsNodes = document.querySelector(".levelsContainer").children;
+
+  // Calculate and set rgb values for each level indicator based on corresponding specified intensity.
+  for (var i = 0; i < levelsNodes.length; i++)
+  {
+    // Set rgb values based on which side of spectrum intensity resides on.
+    // Intensity ranges from 0.0 to 2.0,
+    // 0.0: No students completed, 1.0: 50/50, 2.0: All students completed.
+    if (intensities[i] >= 1.0)
+    {
+      // Majority (or half) completed level, set green (or neutral) color.
+      // Note: Neutral color is light gray instead of white since text is white.
+      // Note: rb ranges from 50 to 205.
+      g = 205;
+      r = b = ((2.0 - intensities[i]) * 155) + 50;
+    } else
+    {
+      // Majority not completed level, set red color.
+      // Note: gb ranges from 50 to 255.
+      r = 255;
+      g = b = ((intensities[i]) * 205) + 50;
+    }
+    
+    levelsNodes[i].style.backgroundColor = "rgb(" + r + "," + g + "," + b + ")";
+  }
+}
+/**
+ * Extract students' first and last names in individualized form from a list of students.
+ * @param list List of students to parse.
+ */
+function parseStudents(list)
+{
+  const STUDENT_SEPARATOR = "/";
+  const NAME_SEPARATOR = ", ";
+
+  var students = [];
+  var studentNode;
+
+  var containerNode = document.querySelector(".foundContainer");
+  containerNode.innerHTML = "";
+
+  // Separate students' full names from list.
+  var names = list.split(STUDENT_SEPARATOR);
+  names.forEach(function(studentName) {
+    // Separate student's first and last name from full name string.
+    studentName = studentName.split(NAME_SEPARATOR);
+    // Verify name is valid, i.e. only contains a first and last name, both of which are initialized.
+    if (
+      studentName.length == 2 &&
+      studentName[0] != "" && studentName[1] != ""
+    )
+    {
+      // Parsed name is valid, add to students array.
+      // Note: studentName = ["lastName","firstName"].
+      students.push(
+        { fName: studentName[1], lName: studentName[0] }
+      );
+      
+      // Display student's name under "Found Students" to notify user of their correct formatting.
+      studentNode = document.createElement("div");
+      studentNode.innerHTML = studentName[1] + " " + studentName[0];
+      containerNode.appendChild(studentNode);
+    }
+  });
+
+  // Display if no student names were parsed successfully, either by formatting error or no input.
+  containerNode.innerHTML = students.length == 0 ? "No students found."
+                          : containerNode.innerHTML;
 }

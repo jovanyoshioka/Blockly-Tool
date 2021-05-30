@@ -41,6 +41,9 @@
 
   $conn->close();
 
+  // Flag that user is no longer required to set password before accessing web app.
+  $_SESSION['tempPwd'] = false;
+
   // Notify user of success. Redirect occurs in JavaScript since PHP header()
   // must be called before any actual output is sent (thus it does not work here).
   $msg = "Redirecting you momentarily.";

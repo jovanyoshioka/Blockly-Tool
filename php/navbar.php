@@ -37,6 +37,10 @@
     case 2:
       // Teacher/Admin Navigation Bar: Dashboard, Generator, Classes, Contact, Logout
       // Note: Difference between Teacher and Admin accounts is what the pages display.
+      
+      // Get class links, stored in variable $classLinks.
+      include('getClassesNav.php');
+
       echo '
         <nav class="navbar">
           <ul>
@@ -45,10 +49,8 @@
             <div class="dropdown">
               <li><a href="javascript:void(0);" class="'.$pages["class"].'">Classes &#9660;</a></li>
               <div class="dropdownContent">
-                <a href="class.php?classID=161361723">1st Period</a>
-                <a href="class.php?classID=837105723">2nd Period</a>
-                <a href="class.php?classID=982761236">3rd Period</a>
-                <a href="class.php?classID=419602151">4th Period</a>
+                '.$classLinks.'
+                <a href="dashboard.php?createClass=1">Create a class</a>
               </div>
             </div>
             <li><a href="contact.php" class="'.$pages["contact"].'">Contact</a></li>

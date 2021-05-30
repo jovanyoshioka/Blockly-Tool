@@ -57,18 +57,20 @@
       </footer>
     </div>
 
-    <!-- Dark background tint for modal -->
+    <!-- Dark background tint for modal (one instance needed for all modals) -->
     <div class="modalBackground" onclick="closeModal(document.querySelector('.modal.show'))"></div>
 
     <!-- Choose a story form -->
     <section id="chooseAStoryForm" class="formContainer">
       <!-- Header -->
-      <h1>Maze Generator</h1>
-      <h2>Choose a story</h2>
+      <header class="banner">
+        <h1>Maze Generator</h1>
+        <h2>Choose a story</h2>
+      </header>
       <form action="" method="POST">
         <!-- Search bar for table of stories -->
         <!-- Note: search bar input is not type="search" due to inability to reliably control "X" click, search event not yet universally supported -->
-        <input type="text" onkeydown="handleSearch(event,this)" onkeyup="handleSearch(event,this)" class="hideWhenSelected search" placeholder="Search" />
+        <input type="text" onkeydown="handleSearch(event,this)" onkeyup="handleSearch(event,this)" class="hideWhenSelected search" placeholder="Search..." />
         <input type="button" onclick="displayStories(1,this.previousElementSibling.value)" class="hideWhenSelected orangeBtn" value="Search" />
         <!-- Table of pre-existing published stories -->
         <table id="stories">
@@ -126,8 +128,10 @@
     <!-- Make your own form -->
     <section id="makeYourOwnForm" class="formContainer">
       <!-- Header -->
-      <h1>Maze Generator</h1>
-      <h2>Make your own story</h2>
+      <header class="banner">
+        <h1>Maze Generator</h1>
+        <h2>Make your own story</h2>
+      </header>
       <h2>**Work in progress**</h2>
     </section>
 

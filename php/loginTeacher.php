@@ -47,7 +47,7 @@
       $_SESSION['lName']   = $row['LName'];
       $_SESSION['school']  = $row['School'];
       $_SESSION['tempPwd'] = $row['TempPwd'] == 1 ? true : false;
-      $_SESSION['type']    = 1; // Teacher
+      $_SESSION['type']    = $row['IsAdmin'] == 1 ? 2 : 1; // Admin Type = 2, Teacher Type = 1
 
       // Notify user of success.
       // If temporary password, display password form. Otherwise, redirect to dashboard.
