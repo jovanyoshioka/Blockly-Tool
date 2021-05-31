@@ -109,6 +109,10 @@ function searchElements(term, container)
 }
 /**
  * Search table for rows matching specified search term.
+ * 
+ * HTML Requirements:
+ *   <td class="none" colspan="a" style="display:b">No students found.</td>
+ * 
  * @param term Term to search by.
  * @param table Table to search.
  * @param toSearch Indicates which columns to search. Ex: [true, false] -> Search col1, not col2.
@@ -117,13 +121,14 @@ function searchTable(term, table, toSearch)
 {
   var rowTxt;
   var displayAttr;
+  var found = false;
 
   // Row's text and search term compared case-insensitive.
   term = term.toUpperCase();
 
   // Compare each row's content to search term.
   // Ignore header row, i.e. first row.
-  for (row of table.querySelectorAll("tr:not(:first-of-type)"))
+  for (row of table.querySelectorAll("tbody tr:not(.none)"))
   {
     // To compare each row, need to compare each row's columns' content to search term.
     rowTxt = "";
@@ -135,7 +140,13 @@ function searchTable(term, table, toSearch)
     // Compare cumulative row text to search term. If matches, show. Otherwise, hide.
     displayAttr = rowTxt.includes(term) ? "table-row" : "none";
     row.style.display = displayAttr;
+
+    // If row was displayed, indicate at least one result was found.
+    if (displayAttr == "table-row") found = true;
   }
+  
+  // Display "No students found." message if no results were found.
+  table.querySelector("tbody tr.none").style.display = (!found ? "table-row" : "none");
 }
 
 /*****************
@@ -265,8 +276,8 @@ function trimFormFields(fields)
 /**
  * Displays form message.
  * @param msgNode Message display element.
- * @param type 1: success, 2: fail, (default) 0: neutral
  * @param msg Message to display.
+ * @param type 1: success, 2: fail, (default) 0: neutral
  */
 function displayFormMsg(msgNode, msg, type = 0)
 {
@@ -275,6 +286,32 @@ function displayFormMsg(msgNode, msg, type = 0)
                     : type == 2 ? "msg fail"
                     : "msg";
   msgNode.innerHTML = msg;
+}
+/**
+ * Execute generic actions required by several forms:
+ *   Prevent page refresh, clear form message, verify field requirements met.
+ * @param e Form submission event.
+ * @param fields Form fields to verify have been filled.
+ * @param msgNode Form message node for notifying user of success/failure.
+ * @param failMsg Generic message to display when an error occurs.
+ * @return true if success, false if failure.
+ */
+function handleGenericForm(e, fields, msgNode, failMsg)
+{
+  // Prevent form from refreshing page.
+  e.preventDefault();
+
+  // Clear previous login message.
+  msgNode.innerHTML = "";
+
+  // Verify all fields were filled.
+  if (!verifyFormFields(fields))
+  {
+    displayFormMsg(msgNode, failMsg + "<br />All required info not entered.", 2);
+    return false;
+  }
+
+  return true;
 }
 
 /*********
@@ -288,19 +325,11 @@ function displayFormMsg(msgNode, msg, type = 0)
  */
 function loginUser(e, formObj, type)
 {
-  // Prevent form from refreshing page.
-  e.preventDefault();
+  const FAIL_MSG = "Login unsuccessful!";
+  var msgNode    = formObj.querySelector("p.msg");
 
-  var msgNode = formObj.querySelector("p.msg");
-  // Clear previous login message.
-  msgNode.innerHTML = "";
-
-  // Verify all fields were filled.
-  if (!verifyFormFields(formObj.elements))
-  {
-    displayFormMsg(msgNode, "Login unsuccessful!<br />All required info not entered.", 2);
-    return;
-  }
+  // Execute generic form actions. Stop login process if false is returned.
+  if (!handleGenericForm(e, formObj.elements, msgNode, FAIL_MSG)) return;
 
   // Determine "action" path based on if student or teacher login.
   var actionPath = type == 0 ? "../php/loginStudent.php"
@@ -331,12 +360,12 @@ function loginUser(e, formObj, type)
     } else
     {
       // Login was unsuccessful.
-      displayFormMsg(msgNode, "Login unsuccessful!<br />" + data.msg, 2);
+      displayFormMsg(msgNode, FAIL_MSG + "<br />" + data.msg, 2);
     }
   }, "json")
     .fail(function(jqXHR, status, error) {
       // Something unexpected went wrong.
-      displayFormMsg(msgNode, "Login unsuccessful!<br />Please try again later.", 2);
+      displayFormMsg(msgNode, FAIL_MSG + "<br />Please try again later.", 2);
     });
 }
 /**
@@ -347,22 +376,16 @@ function loginUser(e, formObj, type)
  */
 function setPassword(e, formObj)
 {
-  // Prevent form from refreshing page.
-  e.preventDefault();
+  const FAIL_MSG = "Password change unsuccessful!";
+  var msgNode    = formObj.querySelector("p.msg");
 
-  var msgNode = formObj.querySelector("p.msg");
-
-  // Verify all fields were filled.
-  if (!verifyFormFields(formObj.elements))
-  {
-    displayFormMsg(msgNode, "Password change unsuccessful!<br />All required info not entered.", 2);
-    return;
-  }
+  // Execute generic form actions. Stop pwd change process if false is returned.
+  if (!handleGenericForm(e, formObj.elements, msgNode, FAIL_MSG)) return;
 
   // Verify passwords match.
   if (formObj.elements["newPwd"].value != formObj.elements["rePwd"].value)
   {
-    displayFormMsg(msgNode, "Password change unsuccessful!<br />Passwords do not match.", 2);
+    displayFormMsg(msgNode, FAIL_MSG + "<br />Passwords do not match.", 2);
     return;
   }
 
@@ -380,12 +403,12 @@ function setPassword(e, formObj)
     } else
     {
       // Password change was unsuccessful.
-      displayFormMsg(msgNode, "Password change unsuccessful!<br />" + data.msg, 2);
+      displayFormMsg(msgNode, FAIL_MSG + "<br />" + data.msg, 2);
     }
   }, "json")
     .fail(function(jqXHR, status, error) {
       // Something unexpected went wrong.
-      displayFormMsg(msgNode, "Password change unsuccessful!<br />Please try again later." + error, 2);
+      displayFormMsg(msgNode, FAIL_MSG + "<br />Please try again later.", 2);
     });
 }
 
@@ -453,9 +476,10 @@ function parseStudents(list)
     )
     {
       // Parsed name is valid, add to students array.
+      // Trim strings as line breaks will cause "onclick" errors for Edit/Delete buttons.
       // Note: studentName = ["lastName","firstName"].
       students.push(
-        { fName: studentName[1], lName: studentName[0] }
+        { fName: studentName[1].trim(), lName: studentName[0].trim() }
       );
       
       // Display student's name under "Found Students" to notify user of their correct formatting.
@@ -468,4 +492,169 @@ function parseStudents(list)
   // Display if no student names were parsed successfully, either by formatting error or no input.
   containerNode.innerHTML = students.length == 0 ? "No students found."
                           : containerNode.innerHTML;
+      
+  // Return array of parsed students for adding to database.
+  return students;
+}
+/**
+ * Gets all students of current class, as defined by $_SESSION['classID'].
+ * Formats in row form for "Manage Students" table and button form for "Levels Progression" student selection.
+ */
+function getStudents()
+{
+  $.post("../php/getStudents.php", {}, function(data) {
+    // "Manage Students" Table Rows
+    document.querySelector("div.studentsContainer table tbody").innerHTML = data.rows;
+    // "Levels Progression" Student Selection Buttons
+    document.querySelector("div.mazesContainer section#studentSelect div").innerHTML = data.btns;
+  }, "json")
+    .fail(function(jqXHR, status, error) {
+      alert("An error occured when fetching students: " + error);
+    });
+}
+/**
+ * Add students, via first and last name, to class in database.
+ */
+function addStudents()
+{
+  var textareaNode = document.querySelector("#addModal div.body textarea");
+
+  // Parse out array of students, each element with first and last name, from textarea.
+  var students = parseStudents(
+    textareaNode.value
+  );
+
+  // Verify there are students to add.
+  if (students.length == 0)
+  {
+    alert("No students to add were found.\nPlease verify your formatting and try again.");
+    return;
+  }
+
+  // Add found students to database.
+  $.post("../php/addStudents.php", { students: students }, function(data) {
+    // Addition of students was successful.
+    // Reset textarea/found list to allow adding more students/prevent adding same students.
+    textareaNode.value = '';
+    document.querySelector(".foundContainer").innerHTML = 'No students found.';
+    // Reload students' information on page.
+    getStudents();
+    // Close add student(s) modal.
+    closeModal(document.querySelector('.modal.show'));
+  })
+    .fail(function(jqXHR, status, error) {
+      alert("An error occured when adding students: " + error);
+    });
+}
+/**
+ * Initializes data and displays edit student modal.
+ * @param id Student's ID number.
+ * @param fName Student's first name.
+ * @param lName Student's last name.
+ * @param birthday Student's birthday, formatted "YYYY-MM-DD".
+ */
+function displayEditStudent(id, fName, lName, birthday)
+{
+  var formObj = document.querySelector("#editStudentForm");
+
+  // Clear previous form message.
+  formObj.querySelector("p.msg").innerHTML = "";
+
+  // Pre-fill fields with student info.
+  formObj.elements["id"].value       = id;
+  formObj.elements["fName"].value    = fName;
+  formObj.elements["lName"].value    = lName;
+  formObj.elements["birthday"].value = birthday;
+
+  // Open edit student modal.
+  openModal("editModal");
+}
+/**
+ * Edit student information in database.
+ * @param e Form submission event.
+ * @param formObj Object of edit student form.
+ */
+function editStudent(e, formObj)
+{
+  const FAIL_MSG = "Edit unsuccessful!";
+  var msgNode    = formObj.querySelector("p.msg");
+
+  // Note: Birthday field may be unset as it is automatically set on student login,
+  // thus it is not a required field.
+  var fieldsToVerify = [
+    formObj.elements["id"],
+    formObj.elements["fName"],
+    formObj.elements["lName"]
+  ];
+
+  // Execute generic form actions. Stop edit process if false is returned.
+  if (!handleGenericForm(e, fieldsToVerify, msgNode, FAIL_MSG)) return;
+
+  // Prepare form data for passing by removing leading/trailing whitespace and serializing.
+  trimFormFields(formObj.elements);
+  var formData = $(formObj).serialize();
+
+  // Edit student information.
+  $.post("../php/editStudent.php", formData, function(data) {
+    if (data.success)
+    {
+      // Notify user edit was successful.
+      displayFormMsg(msgNode, "Student information has been successfully edited!", 1);
+
+      // Reload students' information on page.
+      getStudents();
+    } else
+    {
+      // Edit was unsuccessful.
+      displayFormMsg(msgNode, FAIL_MSG + "<br />" + data.msg, 2);
+    }
+  }, "json")
+    .fail(function(jqXHR, status, error) {
+      // Something unexpected went wrong.
+      displayFormMsg(msgNode, FAIL_MSG + "<br />Please try again later.", 2);
+    });
+}
+/**
+ * Initializes data and displays delete student confirmation modal.
+ * @param id Student's ID number.
+ * @param name Student's first and last name.
+ */
+function displayDelStudent(id, name)
+{
+  var modalNode = document.getElementById("delModal");
+
+  // Set confirmation message with student's full name.
+  modalNode.querySelector("div.body h2").innerHTML =
+    "Are you sure you want to delete " + name + " from this class?";
+
+  // Set "Confirm" button to delete student with passed id.
+  // Must use function() { deleteStudent() }
+  modalNode.querySelector("footer button:nth-of-type(2)").onclick = function() { deleteStudent(id); }
+ 
+   // Open delete student modal.
+   openModal("delModal");
+ }
+ /**
+ * Delete student from class in database.
+ * @param id Student's ID number.
+ */
+function deleteStudent(id)
+{
+  $.post("../php/deleteStudent.php", { id: id }, function(data) {
+    if (data.success)
+    {
+      // Reload students' information on page.
+      getStudents();
+    } else
+    {
+      // Deletion was unsuccessful. Notify user.
+      alert("Student deletion unsuccessful!\n" + data.msg);
+    }
+    // Close delete student modal, regardless of success or fail.
+    closeModal(document.querySelector('.modal.show'));
+  }, "json")
+    .fail(function(jqXHR, status, error) {
+      // Something unexpected went wrong.
+      alert("An error when deleting student: " + error);
+    });
 }

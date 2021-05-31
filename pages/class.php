@@ -16,11 +16,11 @@
     <?php include('../php/navbar.php'); ?>
 
     <header class="banner">
-      <h1><?php echo isset($_GET['name']) ? $_GET['name'] : 'Class '.$_GET['id']; ?></h1>
-      <h2>Class ID: <?php echo $_GET['id']; ?></h2>
+      <h1><?php echo isset($_GET['name']) ? $_GET['name'] : 'Class '.$_SESSION['classID']; ?></h1>
+      <h2>Class ID: <?php echo $_SESSION['classID']; ?></h2>
       <div class="tooltip">
         <button
-          onclick="copyText(this.querySelector('.tooltipText'), 'codeastory.utk.edu/pages/login.php?classID=<?php echo $_GET['id']; ?>')"
+          onclick="copyText(this.querySelector('.tooltipText'), 'codeastory.utk.edu/pages/login.php?classID=<?php echo $_SESSION['classID']; ?>')"
           onmouseout="changeTooltipText(this.querySelector('.tooltipText'), 'Copy Student Login Link')"
         >
           <span class="tooltipText">Copy Student Login Link</span>
@@ -31,7 +31,7 @@
 
     <div class="mazesContainer">
       <!-- Story Information -->
-      <section>
+      <section id="storyInfo">
         <select onchange="">
           <option value="" disabled selected>Select a story</option>
           <option value="1">The Very Hungry Caterpillar</option>
@@ -44,15 +44,10 @@
       </section>
 
       <!-- Student Selection -->
-      <section>
+      <section id="studentSelect">
         <h1>Cumulative</h1>
         <div>
-          <button onclick="">Cumulative</button>
-          <button onclick="">Smith, John</button>
-          <button onclick="">Johnson, James</button>
-          <button onclick="">Robert, Bob</button>
-          <button onclick="">Smith, Dylan</button>
-          <button onclick="">Brown, Jacob</button>
+          <!-- Data from getStudents(); -->
         </div>
         <input
           type="text" placeholder="Search a student..."
@@ -61,7 +56,7 @@
       </section>
 
       <!-- Progress Analytics -->
-      <section>
+      <section id="analytics">
         <h2>Levels Progression</h2>
         <div class="ringContainer">
           <svg id="progressRing">
@@ -111,51 +106,16 @@
         <button class="orangeBtn right" onclick="openModal('addModal')">Add Student(s)</button>
       </div>
       <table>
-        <tr>
-          <th>Name</th>
-          <th>Birthday</th>
-          <th></th>
-        </tr>
-        <tr>
-          <td>Smith, John</td>
-          <td>July 2, 2002</td>
-          <td>
-            <button class="orangeBtn" onclick="openModal('editModal')">Edit</button>
-            <button class="orangeBtn" onclick="openModal('delModal')">Delete</button>
-          </td>
-        </tr>
-        <tr>
-          <td>Johnson, James</td>
-          <td>May 31, 2005</td>
-          <td>
-            <button class="orangeBtn">Edit</button>
-            <button class="orangeBtn">Delete</button>
-          </td>
-        </tr>
-        <tr>
-          <td>Robert, Bob</td>
-          <td>Aug 14, 1998</td>
-          <td>
-            <button class="orangeBtn">Edit</button>
-            <button class="orangeBtn">Delete</button>
-          </td>
-        </tr>
-        <tr>
-          <td>Smith, Dylan</td>
-          <td><span>Set on Login</span></td>
-          <td>
-            <button class="orangeBtn">Edit</button>
-            <button class="orangeBtn">Delete</button>
-          </td>
-        </tr>
-        <tr>
-          <td>Brown, Jacob</td>
-          <td>Jan 8, 2010</td>
-          <td>
-            <button class="orangeBtn">Edit</button>
-            <button class="orangeBtn">Delete</button>
-          </td>
-        </tr>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Birthday</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Data from getStudents(); -->
+        </tbody>
       </table>
     </div>
 
@@ -175,7 +135,7 @@
         </div>
       </div>
       <footer>
-        <button class="orangeBtn right">Add</button>
+        <button class="orangeBtn right" onclick="addStudents()">Add</button>
       </footer>
     </div>
 
@@ -185,19 +145,24 @@
         <h1>Edit Student</h1>
         <button onclick="closeModal(this.parentElement.parentElement)">&#x2716;</button>
       </header>
-      <div class="body">
-        <form action="" method="POST">
-          <label for="fName">First Name</label><br />
-          <input type="text" id="fName" name="fName" value="Bob" required /><br />
-          <label for="lName">Last Name</label><br />
-          <input type="text" id="lName" name="lName" value="Robert" required /><br />
-          <label for="birthday">Birthday</label><br />
-          <input type="date" id="birthday" name="birthday" value="2001-05-31" required />
-        </form>
-      </div>
-      <footer>
-        <button class="orangeBtn right">Save</button>
-      </footer>
+      <form id="editStudentForm" action="#" method="POST">
+        <div class="body">
+          <p class="msg"></p>
+          <div> 
+            <!-- Input Values from displayEditStudent(a,b,c,d); -->
+            <input type="hidden" id="id" name="id" />
+            <label for="fName">First Name</label><br />
+            <input type="text" id="fName" name="fName" required /><br />
+            <label for="lName">Last Name</label><br />
+            <input type="text" id="lName" name="lName" required /><br />
+            <label for="birthday">Birthday</label><br />
+            <input type="date" id="birthday" name="birthday" />
+          </div>
+        </div>
+        <footer>
+          <input type="submit" class="orangeBtn right" value="Save" />
+        </footer>
+      </form>
     </div>
 
     <!-- Modal for deleting a student -->
@@ -207,10 +172,13 @@
         <button onclick="closeModal(this.parentElement.parentElement)">&#x2716;</button>
       </header>
       <div class="body">
-        <h2>Are you sure you want to delete Johnson James from 1st Period?</h2>
+        <h2>
+          <!-- Message from displayDelStudent(a,b); -->
+        </h2>
       </div>
       <footer>
-        <button class="orangeBtn left">Cancel</button>
+        <button class="orangeBtn left" onclick="closeModal(document.querySelector('.modal.show'))">Cancel</button>
+        <!-- onclick from displayDelStudent(a,b); -->
         <button class="orangeBtn right">Confirm</button>
       </footer>
     </div>
@@ -219,11 +187,19 @@
     <div class="modalBackground" onclick="closeModal(document.querySelector('.modal.show'))"></div>
 
     <script>
-      // TEMPORARY
-      initProgressRing('progressRing', 65);
-      setProgressColors(
-        [2.0, 1.7, 1.5, 1.0, 0.8, 0.6, 0.3, 0.0]
-      );
+      $(document).ready(function() {
+
+        getStudents();
+
+        // Handle edit student form submission.
+        $("form#editStudentForm").submit(function(e) { editStudent(e, this); });
+        
+        // TEMPORARY
+        initProgressRing('progressRing', 65);
+        setProgressColors(
+          [2.0, 1.7, 1.5, 1.0, 0.8, 0.6, 0.3, 0.0]
+        );
+      });
     </script>
   </body>
 </html>

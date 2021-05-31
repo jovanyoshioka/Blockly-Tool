@@ -57,7 +57,11 @@
 
     $conn->close();
 
-    if ($result->num_rows == 0)
+    if ($result->num_rows > 0)
+    {
+      // User is teacher of class, update session.
+      $_SESSION['classID']   = $classID;
+    } else
     {
       // User is not teacher of the class, redirect to dashboard.
       header('Location: dashboard.php');

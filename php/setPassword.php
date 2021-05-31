@@ -8,13 +8,19 @@
   {
     // User not yet authenticated. Notify user.
     $msg = "You are not logged in.";
-    echo json_encode(array("success"=>false,"msg"=>$msg));
+    echo json_encode(array(
+      "success"=>false,
+      "msg"=>$msg
+    ));
     exit;
   } else if (!isset($_SESSION['tempPwd']) || !$_SESSION['tempPwd'])
   {
     // User is not authorized to set a new password. Notify user.
     $msg = "A new password is currently not authorized.";
-    echo json_encode(array("success"=>false,"msg"=>$msg));
+    echo json_encode(array(
+      "success"=>false,
+      "msg"=>$msg
+    ));
     exit;
   }
 
@@ -47,7 +53,10 @@
   // Notify user of success. Redirect occurs in JavaScript since PHP header()
   // must be called before any actual output is sent (thus it does not work here).
   $msg = "Redirecting you momentarily.";
-  echo json_encode(array("success"=>true,"msg"=>$msg));
+  echo json_encode(array(
+    "success"=>true,
+    "msg"=>$msg
+  ));
   exit;
 
 ?>

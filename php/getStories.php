@@ -117,7 +117,10 @@
   }
 
   // Return data in json format to later be interpreted using JavaScript.
-  echo json_encode(array("table"=>$table,"nav"=>$nav));
+  echo json_encode(array(
+    "table"=>$table,
+    "nav"=>$nav
+  ));
 
   $conn->close();
 

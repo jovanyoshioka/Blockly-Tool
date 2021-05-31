@@ -8,7 +8,10 @@
   {
     // Notify user of situation.
     $msg = "You are already logged in.";
-    echo json_encode(array("success"=>false,"msg"=>$msg));
+    echo json_encode(array(
+      "success"=>false,
+      "msg"=>$msg
+    ));
     exit;
   }
 
@@ -86,7 +89,10 @@
       // Notify user of success. Redirect occurs in JavaScript since PHP header()
       // must be called before any actual output is sent (thus it does not work here).
       $msg = "Redirecting you momentarily.";
-      echo json_encode(array("success"=>true,"msg"=>$msg));
+      echo json_encode(array(
+        "success"=>true,
+        "msg"=>$msg
+      ));
       exit;
     }
   }
@@ -96,7 +102,10 @@
   
   // Notify user of failure.
   $msg = "Please verify your credentials and try again.";
-  echo json_encode(array("success"=>false,"msg"=>$msg));
+  echo json_encode(array(
+    "success"=>false,
+    "msg"=>$msg
+  ));
   exit;
 
 ?>
