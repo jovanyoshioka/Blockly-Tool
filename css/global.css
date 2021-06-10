@@ -198,6 +198,66 @@ p.fail {
   opacity: 1;
 }
 
+/* Notification */
+/* Either "success", "fail", or default neutral */
+.notification {
+  min-width: 350px;
+  height: 75px;
+  line-height: 75px;
+  padding: 0 25px;
+  position: fixed;
+  top: 35px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  border-radius: 5px;
+  background-color: var(--rock); /* default */
+  pointer-events: none;
+  opacity: 0.0;
+  transition: opacity 0.75s;
+  z-index: 999;
+}
+.notification:hover {
+  cursor: pointer;
+}
+.notification.success {
+  background-color: #d4edda;
+}
+.notification.fail {
+  background-color: #f8d7da;
+}
+/* Icons and Message */
+.notification p {
+  display: inline-block;
+}
+.notification.success p {
+  color: #188732;
+}
+.notification.fail p {
+  color: #721c24;
+}
+/* Notification Icons: Check (Success) & Caution (Fail) */
+.notification span.success,
+.notification span.fail {
+  font-size: 2em;
+  display: none;
+}
+.notification.success span.success,
+.notification.fail span.fail {
+  display: inline;
+}
+/* Notification Message */
+.notification span.msg {
+  font-size: 1.15em;
+  margin: 0 10px;
+  vertical-align: top;
+}
+/* Close Notification Icon: X */
+.notification span:last-of-type {
+  font-size: 1.75em;
+  padding-left: 20px;
+}
+
 /* Modal */
 .modal {
   width: 800px; /* default */
@@ -992,6 +1052,11 @@ body#class div.studentModal header button {
 }
 
 /* Add Student(s) Modal */
+body#class div#addModal div.body p {
+  font-size: 1.25em;
+  margin: 15px 0 0 0;
+  text-align: center;
+}
 body#class div#addModal div.body h2 {
   margin: 7.5px 0 0 7.5px;
 }
@@ -1054,9 +1119,13 @@ body#class div#editModal form input:not([type="submit"]) {
 body#class div#delModal {
   width: 400px;
 }
-body#class div#delModal div.body h2 {
+body#class div#delModal div.body p {
+  font-size: 1.5em;
   margin: 20px 20px;
   text-align: center;
+}
+body#class div#delModal div.body p span {
+  font-weight: 900;
 }
 
 /*********************

@@ -60,6 +60,44 @@ function changeTooltipText(txtNode, newTxt)
   txtNode.innerHTML = newTxt;
 }
 
+/****************
+ * NOTIFICATION *
+ ****************/
+/**
+ * Shows notification with specified type and message.
+ * Note: There should only be one notification instance on each page.
+ * @param msg Notification's message.
+ * @param type 1: success, 2: fail, (default) 0: neutral
+ */
+function showNotification(msg, type = 0)
+{
+  var notificationNode = document.querySelector(".notification");
+
+  // Set success/fail type and message.
+  // type = 1: success, 2: fail, (default) 0: neutral
+  type = type == 1 ? "success"
+       : type == 2 ? "fail"
+       : "";
+  notificationNode.classList = "notification " + type;
+  notificationNode.querySelector("span.msg").innerHTML = msg;
+
+  // Display notification element.
+  notificationNode.style.pointerEvents = "all";
+  notificationNode.style.opacity = 1.0;
+}
+/**
+ * Hides displayed notification.
+ * Note: There should only be one notification instance on each page.
+ */
+function hideNotification()
+{
+  var notificationNode = document.querySelector(".notification");
+
+  // Hide notification element, and disable click to prevent blocking content.
+  notificationNode.style.pointerEvents = "none";
+  notificationNode.style.opacity = 0.0;
+}
+
 /*********
  * MODAL *
  *********/
@@ -301,7 +339,7 @@ function handleGenericForm(e, fields, msgNode, failMsg)
   // Prevent form from refreshing page.
   e.preventDefault();
 
-  // Clear previous login message.
+  // Clear previous form message.
   msgNode.innerHTML = "";
 
   // Verify all fields were filled.
@@ -509,7 +547,8 @@ function getStudents()
     document.querySelector("div.mazesContainer section#studentSelect div").innerHTML = data.btns;
   }, "json")
     .fail(function(jqXHR, status, error) {
-      alert("An error occured when fetching students: " + error);
+      // Something unexpected went wrong.
+      showNotification("An error occured when fetching students: " + error, 2);
     });
 }
 /**
@@ -517,7 +556,9 @@ function getStudents()
  */
 function addStudents()
 {
-  var textareaNode = document.querySelector("#addModal div.body textarea");
+  var modalBodyNode = document.querySelector("#addModal div.body");
+  var textareaNode  = modalBodyNode.querySelector("textarea");
+  var msgNode       = modalBodyNode.querySelector("p.msg");
 
   // Parse out array of students, each element with first and last name, from textarea.
   var students = parseStudents(
@@ -527,23 +568,31 @@ function addStudents()
   // Verify there are students to add.
   if (students.length == 0)
   {
-    alert("No students to add were found.\nPlease verify your formatting and try again.");
+    displayFormMsg(msgNode, "No students to add were found.\nPlease verify your formatting and try again.", 2);
     return;
   }
 
   // Add found students to database.
   $.post("../php/addStudents.php", { students: students }, function(data) {
     // Addition of students was successful.
-    // Reset textarea/found list to allow adding more students/prevent adding same students.
-    textareaNode.value = '';
-    document.querySelector(".foundContainer").innerHTML = 'No students found.';
-    // Reload students' information on page.
-    getStudents();
-    // Close add student(s) modal.
-    closeModal(document.querySelector('.modal.show'));
+    // Show success notification.
+    showNotification("Student(s) was successfully added to this class!", 1);
   })
     .fail(function(jqXHR, status, error) {
-      alert("An error occured when adding students: " + error);
+      // Something unexpected went wrong.
+      showNotification("An error occured when adding students: " + error, 2);
+    })
+    .always(function() {
+      // Perform actions below for error too in case error occured after students added.
+      // Clear any previous message.
+      msgNode.innerHTML = '';
+      // Reset textarea/found list to allow adding more students/prevent adding same students.
+      textareaNode.value = '';
+      modalBodyNode.querySelector(".foundContainer").innerHTML = 'No students found.';
+      // Reload students' information on page.
+      getStudents();
+      // Close add student(s) modal.
+      closeModal(document.querySelector('.modal.show'));
     });
 }
 /**
@@ -610,8 +659,10 @@ function editStudent(e, formObj)
     }
   }, "json")
     .fail(function(jqXHR, status, error) {
+      // Close edit student modal.
+      closeModal(document.querySelector('.modal.show'));
       // Something unexpected went wrong.
-      displayFormMsg(msgNode, FAIL_MSG + "<br />Please try again later.", 2);
+      showNotification("An error occured when editing student: " + error, 2);
     });
 }
 /**
@@ -624,8 +675,8 @@ function displayDelStudent(id, name)
   var modalNode = document.getElementById("delModal");
 
   // Set confirmation message with student's full name.
-  modalNode.querySelector("div.body h2").innerHTML =
-    "Are you sure you want to delete " + name + " from this class?";
+  modalNode.querySelector("div.body p").innerHTML =
+    "Are you sure you want to delete <span>" + name + "</span> from this class?";
 
   // Set "Confirm" button to delete student with passed id.
   // Must use function() { deleteStudent() }
@@ -643,18 +694,22 @@ function deleteStudent(id)
   $.post("../php/deleteStudent.php", { id: id }, function(data) {
     if (data.success)
     {
+      // Deletion was successful. Notify user.
+      showNotification("Student was successfully deleted from this class!", 1);
       // Reload students' information on page.
       getStudents();
     } else
     {
       // Deletion was unsuccessful. Notify user.
-      alert("Student deletion unsuccessful!\n" + data.msg);
+      showNotification("Student deletion unsuccessful! " + data.msg, 2);
     }
-    // Close delete student modal, regardless of success or fail.
-    closeModal(document.querySelector('.modal.show'));
   }, "json")
     .fail(function(jqXHR, status, error) {
       // Something unexpected went wrong.
-      alert("An error when deleting student: " + error);
+      showNotification("An error occured when deleting student: " + error, 2);
+    })
+    .always(function() {
+      // Close delete student modal in all outcomes.
+      closeModal(document.querySelector('.modal.show'));
     });
 }

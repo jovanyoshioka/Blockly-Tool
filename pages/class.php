@@ -126,6 +126,7 @@
         <button onclick="closeModal(this.parentElement.parentElement)">&#x2716;</button>
       </header>
       <div class="body">
+        <p class="msg"></p>
         <h2>Copy and paste a list of your students:</h2>
         <h3>Example: <span>To add John Smith and James Johnson, enter: "Smith, John/Johnson, James"</span></h3>
         <textarea onkeyup="parseStudents(this.value)"></textarea>
@@ -172,15 +173,28 @@
         <button onclick="closeModal(this.parentElement.parentElement)">&#x2716;</button>
       </header>
       <div class="body">
-        <h2>
+        <p>
           <!-- Message from displayDelStudent(a,b); -->
-        </h2>
+        </p>
       </div>
       <footer>
         <button class="orangeBtn left" onclick="closeModal(document.querySelector('.modal.show'))">Cancel</button>
         <!-- onclick from displayDelStudent(a,b); -->
         <button class="orangeBtn right">Confirm</button>
       </footer>
+    </div>
+
+    <!-- Universal Notification (one instance only for each page) -->
+    <div class="notification" onclick="hideNotification()">
+      <p>
+        <!-- Corresponding icon to notification type is displayed -->
+        <span class="success">&check;</span>
+        <span class="fail">&#9888;</span>
+        <span class="msg">
+          <!-- Message from showNotification(a,b); -->
+        </span>
+        <span>&#x2716;</span>
+      </p>
     </div>
 
     <!-- Dark background tint for modal (one instance needed for all modals) -->
