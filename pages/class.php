@@ -30,16 +30,19 @@
     </header>
 
     <div class="mazesContainer">
-      <!-- Story Information -->
-      <section id="storyInfo">
-        <select onchange="">
-          <option value="" disabled selected>Select a story</option>
-          <option value="1">The Very Hungry Caterpillar</option>
-          <option value="2 (id of story)">Green Eggs and Ham</option>
+      <!-- Maze Information -->
+      <section id="mazeInfo">
+        <select onchange="showMazeAnalytics(this.value)">
+          <option value="" disabled selected>Select a maze</option>
+          <?php include('../php/getStoriesDrpdwn.php'); ?>
         </select>
-        <h1>The Very Hungry Caterpillar</h1>
-        <h2>By Eric Carle</h2>
-        <p>Status: <span>Assigned</span></p>
+        <h1>Maze Analytics</h1>
+        <h2>Select a maze from the dropdown to get started</h2>
+        <p>
+          Status: 
+          <span><!-- Assigned/Not Assigned from displayMazeAssignment(x); --></span>
+        </p>
+        <!-- onclick from showMazeAnalytics(x); -->
         <button class="orangeBtn">Unassign</button>
       </section>
 
@@ -208,11 +211,12 @@
         // Handle edit student form submission.
         $("form#editStudentForm").submit(function(e) { editStudent(e, this); });
         
-        // TEMPORARY
+        /*
         initProgressRing('progressRing', 65);
         setProgressColors(
           [2.0, 1.7, 1.5, 1.0, 0.8, 0.6, 0.3, 0.0]
         );
+        */
       });
     </script>
   </body>

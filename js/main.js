@@ -488,6 +488,104 @@ function setProgressColors(intensities)
   }
 }
 /**
+ * Sets status text and button based on if maze specifieed as assigned or not assigned.
+ * @param isAssigned true if maze assigned, false if not assigned.
+ */
+function displayMazeAssignment(isAssigned)
+{
+  var mazeInfoContainer  = document.getElementById("mazeInfo");
+
+  mazeInfoContainer.querySelector("p span").style.color = isAssigned? "#32CD32" : "#FF3131";
+  mazeInfoContainer.querySelector("p span").innerHTML   = isAssigned ? "Assigned" : "Not Assigned";
+
+  mazeInfoContainer.querySelector("button").innerHTML   = isAssigned ? "Unassign" : "Assign";
+}
+/**
+ * Toggles assignment of specified maze.
+ * @param mazeID ID of selected maze.
+ */
+function toggleMazeAssignment(mazeID)
+{
+
+  $.post("../php/toggleAssignment.php", { id: mazeID }, function(data) {
+    if (data.success)
+    {
+      // Maze assignment toggle was successful.
+      // Notify user.
+      showNotification(data.msg, 1);
+      // Update assignment status text/button.
+      displayMazeAssignment(data.assigned);
+    } else
+    {
+      // Maze assignment toggle was unsuccessful.
+      showNotification("Assignment toggle unsuccessful! " + data.msg, 2);
+    }
+  }, "json")
+    .fail(function(jqXHR, status, error) {
+      // Something unexpected went wrong.
+      showNotification("An error occured when toggling maze assignment: " + error, 2);
+    });
+}
+/**
+ * Retrieves, prepares, and displays specified maze's analytics.
+ * @param mazeID ID of selected maze.
+ */
+function showMazeAnalytics(mazeID)
+{
+  var mazeInfoContainer  = document.getElementById("mazeInfo");
+  var studentsContainer  = document.getElementById("studentSelect");
+  var analyticsContainer = document.getElementById("analytics");
+
+  // Display front-end components if not already displayed.
+  showElements();
+
+  // Retrieve maze information from database and append to appropriate elements.
+  $.post("../php/getMazeAnalytics.php", { id: mazeID }, function(data) {
+    if (data.success)
+    {
+      // Maze analytics selection was successful.
+      // Display maze information.
+      mazeInfoContainer.querySelector("h1").innerHTML = data.mazeInfo.title;
+      mazeInfoContainer.querySelector("h2").innerHTML = "By " + data.mazeInfo.author;
+      // Set assignment status text/button.
+      displayMazeAssignment(data.mazeInfo.assigned);
+      mazeInfoContainer.querySelector("button").onclick = function() { toggleMazeAssignment(mazeID); };
+    } else
+    {
+      // Maze analytics selection was unsuccessful.
+      showNotification("Selection unsuccessful! " + data.msg, 2);
+    }
+  }, "json")
+    .fail(function(jqXHR, status, error) {
+      // Something unexpected went wrong.
+      showNotification("An error occured when fetching maze analytics: " + error, 2);
+    });
+  
+  /**
+   * Nested function to display analytics elements if not already shown.
+   */
+  function showElements()
+  {
+    if (
+      window.getComputedStyle(
+        mazeInfoContainer.querySelector("p")
+      )
+        .getPropertyValue("display") == "none"
+    )
+    {
+      // Remove encapsulating border.
+      document.querySelector("div.mazesContainer").style.border = "none";
+      document.querySelector("div.mazesContainer").style.clipPath = "none";
+      // Show maze assignment status text and button.
+      mazeInfoContainer.querySelector("p").style.display      = "block";
+      mazeInfoContainer.querySelector("button").style.display = "block";
+      // Show student selection and progress analytics containers.
+      studentsContainer.style.display  = "flex";
+      analyticsContainer.style.display = "flex";
+    }
+  }
+}
+/**
  * Extract students' first and last names in individualized form from a list of students.
  * @param list List of students to parse.
  */
@@ -680,12 +778,12 @@ function displayDelStudent(id, name)
 
   // Set "Confirm" button to delete student with passed id.
   // Must use function() { deleteStudent() }
-  modalNode.querySelector("footer button:nth-of-type(2)").onclick = function() { deleteStudent(id); }
+  modalNode.querySelector("footer button:nth-of-type(2)").onclick = function() { deleteStudent(id); };
  
    // Open delete student modal.
    openModal("delModal");
  }
- /**
+/**
  * Delete student from class in database.
  * @param id Student's ID number.
  */

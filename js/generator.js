@@ -30,7 +30,7 @@ function selectMode(btnNode)
  */
 function displayStories(page, search = "")
 {
-  $.post("../php/getStories.php", { page: page, search: search }, function(data) {
+  $.post("../php/getStoriesTable.php", { page: page, search: search }, function(data) {
     // Show specified page of stories in table.
     document.querySelector("table#stories tbody").innerHTML = data.table;
 

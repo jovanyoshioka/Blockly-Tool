@@ -844,6 +844,11 @@ body#class div.mazesContainer {
   width: 1100px;
   height: 400px;
   display: flex;
+  justify-content: center; /* for when mazeInfo only shown by default */
+  border: 2px solid #FFFFFF;
+  clip-path: polygon(
+    0 40%, 20% 0, 100% 0, 100% 60%, 80% 100%, 0% 100%
+  );
 }
 /* Sections: Story Information, Student Selection, Progress Analytics */
 body#class div.mazesContainer section {
@@ -856,15 +861,14 @@ body#class div.mazesContainer section {
 }
 
 /* Story Information */
-body#class div.mazesContainer section#storyInfo {
+body#class div.mazesContainer section#mazeInfo {
   width: 30%;
   padding-right: 2%;
   justify-content: center;
   align-items: center;
-  border-right: 2px solid #FFFFFF;
 }
 /* Story Selector */
-body#class div.mazesContainer section#storyInfo select {
+body#class div.mazesContainer section#mazeInfo select {
   width: 90%;
   margin: 0 0 10px 0;
   padding: 5px;
@@ -876,26 +880,30 @@ body#class div.mazesContainer section#storyInfo select {
   background-color: var(--tnOrange);
 }
 /* Story Information Text */
-body#class div.mazesContainer section#storyInfo h2 {
+body#class div.mazesContainer section#mazeInfo h2 {
   margin-top: 5px;
 }
-body#class div.mazesContainer section#storyInfo p {
+body#class div.mazesContainer section#mazeInfo p {
   font-size: 1.5em;
   margin: 30px 0;
+  display: none; /* default */
 }
-body#class div.mazesContainer section#storyInfo p span {
+body#class div.mazesContainer section#mazeInfo p span {
   color: var(--green);
 }
 /* Assign/Unassign Button */
-body#class div.mazesContainer section#storyInfo button {
+body#class div.mazesContainer section#mazeInfo button {
   font-size: 1.5em;
   padding: 10px 10px;
+  display: none; /* default */
 }
 
 /* Student Selection */
 body#class div.mazesContainer section#studentSelect {
   width: 36.5%;
   padding-left: 1.5%;
+  border-left: 2px solid #FFFFFF;
+  display: none; /* default */
 }
 /* Currently Displayed Student Text */
 body#class div.mazesContainer section#studentSelect h1 {
@@ -939,6 +947,7 @@ body#class div.mazesContainer section#studentSelect input[type="text"] {
 body#class div.mazesContainer section#analytics {
   width: 27.5%;
   padding-right: 2.5%;
+  display: none; /* default */
 }
 body#class div.mazesContainer section#analytics h2 {
   margin: 10px 0;
