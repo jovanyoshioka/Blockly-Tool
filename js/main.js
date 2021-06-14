@@ -199,6 +199,9 @@ function initProgressRing(id, percentage)
 {
   var ringNode = document.getElementById(id).querySelector("circle.filler");
 
+  // Cast percentage as integer; otherwise, percentage may oscillate.
+  percentage = parseInt(percentage);
+
   // Set progress ring to fill to specified percentage.
   var maxStrokeOffset = parseInt(
     window.getComputedStyle(ringNode).getPropertyValue("stroke-dasharray")
@@ -454,10 +457,33 @@ function setPassword(e, formObj)
  * CLASSES *
  ***********/
 /**
+ * Instantiates specified number of levels completion indicators.
+ * @param count Number of indicators to instantiate.
+ */
+function instLvlIndicators(count)
+{
+  // Clear previous levels indicators.
+  document.querySelector(".levelsContainer").innerHTML = "";
+
+  // Instantiate new levels indicators.
+  var node;
+  for (var i = 1; i <= count; i++)
+  {
+    // Create level indicator node.
+    // Format: <div class="level">X</div>
+    node = document.createElement("div");
+    node.classList.add("level");
+    node.innerHTML = i;
+
+    // Append to levels indicators container.
+    document.querySelector(".levelsContainer").appendChild(node);
+  }
+}
+/**
  * Sets color of level completion indicators. Supports cumulative and individual data.
  * @param intensities Array of color saturation intensities (0.0 to 2.0) for each level indicator.
  */
-function setProgressColors(intensities)
+function setLvlIndicators(intensities)
 {
   var r, g, b;
 
@@ -488,6 +514,20 @@ function setProgressColors(intensities)
   }
 }
 /**
+ * Initializes and displays levels progression via progress ring and levels indicators.
+ * @param progress Array of maze progression: [0] => ring percentage, [1...n] => level indicator intensities.
+ */
+function displayProgress(progress)
+{
+  // Set progress ring to specified percentage.
+  initProgressRing('progressRing', progress[0]);
+  // Remove percentage from progress array to pass rest to setLvlIndicators(x);
+  progress.shift();
+
+  // Set levels indicators to specified intensities.
+  setLvlIndicators(progress);
+}
+/**
  * Sets status text and button based on if maze specifieed as assigned or not assigned.
  * @param isAssigned true if maze assigned, false if not assigned.
  */
@@ -495,8 +535,9 @@ function displayMazeAssignment(isAssigned)
 {
   var mazeInfoContainer  = document.getElementById("mazeInfo");
 
-  mazeInfoContainer.querySelector("p span").style.color = isAssigned? "#32CD32" : "#FF3131";
-  mazeInfoContainer.querySelector("p span").innerHTML   = isAssigned ? "Assigned" : "Not Assigned";
+  var statusTxtNode = mazeInfoContainer.querySelector("p span");
+  statusTxtNode.style.color = isAssigned? "#32CD32" : "#FF3131";
+  statusTxtNode.innerHTML   = isAssigned ? "Assigned" : "Not Assigned";
 
   mazeInfoContainer.querySelector("button").innerHTML   = isAssigned ? "Unassign" : "Assign";
 }
@@ -506,12 +547,10 @@ function displayMazeAssignment(isAssigned)
  */
 function toggleMazeAssignment(mazeID)
 {
-
   $.post("../php/toggleAssignment.php", { id: mazeID }, function(data) {
     if (data.success)
     {
-      // Maze assignment toggle was successful.
-      // Notify user.
+      // Maze assignment toggle was successful. Notify user.
       showNotification(data.msg, 1);
       // Update assignment status text/button.
       displayMazeAssignment(data.assigned);
@@ -532,6 +571,31 @@ function toggleMazeAssignment(mazeID)
  */
 function showMazeAnalytics(mazeID)
 {
+  /**
+   * Nested function to display analytics elements if not already shown.
+   */
+  function showElements()
+  {
+    if (
+      window.getComputedStyle(
+        mazeInfoContainer.querySelector("p")
+      )
+        .getPropertyValue("display") == "none"
+    )
+    {
+      // Remove encapsulating border.
+      var container = document.querySelector("div.mazesContainer");
+      container.style.border = "none";
+      container.style.clipPath = "none";
+      // Show maze assignment status text and button.
+      mazeInfoContainer.querySelector("p").style.display      = "block";
+      mazeInfoContainer.querySelector("button").style.display = "block";
+      // Show student selection and progress analytics containers.
+      studentsContainer.style.display  = "flex";
+      analyticsContainer.style.display = "flex";
+    }
+  }
+
   var mazeInfoContainer  = document.getElementById("mazeInfo");
   var studentsContainer  = document.getElementById("studentSelect");
   var analyticsContainer = document.getElementById("analytics");
@@ -550,6 +614,11 @@ function showMazeAnalytics(mazeID)
       // Set assignment status text/button.
       displayMazeAssignment(data.mazeInfo.assigned);
       mazeInfoContainer.querySelector("button").onclick = function() { toggleMazeAssignment(mazeID); };
+
+      // Instantiate levels indicators elements.
+      instLvlIndicators(data.mazeProgress.length-1);
+      // Display cumulative levels progression (by default).
+      displayProgress(data.mazeProgress);
     } else
     {
       // Maze analytics selection was unsuccessful.
@@ -560,30 +629,6 @@ function showMazeAnalytics(mazeID)
       // Something unexpected went wrong.
       showNotification("An error occured when fetching maze analytics: " + error, 2);
     });
-  
-  /**
-   * Nested function to display analytics elements if not already shown.
-   */
-  function showElements()
-  {
-    if (
-      window.getComputedStyle(
-        mazeInfoContainer.querySelector("p")
-      )
-        .getPropertyValue("display") == "none"
-    )
-    {
-      // Remove encapsulating border.
-      document.querySelector("div.mazesContainer").style.border = "none";
-      document.querySelector("div.mazesContainer").style.clipPath = "none";
-      // Show maze assignment status text and button.
-      mazeInfoContainer.querySelector("p").style.display      = "block";
-      mazeInfoContainer.querySelector("button").style.display = "block";
-      // Show student selection and progress analytics containers.
-      studentsContainer.style.display  = "flex";
-      analyticsContainer.style.display = "flex";
-    }
-  }
 }
 /**
  * Extract students' first and last names in individualized form from a list of students.

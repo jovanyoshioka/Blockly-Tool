@@ -81,14 +81,7 @@
           </svg>
         </div>
         <div class="levelsContainer">
-          <div class="level">1</div>
-          <div class="level">2</div>
-          <div class="level">3</div>
-          <div class="level">4</div>
-          <div class="level">5</div>
-          <div class="level">6</div>
-          <div class="level">7</div>
-          <div class="level">8</div>
+          <!-- Data from instLvlIndicators(x); -->
         </div>
       </section>
     </div>
@@ -205,18 +198,11 @@
 
     <script>
       $(document).ready(function() {
-
+        // Fill "section#studentSelect" and "Manage Students".
         getStudents();
 
         // Handle edit student form submission.
         $("form#editStudentForm").submit(function(e) { editStudent(e, this); });
-        
-        /*
-        initProgressRing('progressRing', 65);
-        setProgressColors(
-          [2.0, 1.7, 1.5, 1.0, 0.8, 0.6, 0.3, 0.0]
-        );
-        */
       });
     </script>
   </body>

@@ -844,7 +844,7 @@ body#class div.mazesContainer {
   width: 1100px;
   height: 400px;
   display: flex;
-  justify-content: center; /* for when mazeInfo only shown by default */
+  justify-content: center; /* for when section#mazeInfo only shown by default */
   border: 2px solid #FFFFFF;
   clip-path: polygon(
     0 40%, 20% 0, 100% 0, 100% 60%, 80% 100%, 0% 100%
