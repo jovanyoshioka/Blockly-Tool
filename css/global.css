@@ -14,7 +14,7 @@
   --limestone:   #F0EDE3;
   --rock:        #A7A9AC;
   --green:       #32CD32;
-  --red:         #FF3131;
+  --red:         #FF3232;
   /* Font */
   --gothic:      'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   /* Global Values */
@@ -990,7 +990,7 @@ body#class div.mazesContainer section#analytics div.levelsContainer div.level {
   line-height: 55px;
   display: inline-block;
   border-radius: 50%;
-  background-color: var(--lighterGray);
+  background-color: var(--red);
   transition: background-color 1s;
 }
 body#class div.mazesContainer section#analytics div.levelsContainer div.level:first-of-type {

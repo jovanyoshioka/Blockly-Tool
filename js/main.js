@@ -31,7 +31,7 @@ function copyText(txtNode, copyTxt)
     })
       .catch(function() {
         // Failed at copying text.
-        txtNode.innerHTML = "An error occured.";
+        txtNode.innerHTML = "An error occurred.";
       });
   } else
   {
@@ -190,6 +190,8 @@ function searchTable(term, table, toSearch)
 /*****************
  * PROGRESS RING *
  *****************/
+// Global variable needed to clear previous counter.
+var ringCounter;
 /**
  * Initializes progress ring fill animation with percentage text.
  * @param id ID of progress ring SVG element.
@@ -215,15 +217,17 @@ function initProgressRing(id, percentage)
 
   // Calculate time per iteration for counter to reach new percentage in one second (duration of SVG drawing animation).
   var counterDuration = 1000 / Math.abs(percentage - currPercent);
+  // Clear previous counter or it will continue counting to previous percentage.
+  clearInterval(ringCounter)
   // Count from initial to new percentage.
-  var counter = setInterval(function() {
+  ringCounter = setInterval(function() {
     // Calculate and display next percentage.
     currPercent = parseInt(textNode.innerHTML);
     newPercent = currPercent > percentage ? currPercent - 1 : currPercent + 1;
     textNode.innerHTML = newPercent + "%";
     
     // Stop counter once specified percentage reached.
-    if (newPercent == percentage) clearInterval(counter);
+    if (newPercent == percentage) clearInterval(ringCounter);
   }, counterDuration);
 }
 
@@ -562,7 +566,7 @@ function toggleMazeAssignment(mazeID)
   }, "json")
     .fail(function(jqXHR, status, error) {
       // Something unexpected went wrong.
-      showNotification("An error occured when toggling maze assignment: " + error, 2);
+      showNotification("An error occurred when toggling maze assignment: " + error, 2);
     });
 }
 /**
@@ -627,7 +631,34 @@ function showMazeAnalytics(mazeID)
   }, "json")
     .fail(function(jqXHR, status, error) {
       // Something unexpected went wrong.
-      showNotification("An error occured when fetching maze analytics: " + error, 2);
+      showNotification("An error occurred when fetching maze analytics: " + error, 2);
+    });
+}
+/**
+ * Displays specified student's progress on currently selected maze.
+ * Also displays cumulative progress if studentID passed as 0.
+ * @param studentID ID of student to get progress on. Pass 0 for cumulative.
+ */
+function getStudentProgress(studentID)
+{
+  // Get currently selected maze via <select> input.
+  var mazeID = document.getElementById("mazeInfo").querySelector("select").value;
+  
+  // Retrieve student's progress from database and append to appropriate elements.
+  $.post("../php/getStdntProgress.php", { studentID: studentID, mazeID: mazeID }, function(data) {
+    if (data.success)
+    {
+      // Display retrieved levels progression, either student or cumulative as defined by studentID.
+      displayProgress(data.progress);
+    } else
+    {
+      // Student progression selection was unsuccessful.
+      showNotification("Selection unsuccessful! " + data.msg, 2);
+    }
+  }, "json")
+    .fail(function(jqXHR, status, error) {
+      // Something unexpected went wrong.
+      showNotification("An error occurred when fetching student progression: " + error, 2);
     });
 }
 /**
@@ -691,7 +722,7 @@ function getStudents()
   }, "json")
     .fail(function(jqXHR, status, error) {
       // Something unexpected went wrong.
-      showNotification("An error occured when fetching students: " + error, 2);
+      showNotification("An error occurred when fetching students: " + error, 2);
     });
 }
 /**
@@ -723,10 +754,10 @@ function addStudents()
   })
     .fail(function(jqXHR, status, error) {
       // Something unexpected went wrong.
-      showNotification("An error occured when adding students: " + error, 2);
+      showNotification("An error occurred when adding students: " + error, 2);
     })
     .always(function() {
-      // Perform actions below for error too in case error occured after students added.
+      // Perform actions below for error too in case error occurred after students added.
       // Clear any previous message.
       msgNode.innerHTML = '';
       // Reset textarea/found list to allow adding more students/prevent adding same students.
@@ -805,7 +836,7 @@ function editStudent(e, formObj)
       // Close edit student modal.
       closeModal(document.querySelector('.modal.show'));
       // Something unexpected went wrong.
-      showNotification("An error occured when editing student: " + error, 2);
+      showNotification("An error occurred when editing student: " + error, 2);
     });
 }
 /**
@@ -849,7 +880,7 @@ function deleteStudent(id)
   }, "json")
     .fail(function(jqXHR, status, error) {
       // Something unexpected went wrong.
-      showNotification("An error occured when deleting student: " + error, 2);
+      showNotification("An error occurred when deleting student: " + error, 2);
     })
     .always(function() {
       // Close delete student modal in all outcomes.

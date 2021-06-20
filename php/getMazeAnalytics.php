@@ -53,7 +53,7 @@
   } else
   {
     // Invalid maze selected, throw error and stop process.
-    $msg = "Maze is not valid.";
+    $msg = "Maze is invalid.";
     echo json_encode(array(
       "success" => false,
       "msg"     => $msg

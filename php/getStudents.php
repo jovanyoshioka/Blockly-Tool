@@ -39,7 +39,7 @@
 
   // Cumulative option for "Levels Progression" selection buttons.
   $studentsBtns .= '
-    <button onclick="">Cumulative</button>
+    <button onclick="getStudentProgress(0)">Cumulative</button>
   ';
 
   // Format retrieved data into table rows and buttons.
@@ -83,7 +83,7 @@
 
     // Format data as button for "Levels Progression" student selection.
     $studentsBtns .= '
-      <button onclick="">'.$row['LName'].', '.$row['FName'].'</button>
+      <button onclick="getStudentProgress('.$row['ID'].')">'.$row['LName'].', '.$row['FName'].'</button>
     ';
   }
 

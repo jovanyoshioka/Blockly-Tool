@@ -10,17 +10,24 @@
   $sql = $conn->prepare("
     SELECT
       COUNT(DISTINCT levels.ID) AS Total,
-      GROUP_CONCAT(DISTINCT progress.CurrLevel) AS Progress
+      (
+        SELECT
+          GROUP_CONCAT(progress.CurrLevel) AS Progress
+        FROM
+          progress
+        INNER JOIN
+          students
+        ON
+          students.ID = progress.StudentID AND students.ClassID=?
+        WHERE
+          progress.StoryID = levels.StoryID
+      ) AS Progress
     FROM
       levels
-    LEFT JOIN
-      progress
-    ON
-      progress.StoryID = levels.StoryID
     WHERE
       levels.StoryID=? AND levels.LvlNum > 0
   ");
-  $sql->bind_param("i", $mazeID);
+  $sql->bind_param("ii", $_SESSION['classID'], $mazeID);
   $sql->execute();
   $row = $sql->get_result()->fetch_assoc();
 
@@ -29,7 +36,7 @@
   $currLevelsString = $row['Progress'];
 
   // Initialize array to record students' levels progression.
-  // Note: [0] => cumulative percentage, [1...n] => individual level progress.
+  // Format: [0] => cumulative percentage, [1...n] => individual level progress (for displayProgress(x);).
   $progress = array_fill(0, $totalLevels+1, 0);
 
   if (!isset($currLevelsString))

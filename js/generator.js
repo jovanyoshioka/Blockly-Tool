@@ -38,7 +38,7 @@ function displayStories(page, search = "")
     document.getElementById("tableNav").innerHTML = data.nav;
   }, "json")
     .fail(function(jqXHR, status, error) {
-      alert("An error occured when fetching stories: " + error);
+      alert("An error occurred when fetching stories: " + error);
     });
 }
 
@@ -149,7 +149,7 @@ function previewStory(storyID, title)
     document.querySelector("#previewModal div.body").innerHTML = data;
   })
     .fail(function(jqXHR, status, error) {
-      alert("An error occured when fetching the story's data: " + error);
+      alert("An error occurred when fetching the story's data: " + error);
     });
 
   openModal("previewModal");
@@ -165,7 +165,7 @@ function displayStoryEditor(storyID)
     alert(data);
   })
     .fail(function(jqXHR, status, error) {
-      alert("An error occured when fetching the story's data: " + error);
+      alert("An error occurred when fetching the story's data: " + error);
     });
 }
 

@@ -302,7 +302,7 @@ function trackPos(char)
       char.y += char.size;
       break;
     default:
-      console.log("An error occured while identifying character's direction!");
+      console.log("An error occurred while identifying character's direction!");
       break;
   }
 }

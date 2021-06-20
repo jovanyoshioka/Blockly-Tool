@@ -75,17 +75,7 @@
     </div>
 
     <?php
-      if (isset($_GET['classID']))
-      {
-        // Only display student login if "classID" present in URL.
-        echo '
-          <script type="text/javascript">
-            document.getElementById("loginSelector").style.transition = "none";
-            document.getElementById("studentForm").style.transition   = "none";
-            switchFormTabs("loginSelector","studentForm");
-          </script>
-        ';
-      } else if (isset($_SESSION['id']) && $_SESSION['type'] == 1 && $_SESSION['tempPwd'])
+      if (isset($_SESSION['id']) && $_SESSION['type'] == 1 && $_SESSION['tempPwd'])
       {
         // Only display password form if teacher used temporary password to log in to current session.
         echo '
@@ -93,6 +83,16 @@
             document.getElementById("loginSelector").style.transition = "none";
             document.getElementById("pwdForm").style.transition   = "none";
             switchFormTabs("loginSelector","pwdForm");
+          </script>
+        ';
+      } else if (isset($_GET['classID']))
+      {
+        // Only display student login if "classID" present in URL.
+        echo '
+          <script type="text/javascript">
+            document.getElementById("loginSelector").style.transition = "none";
+            document.getElementById("studentForm").style.transition   = "none";
+            switchFormTabs("loginSelector","studentForm");
           </script>
         ';
       }

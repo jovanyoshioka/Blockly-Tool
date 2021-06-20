@@ -44,7 +44,7 @@
     echo 'Registration successful! ' . $fName . ' ' . $lName . ' has been added!';
   } else
   {
-    echo 'Registration unsuccessful! An insertion error occured.';
+    echo 'Registration unsuccessful! An insertion error occurred.';
   }
 
   exit;
