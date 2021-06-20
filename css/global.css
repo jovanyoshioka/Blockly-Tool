@@ -377,6 +377,45 @@ p.fail {
   pointer-events: all;
 }
 
+/* Form Modal */
+div.formModal {
+  width: 450px;
+}
+/* Form Header */
+div.formModal header {
+  padding: 7.5px 0;
+}
+div.formModal header h1 {
+  margin: 0 10px !important;
+  display: inline;
+}
+div.formModal header button {
+  margin-top: -5px;
+}
+/* Form Labels/Fields */
+div.formModal div.body div {
+  margin: 15px auto 25px auto;
+  display: table;
+}
+div.formModal form p {
+  width: 75%;
+  font-size: 1.5em;
+  margin: 15px auto 0 auto !important;
+  text-align: center;
+}
+div.formModal form label {
+  font-size: 1.75em;
+  margin: 5px 0 0 0;
+}
+div.formModal form input:not([type="submit"]) {
+  font-size: 2em;
+  margin: 5px 0;
+  padding: 10px 15px;
+  font-family: var(--gothic);
+  border: none;
+  border-radius: 5px;
+}
+
 /*******************
  * PAGE: login.php *
  *******************/
@@ -1094,34 +1133,6 @@ body#class div#addModal div.body div.foundContainer div {
   display: inline-block;
   background-color: var(--tnOrange);
   border-radius: 2.5px;
-}
-
-/* Edit Student Modal */
-body#class div#editModal {
-  width: 450px;
-}
-/* Edit Form Labels/Fields */
-body#class div#editModal div.body div {
-  margin: 15px auto 25px auto;
-  display: table;
-}
-body#class div#editModal form p {
-  width: 75%;
-  font-size: 1.5em;
-  margin: 15px auto 0 auto;
-  text-align: center;
-}
-body#class div#editModal form label {
-  font-size: 1.75em;
-  margin: 5px 0 0 0;
-}
-body#class div#editModal form input:not([type="submit"]) {
-  font-size: 2em;
-  margin: 5px 0;
-  padding: 10px 15px;
-  font-family: var(--gothic);
-  border: none;
-  border-radius: 5px;
 }
 
 /* Delete Student Modal */

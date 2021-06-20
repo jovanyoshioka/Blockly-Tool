@@ -137,7 +137,7 @@
     </div>
 
     <!-- Modal for editing a student's information -->
-    <div id="editModal" class="modal studentModal">
+    <div id="editModal" class="modal studentModal formModal">
       <header>
         <h1>Edit Student</h1>
         <button onclick="closeModal(this.parentElement.parentElement)">&#x2716;</button>
@@ -180,23 +180,7 @@
       </footer>
     </div>
 
-    <!-- Universal Notification (one instance only for each page) -->
-    <div class="notification" onclick="hideNotification()">
-      <p>
-        <!-- Corresponding icon to notification type is displayed -->
-        <span class="success">&check;</span>
-        <span class="fail">&#9888;</span>
-        <span class="msg">
-          <!-- Message from showNotification(a,b); -->
-        </span>
-        <span>&#x2716;</span>
-      </p>
-    </div>
-
-    <!-- Dark background tint for modal (one instance needed for all modals) -->
-    <div class="modalBackground" onclick="closeModal(document.querySelector('.modal.show'))"></div>
-
-    <script>
+    <script type="text/javascript">
       $(document).ready(function() {
         // Fill "section#studentSelect" and "Manage Students".
         getStudents();

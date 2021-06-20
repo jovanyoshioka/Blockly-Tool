@@ -461,6 +461,47 @@ function setPassword(e, formObj)
  * CLASSES *
  ***********/
 /**
+ * Create a class with specified name.
+ * @param e Form submission event.
+ * @param formObj Object of "Create a Class" form.
+ */
+function createClass(e, formObj)
+{
+  const FAIL_MSG = "Creation unsuccessful!";
+  var msgNode    = formObj.querySelector("p.msg");
+
+  // Execute generic form actions. Stop edit process if false is returned.
+  if (!handleGenericForm(e, [formObj.elements["name"]], msgNode, FAIL_MSG)) return;
+
+  // Prepare form data for passing by removing leading/trailing whitespace and serializing.
+  trimFormFields(formObj.elements);
+  var formData = $(formObj).serialize();
+
+  // Create class.
+  $.post("../php/createClass.php", formData, function(data) {
+    if (data.success)
+    {
+      // Notify class creation was successful.
+      displayFormMsg(msgNode, "Class has been successfully created!", 1);
+
+      // Redirect to newly created class with delay so user can view success msg.
+      setTimeout(function() {
+        window.location.href = "class.php?id=" + data.classID + "&name=" + data.className;
+      }, 1500);
+    } else
+    {
+      // Creation was unsuccessful.
+      displayFormMsg(msgNode, FAIL_MSG + "<br />" + data.msg, 2);
+    }
+  }, "json")
+    .fail(function(jqXHR, status, error) {
+      // Close "Create a Class" modal.
+      closeModal(document.querySelector('.modal.show'));
+      // Something unexpected went wrong.
+      showNotification("An error occurred when creating the class: " + error, 2);
+    });
+}
+/**
  * Instantiates specified number of levels completion indicators.
  * @param count Number of indicators to instantiate.
  */
