@@ -406,6 +406,8 @@ div.formModal form p {
 div.formModal form label {
   font-size: 1.75em;
   margin: 5px 0 0 0;
+  color: #FFFFFF;
+  font-family: var(--gothic);
 }
 div.formModal form input:not([type="submit"]) {
   font-size: 2em;
@@ -414,6 +416,23 @@ div.formModal form input:not([type="submit"]) {
   font-family: var(--gothic);
   border: none;
   border-radius: 5px;
+}
+
+/* Level Indicator */
+div.levelIndicator {
+  width: 55px;
+  height: 55px;
+  margin: 5px 5px 7.5px 0;
+  text-align: center;
+  font-size: 2em;
+  line-height: 55px;
+  display: inline-block;
+  border-radius: 50%;
+  background-color: var(--red);
+  transition: background-color 1s;
+}
+div.levelIndicator.complete {
+  background-color: var(--green);
 }
 
 /*******************
@@ -524,6 +543,71 @@ body#login div.forms form#pwdForm input[type=button] {
 body#dashboard {
   color: #FFFFFF;
   font-family: var(--gothic);
+  overflow: auto;
+}
+body#dashboard div.wrapper {
+  width: 825px;
+  margin: 0 auto;
+}
+body#dashboard div.wrapper h1 {
+  font-size: 3.25em;
+  margin: 20px 0;
+  text-align: center;
+}
+/* Teacher View */
+body#dashboard div.wrapper h2 {
+  font-size: 2em;
+}
+body#dashboard div.wrapper p {
+  font-size: 1.75em;
+  margin: 0;
+  padding: 0;
+}
+body#dashboard div.wrapper p a {
+  color: var(--tnOrange);
+  transition: color 0.5s;
+}
+body#dashboard div.wrapper p a:hover {
+  color: var(--lightOrange);
+}
+/* Student View */
+body#dashboard div.wrapper h3 {
+  font-size: 2.5em;
+  margin: 0 0 7.5px 0;
+  padding: 0;
+}
+/* Assignment Card */
+body#dashboard div.wrapper div.assignment {
+  width: 100%;
+  height: 100px;
+  margin: 0 0 15px 0;
+  border-radius: 5px;
+  background-color: var(--lightGray);
+  display: flex;
+  align-items: center;
+}
+/* "Go" Button */
+body#dashboard div.wrapper div.assignment button {
+  font-size: 2em;
+  margin: 0 15px;
+  padding: 5px 10px;
+}
+/* Title/Author Text */
+body#dashboard div.wrapper div.assignment h2 {
+  width: 400px;
+  max-height: 85px;
+  margin: 0 20px 0 0;
+  padding: 0;
+  display: inline-block;
+  overflow-y: auto;
+}
+/* Level Indicators Container */
+body#dashboard div.wrapper div.levels {
+  width: 300px;
+  white-space: nowrap;
+  display: inline-block;
+  vertical-align: top;
+  overflow-x: auto;
 }
 
 /***********************
@@ -576,15 +660,13 @@ body#generator button.modeBtn h1 {
   color: #FFFFFF;
 }
 
-/* Maze Generation Modals */
-body#generator .modal {
+/* Maze Generation Preview/Edit Story Modals */
+body#generator .storyModal {
   width: 800px;
 }
-body#generator .modal div.body {
+body#generator .storyModal div.body {
   padding: 10px;
 }
-
-/* Maze Generation Preview/Edit Story Modals */
 body#generator .storyModal div.body section {
   padding: 0 0 10px 0;
   border-bottom: 2px solid #FFFFFF;
@@ -702,7 +784,7 @@ body#generator section.formContainer form {
   margin: 0 auto;
   text-align: center;
 }
-body#generator form label {
+body#generator section.formContainer form label {
   font-size: 1.25em;
 }
 body#generator form input[type="text"],
@@ -814,6 +896,10 @@ body#generator section#chooseAStoryForm form table + div p {
   left: 0;
   right: 0;
   margin: 0 auto;
+}
+/* Unavailable Message */
+body#generator section#makeYourOwnForm h2 {
+  text-align: center;
 }
 
 /*******************
@@ -1021,21 +1107,13 @@ body#class div.mazesContainer section#analytics div.levelsContainer {
   white-space: nowrap;
 }
 /* Levels Completion Indicators */
-body#class div.mazesContainer section#analytics div.levelsContainer div.level {
-  width: 55px;
-  height: 55px;
+body#class div.mazesContainer section#analytics div.levelsContainer div.levelIndicator {
   margin: 5px 5px 7.5px 0;
-  font-size: 2em;
-  line-height: 55px;
-  display: inline-block;
-  border-radius: 50%;
-  background-color: var(--red);
-  transition: background-color 1s;
 }
-body#class div.mazesContainer section#analytics div.levelsContainer div.level:first-of-type {
+body#class div.mazesContainer section#analytics div.levelsContainer div.levelIndicator:first-of-type {
   margin-left: 10px;
 }
-body#class div.mazesContainer section#analytics div.levelsContainer div.level:last-of-type {
+body#class div.mazesContainer section#analytics div.levelsContainer div.levelIndicator:last-of-type {
   margin-right: 10px;
 }
 
@@ -1151,9 +1229,21 @@ body#class div#delModal div.body p span {
 /*********************
  * PAGE: contact.php *
  *********************/
- body#contact {
+
+body#contact {
   color: #FFFFFF;
   font-family: var(--gothic);
+}
+/* Text and Links */
+body#contact h1 {
+  text-align: center;
+}
+body#contact h1 a {
+  color: var(--tnOrange);
+  transition: color 0.5s;
+}
+body#contact h1 a:hover {
+  color: var(--lightOrange);
 }
 
 /*****************

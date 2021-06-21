@@ -132,7 +132,7 @@
         <h1>Maze Generator</h1>
         <h2>Make your own story</h2>
       </header>
-      <h2>**Work in progress**</h2>
+      <h2>This is currently unavailable.<br />Please use the "Choose a story" option.</h2>
     </section>
 
     <script src="../js/generator.js"></script>

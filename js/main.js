@@ -517,7 +517,7 @@ function instLvlIndicators(count)
     // Create level indicator node.
     // Format: <div class="level">X</div>
     node = document.createElement("div");
-    node.classList.add("level");
+    node.classList.add("levelIndicator");
     node.innerHTML = i;
 
     // Append to levels indicators container.

@@ -18,41 +18,60 @@
       switch ($_SESSION['type'])
       {
         case 0:
+          // Student Dashboard: Assignments
+
+          // Get student's assignments and progression, stored in variable $assignments.
+          include('../php/getAssignments.php');
+
           echo '
-            <h1>Student Dashboard **Work in progress**</h1>
-            <h1>Show assigned mazes to complete (something like the following): </h1>
-            <h2>The Very Hungry Caterpillar, Levels 1-3: <a href="app.php">Go</a></h2>
+            <!-- Header -->
+            <header class="banner">
+              <h1>Dashboard</h1>
+              <h2>'.$_SESSION['fName'].' '.$_SESSION['lName'].'</h2>
+            </header>
+            <div class="wrapper">
+              <h1>Code a Story</h1>
+              <h3>Your Assignments</h3>
+              <div class="assignments">
+                '.$assignments.'
+              </div>
+            </div>
           ';
           break;
         case 1:
+          // Teacher Dashboard: Instructions to Get Started
+          // Eventually: Classes, Mazes, Stories
+
           echo '
-            <h1>Teacher Dashboard **Work in progress**</h1>
-            <h1>Show classes (something like the following):</h1>
-            <h2>1st Period: <a href="class.php?classID=161361723">Go</a></h2>
-            <h2>2nd Period: <a href="class.php?classID=837105723">Go</a></h2>
-            <h2>3rd Period: <a href="class.php?classID=982761236">Go</a>
-            <h2>4th Period: <a href="class.php?classID=419602151">Go</a>
-            <h1>Show generated mazes. Allow view/delete.</h1>
-            <h1>Show user\'s uploaded stories. Allow view/edit/publish or unpublish/delete.</h1>
-            <!-- Modal for creating a new class -->
-            <div id="createClassModal" class="modal createClassModal">
-              <header>
-                <h1>Create a Class</h1>
-                <button onclick="closeModal(this.parentElement.parentElement)">&#x2716;</button>
-              </header>
-              <div class="body">
-                
-              </div>
-              <footer>
-                <button class="orangeBtn right">Save</button>
-              </footer>
+            <!-- Header -->
+            <header class="banner">
+              <h1>Dashboard</h1>
+              <h2>'.$_SESSION['fName'].' '.$_SESSION['lName'].'</h2>
+            </header>
+            <div class="wrapper">
+              <h1>Code a Story</h1>
+              <p>
+                &#9679; To get started, use the "Create a Class" option under "Classes &#9660;" on the navigation bar.<br />
+                &#9679; After creating your class, add your students through the "Manage Students" interface.<br />
+                &#9679; Once your students are added, use the 
+                <a href="generator.php">Generator</a>
+                to create mazes.<br />
+                &#9679; Assign the mazes to your students via the "Maze Analytics" interface within your class.<br />
+
+                &#9679; As your students solve the assigned mazes, you can view their progress through the "Maze Analytics" interface as well.<br />
+              </p>
+              <h2>If you have any questions, feel free to reach out to us!</h2>
             </div>
-            <!-- Dark background tint for modal (one instance needed for all modals) -->
-            <div class="modalBackground" onclick="closeModal(document.querySelector(\'.modal.show\'))"></div>
           ';
           break;
         case 2:
-          include('../php/adminDashboard.php');
+          // Admin Dashboard: Manage Teachers, ALL Stories
+
+          echo '
+            <h1>Admin Dashboard **Work in progress**</h1>
+            <h1>Display interface to add/view/change email/reset password/delete teachers.</h1>
+            <h1>Eventually: Display ALL stories and have the ability to delete if needed.</h1>
+          ';
           break;
       }
     ?>
