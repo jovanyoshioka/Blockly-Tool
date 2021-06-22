@@ -54,10 +54,8 @@
   } else
   {
     // Class was not successfully created.
-    $msg = "Insertion into database failed.";
     echo json_encode(array(
-      "success" => false,
-      "msg"     => $msg
+      "success" => false
     ));
   }
 

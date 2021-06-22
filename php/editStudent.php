@@ -19,8 +19,8 @@
     // Student is not in current class, throw error and stop edit process.
     $msg = "Student is not in this class.";
     echo json_encode(array(
-      "success"=>false,
-      "msg"=>$msg
+      "success" => false,
+      "msg"     => $msg
     ));
     $conn->close();
     exit;
@@ -40,10 +40,12 @@
 
   $conn->close();
 
-  // Student information has been successfully edited.
+  // Return success (true) or fail (false) based on update.
   echo json_encode(array(
-    "success"=>true
+    "success" => $sql->affected_rows > 0 ? true : false,
+    "msg"     => $sql->affected_rows > 0 ? "" : "Database update failed."
   ));
+
   exit;
 
 ?>

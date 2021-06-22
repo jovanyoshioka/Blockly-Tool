@@ -39,5 +39,11 @@
   $sql->execute();
 
   $conn->close();
+
+  // Return success (true) or fail (false) based on insertion.
+  echo json_encode(array(
+    "success" => $sql->affected_rows > 0 ? true : false
+  ));
+  
   exit;
 ?>

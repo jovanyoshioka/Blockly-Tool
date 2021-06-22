@@ -20,10 +20,11 @@
           cutscenes
         ON levels.ID = cutscenes.LvlID
     WHERE
-      levels.StoryID = $storyID
+      levels.StoryID = ?
     GROUP BY
-      levels.lvlNum
+      levels.LvlNum
   ");
+  $sql->bind_param("i", $storyID);
   $sql->execute();
   $results = $sql->get_result();
 

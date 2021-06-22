@@ -6,12 +6,10 @@
   $storiesPerPage = 5;
   $page = $_POST["page"];
   $offset = ($page - 1) * $storiesPerPage;
-
-  // Get term to search by.
-  $search = $_POST["search"];
-  // Double all single apostrophes to prevent errors in SQL LIKE statement queries.
-  $search = str_replace("'", "''", $search);
-
+  
+  // Get and format search term.
+  $search = "%{$_POST['search']}%";
+  
   // Get specified page's stories and corresponding uploaders from database.
   // Note: "Default" stories take precedence, newest stories display first.
   // Automatically formatting Uploader as "Default" or "FName LName, School"
@@ -33,18 +31,19 @@
       stories.Published = 1 AND
       (stories.UploaderID = 0 OR stories.UploaderID = teachers.ID) AND
       (
-        stories.Title LIKE '%$search%' OR 
-        stories.Author LIKE '%$search%' OR 
+        stories.Title LIKE ? OR 
+        stories.Author LIKE ? OR 
         CASE
           WHEN stories.UploaderID = 0 THEN 'Default'
           ELSE CONCAT(teachers.FName, ' ', teachers.LName, ', ', teachers.School)
-        END LIKE '%$search%'
+        END LIKE ?
       )
     ORDER BY
       FIELD(stories.UploaderID, 0) DESC,
       stories.ID DESC
-    LIMIT $storiesPerPage OFFSET $offset
+    LIMIT ? OFFSET ?
   ");
+  $sql->bind_param("sssii", $search, $search, $search, $storiesPerPage, $offset);
   $sql->execute();
   $results = $sql->get_result();
 
@@ -79,14 +78,15 @@
       stories.Published = 1 AND
       (stories.UploaderID = 0 OR stories.UploaderID = teachers.ID) AND
       (
-        stories.Title LIKE '%$search%' OR 
-        stories.Author LIKE '%$search%' OR 
+        stories.Title LIKE ? OR 
+        stories.Author LIKE ? OR 
         CASE
           WHEN stories.UploaderID = 0 THEN 'Default'
           ELSE CONCAT(teachers.FName, ' ', teachers.LName, ', ', teachers.School)
-        END LIKE '%$search%'
+        END LIKE ?
       )
   ");
+  $sql->bind_param("sss", $search, $search, $search);
   $sql->execute();
   $results = $sql->get_result();
   $row = $results->fetch_assoc();

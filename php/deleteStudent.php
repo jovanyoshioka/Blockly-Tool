@@ -33,10 +33,11 @@
 
   $conn->close();
 
-  // Student information has been successfully deleted.
+  // Return success (true) or fail (false) based on deletion.
   echo json_encode(array(
-    "success"=>true
+    "success" => $sql->affected_rows > 0 ? true : false
   ));
+
   exit;
 
 ?>

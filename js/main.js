@@ -491,7 +491,7 @@ function createClass(e, formObj)
     } else
     {
       // Creation was unsuccessful.
-      displayFormMsg(msgNode, FAIL_MSG + "<br />" + data.msg, 2);
+      displayFormMsg(msgNode, FAIL_MSG + "<br />" + "Unsuccessful database insertion.", 2);
     }
   }, "json")
     .fail(function(jqXHR, status, error) {
@@ -789,10 +789,18 @@ function addStudents()
 
   // Add found students to database.
   $.post("../php/addStudents.php", { students: students }, function(data) {
-    // Addition of students was successful.
-    // Show success notification.
-    showNotification("Student(s) was successfully added to this class!", 1);
-  })
+    if (data.success)
+    {
+      // Addition of students was successful.
+      // Show success notification.
+      showNotification("Student(s) was successfully added to this class!", 1);
+    } else
+    {
+      // Addition of students was unsuccessful.
+      // Show fail notification.
+      showNotification("Student(s) addition failed! Unsuccessful database insertion.", 2);
+    }
+  }, "json")
     .fail(function(jqXHR, status, error) {
       // Something unexpected went wrong.
       showNotification("An error occurred when adding students: " + error, 2);
@@ -916,7 +924,7 @@ function deleteStudent(id)
     } else
     {
       // Deletion was unsuccessful. Notify user.
-      showNotification("Student deletion unsuccessful! " + data.msg, 2);
+      showNotification("Student deletion unsuccessful! Unsuccessful database deletion.", 2);
     }
   }, "json")
     .fail(function(jqXHR, status, error) {
