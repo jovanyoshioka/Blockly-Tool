@@ -29,7 +29,7 @@
     ON
       progress.StoryID = assignments.StoryID AND progress.StudentID=?
     WHERE
-      assignments.ClassID=?
+      assignments.ClassID=? AND assignments = 1
   ");
   $sql->bind_param("ii", $_SESSION['id'], $_SESSION['classID']);
   $sql->execute();
@@ -69,7 +69,7 @@
   {
     // No assignments found, so change message to reflect such.
     $assignments = '
-      <h1>No assignments found.</h1>
+      <h4>No assignments found.</h4>
     ';
   }
 

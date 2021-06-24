@@ -20,7 +20,7 @@
   }
 
   // Verify provided email not already in use.
-  $sql = $conn->prepare("SELECT ID FROM users WHERE Email=?");
+  $sql = $conn->prepare("SELECT ID FROM teachers WHERE Email=?");
   $sql->bind_param("s",$email);
   $sql->execute();
   if ($sql->get_result()->num_rows > 0)
@@ -35,8 +35,8 @@
   $encryptedPwd = password_hash($password, PASSWORD_BCRYPT, ["cost" => 10]);
 
   // Add user to database.
-  $sql = $conn->prepare("INSERT INTO users (Email,FName,LName,Password,Type,School) VALUES (?,?,?,?,?,?);");
-  $sql->bind_param("ssssis", $email, $fName, $lName, $encryptedPwd, $type, $school);
+  $sql = $conn->prepare("INSERT INTO teachers (Email,FName,LName,Password,School) VALUES (?,?,?,?,?);");
+  $sql->bind_param("sssss", $email, $fName, $lName, $encryptedPwd, $school);
   $success = $sql->execute();
   // Verify insertion was successful.
   if ($success)

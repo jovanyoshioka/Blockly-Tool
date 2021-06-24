@@ -9,8 +9,8 @@
     // Notify user of situation.
     $msg = "You are already logged in.";
     echo json_encode(array(
-      "success"=>false,
-      "msg"=>$msg
+      "success" => false,
+      "msg"     => $msg
     ));
     exit;
   }
@@ -56,8 +56,8 @@
       // If temporary password, display password form. Otherwise, redirect to dashboard.
       $msg = !$_SESSION['tempPwd'] ? "Redirecting you momentarily." : "";
       echo json_encode(array(
-        "success"=>true,
-        "msg"=>$msg
+        "success" => true,
+        "msg"     => $msg
       ));
       exit;
     }
@@ -66,8 +66,8 @@
   // This should only be reached if authentication failed.
   $msg = "Please verify your credentials and try again.";
   echo json_encode(array(
-    "success"=>false,
-    "msg"=>$msg
+    "success" => false,
+    "msg"     => $msg
   ));
   exit;
 

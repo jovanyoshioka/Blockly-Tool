@@ -9,8 +9,8 @@
     // Notify user of situation.
     $msg = "You are already logged in.";
     echo json_encode(array(
-      "success"=>false,
-      "msg"=>$msg
+      "success" => false,
+      "msg"     => $msg
     ));
     exit;
   }
@@ -90,8 +90,8 @@
       // must be called before any actual output is sent (thus it does not work here).
       $msg = "Redirecting you momentarily.";
       echo json_encode(array(
-        "success"=>true,
-        "msg"=>$msg
+        "success" => true,
+        "msg"     => $msg
       ));
       exit;
     }
@@ -103,8 +103,8 @@
   // Notify user of failure.
   $msg = "Please verify your credentials and try again.";
   echo json_encode(array(
-    "success"=>false,
-    "msg"=>$msg
+    "success" => false,
+    "msg"     => $msg
   ));
   exit;
 

@@ -15,7 +15,7 @@
       stories.Title,
       stories.Author,
       CASE
-        WHEN assignments.StoryID = stories.ID THEN 1
+        WHEN stories.ID = assignments.StoryID THEN 1
         ELSE 0
       END AS Assigned
     FROM
@@ -23,7 +23,7 @@
     LEFT JOIN
       assignments
     ON
-      stories.ID = assignments.StoryID AND ClassID=?
+      stories.ID = assignments.StoryID AND assignments.ClassID=? AND assignments.Assigned = 1
     WHERE
       stories.ID=? AND stories.Published=2 AND stories.UploaderID=? AND
       EXISTS (

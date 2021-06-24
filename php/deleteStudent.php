@@ -14,14 +14,14 @@
     // Student is not in current class, throw error and stop delete process.
     $msg = "Student is not in this class.";
     echo json_encode(array(
-      "success"=>false,
-      "msg"=>$msg
+      "success" => false,
+      "msg"     => $msg
     ));
     $conn->close();
     exit;
   }
 
-  // Delete student from class in database.
+  // Delete student from class.
   $sql = $conn->prepare("
     DELETE FROM
       students
@@ -31,13 +31,41 @@
   $sql->bind_param("i", $id);
   $sql->execute();
 
-  $conn->close();
+  // Determine if student was successfully deleted.
+  if ($sql->affected_rows == 0)
+  {
+    // Deletion was unsuccessful, return fail (false).
+    $msg = "Unsuccessful database deletion.";
+    echo json_encode(array(
+      "success" => false,
+      "msg"     => $msg
+    ));
+    $conn->close();
+    exit;
+  }
 
-  // Return success (true) or fail (false) based on deletion.
+  // Deletion was succssful.
+
+  // Update progress table, i.e. delete all entries of deleted student.
+  $update = array("id" => $id, "type" => 1);
+  if (!include("updateProgress.php"))
+  {
+    // An error occured while updating the progress table.
+    $msg = "Student was successfully deleted, but cleansing failed.";
+    echo json_encode(array(
+      "success" => false,
+      "msg"     => $msg
+    ));
+    $conn->close();
+    exit;
+  }
+
+  // Student deletion and progress update were both successful, return success.
   echo json_encode(array(
-    "success" => $sql->affected_rows > 0 ? true : false
+    "success" => true
   ));
 
+  $conn->close();
   exit;
 
 ?>

@@ -2,7 +2,7 @@
 
   include("sqlConnect.php");
 
-  // Retrieve teachers' mazes, stored as copied stories with Published = 2, from database.
+  // Retrieve teacher's mazes, stored as copied stories with Published = 2, from database.
   // Only get valid mazes, i.e. those with associated levels.
   // Note: LvlNum = 0 is for introductory cutscenes, so do not include this in validation.
   $sql = $conn->prepare("
@@ -26,6 +26,7 @@
   $sql->execute();
   $results = $sql->get_result();
 
+  // Format retrieved data into dropdown options.
   while ($row = $results->fetch_assoc())
   {
     echo '

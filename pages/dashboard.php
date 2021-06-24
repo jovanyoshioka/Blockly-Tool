@@ -60,7 +60,7 @@
 
                 &#9679; As your students solve the assigned mazes, you can view their progress through the "Maze Analytics" interface as well.<br />
               </p>
-              <h2>If you have any questions, feel free to reach out to us!</h2>
+              <h2>If you have any questions, please reach out to us!</h2>
             </div>
           ';
           break;

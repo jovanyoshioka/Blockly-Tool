@@ -589,16 +589,19 @@ function displayMazeAssignment(isAssigned)
 /**
  * Toggles assignment of specified maze.
  * @param mazeID ID of selected maze.
+ * @param isAssigned true if maze assigned, false if not assigned. For visuals only.
  */
-function toggleMazeAssignment(mazeID)
+function toggleMazeAssignment(mazeID, isAssigned)
 {
+  console.log("Toggle: " + isAssigned + " => " + !isAssigned);
   $.post("../php/toggleAssignment.php", { id: mazeID }, function(data) {
     if (data.success)
     {
       // Maze assignment toggle was successful. Notify user.
       showNotification(data.msg, 1);
       // Update assignment status text/button.
-      displayMazeAssignment(data.assigned);
+      displayMazeAssignment(!isAssigned);
+      document.querySelector("#mazeInfo button").onclick = function() { toggleMazeAssignment(mazeID, !isAssigned); };
     } else
     {
       // Maze assignment toggle was unsuccessful.
@@ -658,7 +661,7 @@ function showMazeAnalytics(mazeID)
       mazeInfoContainer.querySelector("h2").innerHTML = "By " + data.mazeInfo.author;
       // Set assignment status text/button.
       displayMazeAssignment(data.mazeInfo.assigned);
-      mazeInfoContainer.querySelector("button").onclick = function() { toggleMazeAssignment(mazeID); };
+      mazeInfoContainer.querySelector("button").onclick = function() { toggleMazeAssignment(mazeID, data.mazeInfo.assigned); };
 
       // Instantiate levels indicators elements.
       instLvlIndicators(data.mazeProgress.length-1);
@@ -798,7 +801,7 @@ function addStudents()
     {
       // Addition of students was unsuccessful.
       // Show fail notification.
-      showNotification("Student(s) addition failed! Unsuccessful database insertion.", 2);
+      showNotification("Student(s) addition failed! " + data.msg, 2);
     }
   }, "json")
     .fail(function(jqXHR, status, error) {
@@ -924,7 +927,7 @@ function deleteStudent(id)
     } else
     {
       // Deletion was unsuccessful. Notify user.
-      showNotification("Student deletion unsuccessful! Unsuccessful database deletion.", 2);
+      showNotification("Student deletion unsuccessful! " + data.msg, 2);
     }
   }, "json")
     .fail(function(jqXHR, status, error) {

@@ -34,7 +34,7 @@
       <section id="mazeInfo">
         <select onchange="showMazeAnalytics(this.value)">
           <option value="" disabled selected>Select a maze</option>
-          <?php include('../php/getStoriesDrpdwn.php'); ?>
+          <?php include('../php/getMazesDrpdwn.php'); ?>
         </select>
         <h1>Maze Analytics</h1>
         <h2>Select a maze from the dropdown to get started</h2>
