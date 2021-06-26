@@ -29,7 +29,7 @@
     ON
       progress.StoryID = assignments.StoryID AND progress.StudentID=?
     WHERE
-      assignments.ClassID=? AND assignments = 1
+      assignments.ClassID=? AND assignments.Assigned = 1
   ");
   $sql->bind_param("ii", $_SESSION['id'], $_SESSION['classID']);
   $sql->execute();

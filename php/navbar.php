@@ -31,6 +31,19 @@
             </div>
           </ul>
         </nav>
+
+        <!-- Universal Notification (one instance only for each page) -->
+        <div class="notification" onclick="hideNotification()">
+          <p>
+            <!-- Corresponding icon to notification type is displayed -->
+            <span class="success">&check;</span>
+            <span class="fail">&#9888;</span>
+            <span class="msg">
+              <!-- Message from showNotification(a,b); -->
+            </span>
+            <span>&#x2716;</span>
+          </p>
+        </div>
       ';
       break;
     case 1:

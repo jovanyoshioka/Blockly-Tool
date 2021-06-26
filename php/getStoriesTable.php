@@ -48,21 +48,27 @@
   $results = $sql->get_result();
 
   // Format retrieved story data as table row.
+  // Note: $row["Title"] is wrapped in a <div> to create a min-height for the table row.
   $table = '';
   while ($row = $results->fetch_assoc())
   {
     $table .= '
       <tr>
-        <td>'.$row["Title"].'</td>
+        <td>
+          <div>
+            '.$row["Title"].'
+          </div>
+        </td>
         <td>'.$row["Author"].'</td>
         <td>'.$row["Uploader"].'</td>
         <td class="hideWhenSelected">
           <input type="button" onclick="previewStory('.$row["ID"].', &quot;'.$row["Title"].'&quot;)" class="orangeBtn" value="Preview" />
           <input type="button" onclick="selectStory(this.parentElement.parentElement, '.$row["ID"].', &quot;'.$row["Title"].'&quot;)" class="orangeBtn" value="Select" />
         </td>
+        <!-- TEMPORARY: Disabled for prototype version.
         <td class="showWhenSelected">
           <input type="button" onclick="openModal(\'editModal\')" class="orangeBtn" value="Edit" />
-        </td>
+        </td> -->
       </tr>
     ';
   }

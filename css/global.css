@@ -210,6 +210,7 @@ p.fail {
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
+  font-family: var(--gothic);
   border-radius: 5px;
   background-color: var(--rock); /* default */
   pointer-events: none;
@@ -228,6 +229,8 @@ p.fail {
 }
 /* Icons and Message */
 .notification p {
+  margin: 0;
+  padding: 0;
   display: inline-block;
 }
 .notification.success p {
@@ -864,10 +867,17 @@ body#generator section#chooseAStoryForm form table th {
 body#generator section#chooseAStoryForm form table td {
   padding: 5px 10px;
 }
+body#generator section#chooseAStoryForm form table td div {
+  min-height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 body#generator section#chooseAStoryForm form table td input[type="button"] {
   font-size: 0.85em;
-  margin: 0;
+  margin: 0 auto;
   padding: 5px 7.5px;
+  display: block;
 }
 body#generator section#chooseAStoryForm form table td input[type="button"]:nth-of-type(1) {
   margin-bottom: 5px;

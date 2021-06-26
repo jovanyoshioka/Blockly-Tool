@@ -75,5 +75,17 @@
           break;
       }
     ?>
+
+    <?php
+      // Show any redirect notifications present in URL.
+      if (isset($_GET['notify']) && isset($_GET['notifyType']))
+      {
+        echo '
+          <script type="text/javascript">
+            showNotification("'.$_GET['notify'].'", '.$_GET['notifyType'].');
+          </script>
+        ';
+      }
+    ?>
   </body>
 </html>

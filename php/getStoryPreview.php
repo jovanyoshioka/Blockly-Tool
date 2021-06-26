@@ -18,7 +18,7 @@
       levels
         LEFT JOIN
           cutscenes
-        ON levels.ID = cutscenes.LvlID
+        ON cutscenes.StoryID = levels.StoryID AND cutscenes.LvlNum = levels.LvlNum
     WHERE
       levels.StoryID = ?
     GROUP BY

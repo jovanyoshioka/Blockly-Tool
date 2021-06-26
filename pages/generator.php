@@ -97,30 +97,35 @@
             <input type="button" onclick="unselectStory()" class="orangeBtn back" value="&#10094; Back" />
           </div>
         </div>
-        <!-- Enable/disable decoy goals -->
-        <label for="decoyToggle">Include Decoy Goals: </label>
-        <input type="checkbox" name="decoyToggle" id="decoyToggle" />
-        <br>
-        <!-- Enable/disable cutscenes -->
-        <label for="cutsceneToggle">Include Cutscenes: </label>
-        <input type="checkbox" name="cutsceneToggle" id="cutsceneToggle" />
-        <br>
-        <!-- Maze difficulty selector -->
-        <label for="difficulty">Difficulty: </label>
-        <select name="difficulty" id="difficulty">
-          <option value="easy">Easy</option>
-          <option value="medium">Medium</option>
-          <option value="hard">Hard</option>
-        </select>
-        <br>
-        <!-- Container for buttons that perform actions, i.e. generate, preview, and save maze -->
-        <div class="actions">
-          <!-- Initial option -->
-          <input type="button" onclick="generateMaze(this.form)" class="orangeBtn" value="Generate" />
-          <!-- Options after generated once -->
-          <input type="button" class="orangeBtn" value="Preview" />
-          <input type="button" class="orangeBtn" value="Regenerate" />
-          <input type="submit" class="orangeBtn" value="Save and Exit" />
+        <div class="showWhenSelected">
+          <!-- Selected Story ID -->
+          <input type="hidden" id="storyID" name="storyID" value="0" />
+          <!-- Enable/disable decoy goals -->
+          <label for="decoyToggle">Include Decoy Goals: </label>
+          <input type="checkbox" name="decoyToggle" id="decoyToggle" />
+          <br>
+          <!-- Enable/disable cutscenes -->
+          <label for="cutsceneToggle">Include Cutscenes: </label>
+          <input type="checkbox" name="cutsceneToggle" id="cutsceneToggle" />
+          <br>
+          <!-- Maze difficulty selector -->
+          <label for="difficulty">Difficulty: </label>
+          <select name="difficulty" id="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+          <br>
+          <!-- Container for buttons that perform actions, i.e. generate, preview, and save maze -->
+          <div class="actions">
+            <!-- Initial option -->
+            <input type="button" onclick="generateMaze(this.form, this)" class="orangeBtn" value="Generate" />
+            <!-- Options after generated once -->
+            <!-- TEMPORARY: Disabled for prototype version.
+            <input type="button" class="orangeBtn" value="Preview" />
+            <input type="button" class="orangeBtn" value="Regenerate" />
+            <input type="submit" class="orangeBtn" value="Save and Exit" /> -->
+          </div>
         </div>
       </form>
     </section>

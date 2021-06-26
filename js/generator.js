@@ -38,7 +38,7 @@ function displayStories(page, search = "")
     document.getElementById("tableNav").innerHTML = data.nav;
   }, "json")
     .fail(function(jqXHR, status, error) {
-      alert("An error occurred when fetching stories: " + error);
+      showNotification("An error occurred when fetching stories: " + error, 2);
     });
 }
 
@@ -69,8 +69,10 @@ function selectStory(selectedNode, storyID)
 {
   // Tag selected story (table row) as selected for when maze is to be generated.
   selectedNode.classList.add("selectedStory");
+  // Update selected story ID input.
+  document.querySelector("input#storyID").value = storyID;
 
-  // Hide all table rows (i.e. stories) except table header (i.e. title, author, uploader) and selected story table row.
+  // Hide all table rows (i.e. stories) except table header (i.e. Title, Author, Uploader) and selected story table row.
   var notSelectedNodes = document.querySelector("table#stories tbody").querySelectorAll("tr:not(.selectedStory)");
   for (var i = 0; i < notSelectedNodes.length; i++)
   {
@@ -105,6 +107,20 @@ function unselectStory()
 {
   // Untag selected story (table row).
   document.querySelector(".selectedStory").classList.remove("selectedStory");
+  // Uninitialize (set to 0) selected story ID input.
+  document.querySelector("input#storyID").value = 0;
+
+  // Reset generator options, i.e. Include Decoy Goals, Include Cutscenes, Difficulty.
+  // Note: Options container should be last element in form element.
+  var optionsContainer = document.querySelector("#chooseAStoryForm form:last-child");
+  for (checkBox of optionsContainer.querySelectorAll("input[type='checkbox']"))
+  {
+    checkBox.checked = false;
+  }
+  for (select of optionsContainer.querySelectorAll("select"))
+  {
+    select.selectedIndex = 0;
+  }
 
   // Hide all elements that were shown when story was selected.
   var elementsToHide = document.querySelectorAll(".showWhenSelected");
@@ -149,7 +165,7 @@ function previewStory(storyID, title)
     document.querySelector("#previewModal div.body").innerHTML = data;
   })
     .fail(function(jqXHR, status, error) {
-      alert("An error occurred when fetching the story's data: " + error);
+      showNotification("An error occurred when fetching the story's data: " + error, 2);
     });
 
   openModal("previewModal");
@@ -165,16 +181,52 @@ function displayStoryEditor(storyID)
     alert(data);
   })
     .fail(function(jqXHR, status, error) {
-      alert("An error occurred when fetching the story's data: " + error);
+      showNotification("An error occurred when fetching the story's data: " + error, 2);
     });
 }
 
 /**
  * Generates mazes for all levels with specified attributes.
- * @formObj Form of which to retrieve maze attributes from.
+ * @param formObj Form of which to retrieve maze attributes from.
+ * @param btnNode "Generate" button node to disable/enable.
  */
-function generateMaze(formObj)
+function generateMaze(formObj, btnNode)
 {
-  var includeDecoys = formObj.elements["decoyToggle"].checked;
-  var difficulty = formObj.elements["difficulty"].value;
+  const FAIL_MSG = "Generation unsuccessful! ";
+  var inputs = formObj.elements;
+  
+  // Temporarily disable "Generate" button to prevent multiple generations.
+  btnNode.disabled = true;
+
+  // Save generated maze's data into database.
+  // Note: data validity is verified in PHP script.
+  // TEMPORARY: for prototype version, all maze options are premade, so no new generation is taking place.
+  $.post(
+    "../php/genPremadeMaze.php",
+    {
+      storyID:     inputs["storyID"].value,
+      doDecoys:    inputs["decoyToggle"].checked,
+      doCutscenes: inputs["cutsceneToggle"].checked,
+      difficulty:  inputs["difficulty"].selectedIndex
+    },
+    function(data)
+    {
+      if (data.success)
+      {
+        // Maze generation/save was successful, redirect user and notify.
+        window.location.href = "dashboard.php?notify=Maze was successfully generated!&notifyType=1";
+      } else
+      {
+        // Maze generation/save was unsuccessful.
+        // Enable "Generate" button so user can attempt generating again.
+        btnNode.disabled = false;
+        // Notify user of failure.
+        showNotification(FAIL_MSG + data.msg, 2);
+      }
+    },
+    "json"
+  )
+    .fail(function(jqXHR, status, error) {
+      showNotification("An error occurred when saving the generated maze: " + error, 2);
+    });
 }

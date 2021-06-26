@@ -31,7 +31,7 @@
   )
   {
     // Student/Teacher not permitted on current page, so redirect to dashboard.
-    header('Location: dashboard.php');
+    header('Location: dashboard.php?notify=You are not authorized to access that page!&notifyType=2');
     exit;
   }
 
@@ -64,7 +64,7 @@
     } else
     {
       // User is not teacher of the class, redirect to dashboard.
-      header('Location: dashboard.php');
+      header('Location: dashboard.php?notify=You are not authorized to access that class!&notifyType=2');
       exit;
     }
   } else if ($currPage == "class")
