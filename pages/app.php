@@ -27,37 +27,40 @@
     <!-- Instructions, Story Canvas, and Run/Reset container -->
     <div id="simContainer">
       <header>
-        <select id="storySelector" onchange="loadStory(this.value)">
-          <option value="the_very_hungry_caterpillar">The Very Hungry Caterpillar</option>
-          <option value="green_eggs_and_ham">Green Eggs and Ham</option>
-        </select>
+        <div class="levelsContainer">
+          <!-- Default contents; levels should be filled with JavaScript. -->
+          <div class="levelIndicator">0</div>
+        </div>
       </header>
-      <div id="levelsContainer">
-        <!-- Default contents; levels should be filled with JavaScript. -->
-        <button>0</button>
-      </div>
       <!-- Character and other elements canvas -->
       <!-- Note: Separate because applying transformations to character; can not do this with one canvas. -->
       <div id="canvasWrapper">
         <canvas id="charCanvas"></canvas>
         <canvas id="storyCanvas"></canvas>
       </div>
-      <!-- Story subtitles -->
+      <!-- Run/Reset Buttons -->
       <div id="btns">
-        <!-- JavaScript output text box -->
-        <!-- <textarea id="jsCode"></textarea> -->
-        <button class="orangeBtn" onclick="initCutscene()" style="float:left;">Skip (Demo)</button>
         <button id="reset" class="orangeBtn" onclick="resetSim()">Reset</button>
         <button id="run" class="orangeBtn" onclick="runCode()">Run</button>
       </div>
     </div>
     <!-- Blockly workspace: container holding toolbox and block code -->
     <div id="wsContainer">
-      <div id="instructions">
-        <h1>Instructions:</h1>
-        <h2>You are <span id="charName">undefined</span>.</h2>
-        <h2>Use the code blocks to navigate through the maze.</h2>
-        <h2>Reach the <span id="goalName">undefined</span>, avoid the <span id="boundName">undefined</span>!</h2>
+      <div id="textContainer">
+        <h1>
+          <?php
+            if (isset($_GET['title']) && isset($_GET['author']))
+              echo $_GET['title'].' - By '.$_GET['author'];
+            else
+              echo 'An error occurred when fetching Title and Author.';
+          ?>
+        </h1>
+        <h2>Instructions:</h2>
+        <p>
+          You are <span id="charName">undefined</span>.<br />
+          Use the code blocks to navigate through the maze.<br />
+          Reach the <span id="goalName">undefined</span>, avoid the <span id="boundName">undefined</span>!<br />
+        </p>
       </div>
       <!-- Blockly Coding Space -->
       <div id="workspace"></div>
@@ -88,8 +91,6 @@
     <script src="../js/interpreterAPI.js"></script>
     <!-- TEMPORARY: Story/Maze Data -->
     <script src="../js/data.js"></script>
-    <!-- Global -->
-    <script src="../js/main.js"></script>
     <!-- Using blockly library -->
     <script src="../js/blockly.js"></script>
     <!-- Handles stories' cutscenes -->
@@ -100,7 +101,7 @@
     <script type="text/javascript">
       window.addEventListener('load', function () {
         // Load story when app page loaded.
-        loadStory(document.getElementById("storySelector").value);
+        loadStory(<?php echo $_SESSION['totalLvls']; ?>);
       });
     </script>
   </body>

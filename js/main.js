@@ -593,7 +593,6 @@ function displayMazeAssignment(isAssigned)
  */
 function toggleMazeAssignment(mazeID, isAssigned)
 {
-  console.log("Toggle: " + isAssigned + " => " + !isAssigned);
   $.post("../php/toggleAssignment.php", { id: mazeID }, function(data) {
     if (data.success)
     {

@@ -65,10 +65,7 @@
   $storyID       = $_POST['storyID'];
   $doDecoys      = $_POST['doDecoys'] === 'true' ? 1 : 0;
   $doCutscenes   = $_POST['doCutscenes'] === 'true' ? true : false;
-  $difficultyInt = $_POST['difficulty'];
-  $difficultyStr = $difficultyInt == 0 ? 'Easy'
-                 : ($difficultyInt == 1 ? 'Medium'
-                 : 'Hard');
+  $difficulty    = $_POST['difficulty'];
 
   // Create copy of selected story as user's maze table entry.
   // Replace UploaderID => current teacher's ID, Published => 2 (signifying copy/maze table entry).
@@ -76,7 +73,7 @@
     INSERT INTO
       stories (Title, Author, Published, UploaderID)
     SELECT
-      CONCAT(Title, ' [', ?, ']'),
+      Title,
       Author,
       2,
       ?
@@ -85,7 +82,7 @@
     WHERE
       ID=? AND Published = 1
   ");
-  $sql->bind_param("sii", $difficultyStr, $_SESSION['id'], $storyID);
+  $sql->bind_param("ii", $_SESSION['id'], $storyID);
   $sql->execute();
 
   $mazeID = $sql->insert_id;
@@ -122,13 +119,13 @@
   // Note: DecoyImgs/DecoyCoords only duplicated if enabled in generation parameters ($doDecoys).
   $sql = $conn->prepare("
     INSERT INTO
-      mazes (StoryID, LvlNum, CharCoords, BoundCoords, GoalCoords, DecoyImgs, DecoyCoords)
+      mazes (StoryID, LvlNum, CharCoord, BoundCoords, GoalCoord, DecoyImgs, DecoyCoords)
     SELECT
       ?,
       LvlNum,
-      CharCoords,
+      CharCoord,
       BoundCoords,
-      GoalCoords,
+      GoalCoord,
       CASE
         WHEN ? = 1 THEN DecoyImgs
         ELSE NULL
@@ -142,7 +139,7 @@
     WHERE
       StoryID=? AND Difficulty=?
   ");
-  $sql->bind_param("iiiii", $mazeID, $doDecoys, $doDecoys, $storyID, $difficultyInt);
+  $sql->bind_param("iiiii", $mazeID, $doDecoys, $doDecoys, $storyID, $difficulty);
   $sql->execute();
 
   // Verify mazes duplication was successful, i.e. rows were inserted.

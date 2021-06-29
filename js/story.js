@@ -9,31 +9,94 @@ const SLIDE_IN_DUR = 1750;
  ***********/
 class Story
 {
-  constructor(title)
+  constructor()
   {
-    this.title = title;
+    // Note: The below data changes each level.
 
-    this.charImgSrc = ASSETS_PATH + this.title + "/character.png";
-    this.boundImgSrc = ASSETS_PATH + this.title + "/boundary.png";
+    // Maze Elements, Images/Coords.
+    this.character  = { img: "", coord: "" };
+    this.boundary   = { img: "", coords: [] };
+    this.goal       = { img: "", coord: "" };
+    this.decoys     = [];
 
-    // Initialize at 0 for initial cutscene.
-    this.currLevel = 0;
-
-    this.levels = getLvlsData(this.title);
+    // Other Maze Components.
+    this.background   = "";
+    this.instructions = "";
+    this.cutscenes  = [];
   }
 }
 
-function loadStory(title)
+/**
+ * Initializes Story object and level indicators.
+ * @param totalLvls total number of levels for instantiating level indicators.
+ */
+function loadStory(totalLvls)
 {
-  storyObj = new Story(title);
+  storyObj = new Story();
 
-  // Instantiate level indicators after content is no longer visible (hidden by cutscene).
-  setTimeout(function() {
-    initLvlsIndis();
-  }, SLIDE_IN_DUR);
+  // Instantiate level indicators.
+  instLvlIndicators(totalLvls);
 
-  // Show initial cutscene with cover and introduction.
-  initCutscene();
+  // Load data for current level into Story object.
+  loadCurrentLevel();
+}
+
+/**
+ * Retrieves and applies data for current level,
+ * i.e. cutscene images, maze elements' images/coordinates, instructions.
+ */
+function loadCurrentLevel()
+{
+  /**
+   * Nested function to initialize Story object with retrieved level data.
+   */
+  function initStoryObj(data)
+  {
+    // Initialize maze elements, images/coords.
+    // Character Image Src/Coord.
+    storyObj.character.img = data.charImg;
+    storyObj.character.coord = data.charCoord;
+    // Boundary Image Src/Coords.
+    storyObj.boundary.img = data.boundImg;
+    storyObj.boundary.coords = data.boundCoords;
+    // Goal Image Src/Coord.
+    storyObj.goal.img = data.goalImg;
+    storyObj.goal.coord = data.goalCoord;
+    // Decoy Images Srcs/Coords.
+    for (var i = 0; i < data.decoyImgs.length; i++)
+    {
+      storyObj.decoys.push(
+        { img: data.decoyImgs[i], coord: data.decoyCoords[i] }
+      );
+    }
+
+    // Initialize other maze components.
+    // Background Image Src.
+    storyObj.background = data.bckgrndImg;
+    // Instructions Text.
+    storyObj.instructions = data.instructions;
+    // Cutscene Images Srcs.
+    storyObj.cutscenes = data.cutscnImgs;
+  }
+
+  // Retrieve level data from database.
+  $.post("../php/getLevelData.php", {}, function(data) {
+    if (data.success)
+    {
+      // Level data was successfully retrieved, initialize Story object.
+      initStoryObj(data.data);
+    } else
+    {
+      // Level data was not successfully retrieved, redirect to dashboard with error.
+      var error = "Level load unsuccessful! " + data.msg;
+      window.location.replace("dashboard.php?notify=" + error + "&notifyType=2");
+    }
+  }, "json")
+    .fail(function(jqXHR, status, error) {
+      // Something unexpected went wrong, redirect to dashboard with error.
+      error = "An error occurred when fetching level data: " + error;
+      window.location.replace("dashboard.php?notify=" + error + "&notifyType=2");
+    });
 }
 
 /**********
@@ -46,8 +109,9 @@ function loadStory(title)
  */
 function getLvlsData(title)
 {
-  var story = STORIES_DATA.find(element => element.title == title);
-  var numLevels = MAZES_DATA.find(element => element.title == title).levels.length;
+  // var story = STORIES_DATA.find(element => element.title == title);
+  // var numLevels = MAZES_DATA.find(element => element.title == title).levels.length;
+  var story, numLevels;
   var pages = [];
   var levels = [];
 
@@ -84,49 +148,23 @@ function getLvlsData(title)
 }
 
 /**
- * Instantiates levels indicators, i.e. buttons above workspace showing levels progression.
- */
-function initLvlsIndis()
-{
-  var lvlsContainer = document.getElementById("levelsContainer");
-
-  // Verify no levels present from previously loaded stories by removing container content.
-  lvlsContainer.innerHTML = "";
-
-  // Instantiate number of level indicators as levels present.
-  var btnNode, textNode;
-  for (var i = 1; i < storyObj.levels.length; i++)
-  {
-    btnNode = document.createElement("BUTTON");
-    textNode = document.createTextNode(i);
-    btnNode.appendChild(textNode);
-    btnNode.disabled = true;
-    lvlsContainer.appendChild(btnNode);
-  }
-}
-
-/**
  * Updates levels indicators to reflect completed and current levels.
  */
-function updateLvlsIndis(nextLvlExists)
+function updateLvlIndicators()
 {
-  var lvlsContainer = document.getElementById("levelsContainer");
+  var intensities = [];
 
-  // Change level indicator for completed level to completed color.
-  if (storyObj.currLevel != 0)
+  // Initialize color intensities for each level indicator.
+  // Complete => 2.0, Current => 0.4, Incomplete => 0.0
+  for (var i = 1; i <= storyObj.lvlsTotal; i++)
   {
-    lvlsContainer.children[storyObj.currLevel-1].classList.add("complete");
+    intensities.push(
+      i <= storyObj.currLevel ? 2.0 : i == storyObj.currLevel+1 ? 0.4 : 0.0
+    );
   }
 
-  // Switch active level indicator to next level, if one exists.
-  if (nextLvlExists)
-  {
-    if (storyObj.currLevel != 0)
-    {
-      lvlsContainer.children[storyObj.currLevel-1].classList.remove("active");
-    }
-    lvlsContainer.children[storyObj.currLevel].classList.add("active");
-  }
+  // Set levels indicators to specified color intensities.
+  setLvlIndicators(intensities);
 }
 
 /**
@@ -134,12 +172,12 @@ function updateLvlsIndis(nextLvlExists)
  */
 function goNextLvl()
 {
-  // Determine if there is another level for the user to complete.
-  var nextLvlExists = storyObj.levels.length-1 > storyObj.currLevel;
-
   // Update levels indicators.
-  updateLvlsIndis(nextLvlExists);
+  updateLvlIndicators();
 
+  // Determine if there is another level for the user to complete.
+  var nextLvlExists = storyObj.lvlsTotal > storyObj.currLevel;
+  
   // Advance to next level if one exists. If not, user completed story.
   if (nextLvlExists)
   {
@@ -209,7 +247,7 @@ function initCutscene()
   showingImg.src = storyObj.levels[storyObj.currLevel].pageImgSrcs[0];
 
   // Fade in black background.
-  screen.classList.add("show");
+  screen.classList = "show";
 
   // Remove any animations from previous cutscenes.
   // Note: Only possible remaining animation would be slideOut.
@@ -269,8 +307,8 @@ function showNextScene(idx)
   nextImg.src = storyObj.levels[storyObj.currLevel].pageImgSrcs[idx];
   
   // Bring next image forward.
-  prevImg.style.zIndex = "997";
-  nextImg.style.zIndex = "998";
+  prevImg.style.zIndex = "996";
+  nextImg.style.zIndex = "997";
 
   // Fade out currently shown image, fade in next cutscene image.
   // Note: Animations rely on transition rather than animation due to JS inconsistencies.
@@ -307,7 +345,7 @@ function endCutscene(numShown)
   // Fade out black screen after image slides out of view.
   const SLIDE_FADE_DUR = 750;
   setTimeout(function() {
-    screen.classList.remove("show");
+    screen.classList = "hide";
   }, SLIDE_FADE_DUR);
 
   // After cutscene complete (screen faded away and app content displayed), 

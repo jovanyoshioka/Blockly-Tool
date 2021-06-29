@@ -72,7 +72,7 @@
   $update = array("type" => 0);
   if (!include("updateProgress.php"))
   {
-    // An error occured while updating the progress table.
+    // An error occurred while updating the progress table.
     $msg = "Student(s) was successfully added, but initialization failed.";
     echo json_encode(array(
       "success" => false,

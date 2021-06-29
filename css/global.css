@@ -80,7 +80,7 @@ nav.navbar ul div.dropdown div.dropdownContent {
   position: absolute;
   background-color: var(--lightGray);
   display: none;
-  z-index: 995;
+  z-index: 999;
 }
 nav.navbar ul div.dropdown:hover div.dropdownContent {
   display: block;
@@ -587,7 +587,7 @@ body#dashboard div.wrapper h4 {
 /* Assignment Card */
 body#dashboard div.wrapper div.assignment {
   width: 100%;
-  height: 100px;
+  height: 135px;
   margin: 0 0 15px 0;
   border-radius: 5px;
   background-color: var(--lightGray);
@@ -603,7 +603,7 @@ body#dashboard div.wrapper div.assignment button {
 /* Title/Author Text */
 body#dashboard div.wrapper div.assignment h2 {
   width: 400px;
-  max-height: 85px;
+  max-height: 110px;
   margin: 0 20px 0 0;
   padding: 0;
   display: inline-block;
@@ -1265,9 +1265,9 @@ body#contact h1 a:hover {
  * PAGE: app.php *
  *****************/
 
-/********************************************************************
- * SIMULATION: STORY SELECTOR, LEVELS INDICATORS, CANVAS, RUN/RESET *
- ********************************************************************/
+/****************************************************
+ * SIMULATION: LEVELS INDICATORS, CANVAS, RUN/RESET *
+ ****************************************************/
 body#app div#simContainer {
   width: var(--canvasSize);
   height: 100%;
@@ -1276,48 +1276,23 @@ body#app div#simContainer {
   flex-flow: column;
   float: left;
 }
-
-/* Story Selector */
-body#app div#simContainer header {
-  background-color: var(--smokeyGray);
-  text-align: center;
-}
-body#app div#simContainer header select {
-  margin: 10px 0 5px 0;
-  padding: 5px;
-  border: none;
-  border-radius: 5px;
-  background-color: var(--tnOrange);
-  color: #FFFFFF;
-  font-size: 1em;
-  font-weight: bold;
-}
-body#app div#simContainer header select:focus {
-  outline: none;
-}
-
 /* Levels Indicators */
-body#app div#simContainer div#levelsContainer {
+body#app div#simContainer header {
+  padding-bottom: 5px;
   background-color: var(--smokeyGray);
   border-bottom: 7.5px solid var(--tnOrange);
   text-align: center;
 }
-body#app div#simContainer div#levelsContainer button {
-  width: 35px;
-  height: 35px;
-  margin: 7.5px 5px;
-  border: none;
-  border-radius: 25px;
-  font-size: 1.5em;
-  font-weight: bold;
+body#app div#simContainer header div.levelsContainer {
+  width: 65%;
+  margin: 0 auto;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+body#app div#simContainer header div.levelsContainer div {
+  margin: 7.5px 4px 5px 4px;
   color: #FFFFFF;
-  background-color: var(--tnOrange);
-}
-body#app div#simContainer div#levelsContainer button.complete {
-  background-color: #A5DD24;
-}
-body#app div#simContainer div#levelsContainer button.active {
-  background-color: var(--lightOrange);
+  font-family: var(--gothic);
 }
 
 /* Canvas */
@@ -1341,7 +1316,7 @@ body#app div#simContainer canvas#storyCanvas {
   background-size: cover;
 }
 
-/* Play/Pause Buttons */
+/* Run/Reset Buttons */
 body#app div#simContainer div#btns {
   flex-grow: 1;
   border-top: 7.5px solid var(--tnOrange);
@@ -1354,7 +1329,6 @@ body#app div#simContainer div#btns button.orangeBtn {
   float: right;
 }
 
-
 /************************************************
  * WORKSPACE: INSTRUCTIONS, TOOLBOX, CODE SPACE *
  ************************************************/
@@ -1365,8 +1339,8 @@ body#app div#wsContainer {
   flex-flow: column;
 }
 
-/* Instructions */
-body#app div#wsContainer div#instructions {
+/* Text: Story Title/Author and Instructions */
+body#app div#wsContainer div#textContainer {
   height: 135px;
   padding: 15px;
   background-color: var(--smokeyGray);
@@ -1374,15 +1348,23 @@ body#app div#wsContainer div#instructions {
   border-left: 7.5px solid var(--tnOrange);
   overflow-y: auto;
 }
-body#app div#wsContainer div#instructions h1,
-body#app div#wsContainer div#instructions h2 {
+body#app div#wsContainer div#textContainer h1,
+body#app div#wsContainer div#textContainer h2,
+body#app div#wsContainer div#textContainer p {
   margin: 0;
   padding: 0;
   color: #FFFFFF;
   font-family: var(--gothic);
 }
-body#app div#wsContainer div#instructions h1 {
+body#app div#wsContainer div#textContainer h1 {
+  font-size: 2em;
   padding-bottom: 10px;
+}
+body#app div#wsContainer div#textContainer h2 {
+  font-size: 1.65em;
+}
+body#app div#wsContainer div#textContainer p {
+  font-size: 1.25em;
 }
 
 /* Tool Box & Code Space */
@@ -1417,37 +1399,42 @@ body#app img.cutsceneImg.show,
 body#app button#cutsceneBtn.show {
   opacity: 1.0;
 }
+body#app div#cutsceneScreen.hide {
+  opacity: 0.0 !important;
+}
 
 /* Black Transition Background */
 body#app div#cutsceneScreen {
+  /* TEMPORARY */
+  display: none;
   width: 100%;
-  height: 100%;
+  height: calc(100% - var(--navHeight));
   position: absolute;
-  top: 0;
+  bottom: 0;
   left: 0;
   background-color: #000000;
-  opacity: 0.0;
+  opacity: 1.0;
   transition: opacity 1s;
-  z-index: 996;
+  z-index: 995;
 }
 
 /* Cutscene Images and Animations */
 body#app img.cutsceneImg {
-  height: 100%;
+  height: calc(100% - var(--navHeight));
   position: absolute;
-  top: 0;
+  bottom: 0;
   left: 0;
   right: 0;
   margin: 0 auto;
   opacity: 0.0;
   transition: opacity 1s;
-  z-index: 997;
+  z-index: 996;
 }
 body#app img.cutsceneImg.slideIn {
-  /* Note: Animation will not properly play on page load without transform transition. */
-  transition: opacity 0.5s linear 1s, transform 1.25s ease-out 0.5s;
   opacity: 1.0;
   transform: translateX(-100%);
+  /* Note: Animation will not properly play on page load without transform transition. */
+  transition: opacity 0.5s linear 1s, transform 1.25s ease-out 0.5s;
   animation: slideIn 1.25s ease-out 0.5s forwards;
 }
 body#app img.cutsceneImg.slideOut {
@@ -1463,7 +1450,7 @@ body#app button#cutsceneBtn {
   background-color: var(--tnOrange);
   border: none;
   border-radius: 5px;
-  z-index: 999;
+  z-index: 998;
   opacity: 0.0;
   transition: 0.25s background-color, 0.5s opacity;
 }

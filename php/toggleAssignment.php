@@ -74,7 +74,7 @@
   $update = array("id" => $mazeID, "type" => 2);
   if (!include("updateProgress.php"))
   {
-    // An error occured while updating the progress table.
+    // An error occurred while updating the progress table.
     $msg = "Maze assignment was successfully changed, but initialization failed!";
     echo json_encode(array(
       "success" => false,

@@ -31,6 +31,9 @@
   $levels = '';
   while ($row = $results->fetch_assoc())
   {
+    // Skip iteration if level 0 (introduction) and no cutscene images existent.
+    if ($row['LvlNum'] == 0 && !isset($row['CutscnImgs'])) continue;
+
     // Create new level section, add "Introduction" or "Level n" header text.
     $levels .= '
       <section>

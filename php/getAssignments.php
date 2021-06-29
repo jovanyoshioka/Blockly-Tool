@@ -41,7 +41,7 @@
   {
     $assignments .= '
       <div class="assignment">
-        <a href="app.php?id='.$row['StoryID'].'">
+        <a href="app.php?id='.$row['StoryID'].'&title='.$row['Title'].'&author='.$row['Author'].'">
           <button class="orangeBtn">Go</button>
         </a>
         <h2>'.$row['Title'].'<br />By '.$row['Author'].'</h2>
