@@ -36,8 +36,10 @@
           <option value="" disabled selected>Select a maze</option>
           <?php include('../php/getMazesDrpdwn.php'); ?>
         </select>
+        <!-- Below text from showMazeAnalytics(x); -->
         <h1>Maze Analytics</h1>
-        <h2>Select a maze from the dropdown to get started</h2>
+        <h2>Select a maze from the dropdown to get started.</h2>
+        <h2></h2>
         <p>
           Status: 
           <span><!-- Assigned/Not Assigned from displayMazeAssignment(x); --></span>

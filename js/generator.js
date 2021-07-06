@@ -198,13 +198,26 @@ function generateMaze(formObj, btnNode)
   // Temporarily disable "Generate" button to prevent multiple generations.
   btnNode.disabled = true;
 
+  // Verify required "name" field is filled.
+  // Note: this is in lieu of "required" attribute for input as generateMaze(a, b) called from onclick.
+  if (inputs["name"].value.length == 0)
+  {
+    // Check failed.
+    // Enable "Generate" button so user can attempt generating again.
+    btnNode.disabled = false;
+    // Notify user of failure.
+    showNotification(FAIL_MSG + "Missing custom name.", 2);
+    return;
+  }
+
   // Save generated maze's data into database.
-  // Note: data validity is verified in PHP script.
-  // TEMPORARY: for prototype version, all maze options are premade, so no new generation is taking place.
+  // Note: data is validated in PHP script.
+  // TEMPORARY: for prototype version, all maze options are premade, so no actual maze generation is taking place.
   $.post(
     "../php/genPremadeMaze.php",
     {
       storyID:     inputs["storyID"].value,
+      customName:  inputs["name"].value,
       doDecoys:    inputs["decoyToggle"].checked,
       doCutscenes: inputs["cutsceneToggle"].checked,
       difficulty:  inputs["difficulty"].selectedIndex

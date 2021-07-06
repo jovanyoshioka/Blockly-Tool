@@ -39,11 +39,20 @@
   $assignments = '';
   while ($row = $results->fetch_assoc())
   {
-    $assignments .= '
-      <div class="assignment">
+    // Display "Go" Button if assignment not yet complete. Otherwise, display check mark.
+    $btn = '<h1>&check;</h1>';
+    if ($row['CurrLevel'] <= $row['Total'])
+    {
+      $btn = '
         <a href="app.php?id='.$row['StoryID'].'&title='.$row['Title'].'&author='.$row['Author'].'">
           <button class="orangeBtn">Go</button>
         </a>
+      ';
+    }
+
+    $assignments .= '
+      <div class="assignment">
+        '.$btn.'
         <h2>'.$row['Title'].'<br />By '.$row['Author'].'</h2>
         <div class="levels">
     ';

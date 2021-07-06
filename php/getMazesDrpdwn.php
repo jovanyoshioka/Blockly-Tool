@@ -8,18 +8,9 @@
   $sql = $conn->prepare("
     SELECT DISTINCT
       stories.ID,
-      stories.Title,
-      CASE
-        WHEN mazes.Difficulty = 0 THEN '[Easy]'
-        WHEN mazes.Difficulty = 1 THEN '[Medium]'
-        ELSE '[Hard]'
-      END AS Difficulty
+      stories.Name
     FROM
       stories
-    INNER JOIN
-      mazes
-    ON
-      mazes.StoryID = stories.ID
     WHERE
       stories.UploaderID=? AND stories.Published=2 AND
       EXISTS (
@@ -39,7 +30,7 @@
   while ($row = $results->fetch_assoc())
   {
     echo '
-      <option value="'.$row['ID'].'">'.$row['Title'].' '.$row['Difficulty'].'</option>
+      <option value="'.$row['ID'].'">'.$row['Name'].'</option>
     ';
   }
 

@@ -19,9 +19,10 @@
 
   include("sqlConnect.php");
 
-  // Retrieve the maze and level to get data from.
+  // Retrieve known information, i.e. maze/level to get data from and total number of levels.
   $mazeID = $_SESSION['mazeID'];
   $level  = $_SESSION['currLevel'];
+  $total = $_SESSION['totalLvls'];
 
   // Get cutscene images, maze elements' images/coordinates, and instructions.
   // Note: Adding "GROUP BY levels.ID" as it prevents a completely NULL row from being returned from GROUP_CONCAT if results could not be found.
@@ -37,7 +38,8 @@
       mazes.DecoyCoords,
       levels.BckgrndImg,
       levels.Instructions,
-      GROUP_CONCAT(cutscenes.Img ORDER BY cutscenes.CutscnNum) AS CutscnImgs
+      GROUP_CONCAT(cutscenes.Img ORDER BY cutscenes.CutscnNum) AS CutscnImgs,
+      GROUP_CONCAT(finalCutscenes.Img ORDER BY finalCutscenes.CutscnNum) AS FinalCutscnImgs
     FROM
       levels
         INNER JOIN
@@ -46,12 +48,15 @@
         LEFT JOIN
           cutscenes
         ON cutscenes.StoryID = levels.StoryID AND cutscenes.LvlNum = (levels.LvlNum-1)
+        LEFT JOIN
+          cutscenes AS finalCutscenes
+        ON finalCutscenes.StoryID = levels.StoryID AND finalCutscenes.LvlNum = levels.LvlNum AND ?=?
     WHERE
       levels.StoryID=? AND levels.LvlNum=?
     GROUP BY
       levels.ID
   ");
-  $sql->bind_param("ii", $mazeID, $level);
+  $sql->bind_param("iiii", $level, $total, $mazeID, $level);
   $sql->execute();
   $result = $sql->get_result();
 
@@ -95,6 +100,12 @@
       // Return empty array if no cutscenes included.
       isset($row['CutscnImgs'])
         ? explode(",", $row['CutscnImgs']) 
+        : array()
+    ),
+    "finalCutscnImgs" => (
+      // Return empty array if no final cutscenes included.
+      isset($row['FinalCutscnImgs'])
+        ? explode(",", $row['FinalCutscnImgs'])
         : array()
     )
   );

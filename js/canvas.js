@@ -6,6 +6,7 @@ const GRID_DOT_COLOR  = "#FFFFFF";
 const CHARACTER_ID    = "character";
 const BOUNDARY_ID     = "boundary";
 const GOAL_ID         = "goal";
+const DECOY_ID        = "decoy";
 
 /***********
  * CLASSES *
@@ -153,7 +154,12 @@ class CanvasElement
 function generateMaze()
 {
   // Get current level's maze data.
-  var levelData = MAZES_DATA.find(element => element.title == storyObj.title).levels[storyObj.currLevel-1];
+  var levelData = [
+    { type: CHARACTER_ID, coords: [storyObj.character.coord] },
+    { type: BOUNDARY_ID, coords: storyObj.boundary.coords },
+    { type: GOAL_ID, coords: [storyObj.goal.coord] },
+    { type: DECOY_ID, coords: storyObj.decoy.coords }
+  ];
 
   // Determine size of grid based on input coordinates.
   var gridSize = calcGridSize();
@@ -169,7 +175,7 @@ function generateMaze()
   levelData.forEach(instElements);
 
   // Display story background.
-  document.getElementById("storyCanvas").style.backgroundImage = "url('" + ASSETS_PATH + storyObj.title + "/background.jpg')";
+  document.getElementById("storyCanvas").style.backgroundImage = "url(" + storyObj.background + ")";
 
   /**
    * Calculate size of canvas, i.e. canvas.unitsPerLine, by finding largest upper bound, either of x or y.
@@ -181,12 +187,12 @@ function generateMaze()
     levelData.forEach(function(item) {
       for (var i = 0; i < item.coords.length; i++)
       {
-        size = item.coords[i][0] > size ? item.coords[i][0] : size;
-        size = item.coords[i][1] > size ? item.coords[i][1] : size;
+        size = parseInt(item.coords[i].x) > size ? parseInt(item.coords[i].x) : size;
+        size = parseInt(item.coords[i].y) > size ? parseInt(item.coords[i].y) : size;
       }
     });
     // Coordinate system starts at 0, so 1 needs to be added for size of grid.
-    return size + 1;
+    return parseInt(size) + 1;
   }
 
   /**
@@ -197,23 +203,29 @@ function generateMaze()
   function instElements(item)
   {
     var numElements = item.coords.length;
-    var imgSrc = item.type == CHARACTER_ID ? storyObj.charImgSrc
-               : item.type == BOUNDARY_ID  ? storyObj.boundImgSrc
-               : item.type == GOAL_ID      ? storyObj.levels[storyObj.currLevel].goalImgSrc
+    var imgSrc = item.type == CHARACTER_ID ? storyObj.character.img
+               : item.type == BOUNDARY_ID  ? storyObj.boundary.img
+               : item.type == GOAL_ID      ? storyObj.goal.img
                : null;
     
     for (var i = 0; i < numElements; i++)
     {
+      if (item.type == DECOY_ID)
+      {
+        // Initialize image source as different decoy each iteration.
+        imgSrc = storyObj.decoy.imgs[i];
+      }
+
       if (item.type == CHARACTER_ID)
       {
         // Instantiate character element within character canvas.
-        charCanvas.elements.push(new CanvasElement(charCanvas, item.coords[i][0], item.coords[i][1], item.type, imgSrc));
+        charCanvas.elements.push(new CanvasElement(charCanvas, item.coords[i].x, item.coords[i].y, item.type, imgSrc));
         // Draw recently pushed character element.
         charCanvas.elements[charCanvas.elements.length-1].drawSquare();
       } else
       {
         // Instantiate element of other type (i.e. goal(s) and boundaries) within story canvas.
-        storyCanvas.elements.push(new CanvasElement(storyCanvas, item.coords[i][0], item.coords[i][1], item.type, imgSrc));
+        storyCanvas.elements.push(new CanvasElement(storyCanvas, item.coords[i].x, item.coords[i].y, item.type, imgSrc));
         // Draw recently pushed element.
         storyCanvas.elements[storyCanvas.elements.length-1].drawSquare();
       }
@@ -386,16 +398,43 @@ function checkCompletion()
 {
   var character = charCanvas.elements.find(element => element.type == CHARACTER_ID);
   var goal = storyCanvas.elements.find(element => element.type == GOAL_ID);
+  var decoys = storyCanvas.elements.filter(element => element.type == DECOY_ID);
+
+  // Check if character and any decoy coordinates are the same, i.e. user chose incorrect goal.
+  for (decoy of decoys)
+  {
+    if (round(character.x) == round(decoy.x) && round(character.y) == round(decoy.y))
+    {
+      // TEMPORARY
+      alert("INCORRECT GOAL! SHOW POP-UP INSTEAD OF THIS.");
+    }
+  }
 
   // Check if character and goal coordinates are the same, i.e. maze is completed.
   // Rounding issues may cause character.x/y and goal.x/y to be VERY slightly off when maze is actually completed,
   // round values to the nearest thousandth to counteract this.
   if (round(character.x) == round(goal.x) && round(character.y) == round(goal.y))
   {
-    // User successfully traversed current level's maze, show next cutscene (story.js) and proceed to next level.
-    initCutscene();
+    // User successfully traversed current level's maze, update user's current level and proceed to next level.
+    $.post("../php/setProgress.php", { nextLevel: storyObj.currLvl+1 }, function(data) {
+      if (data.success)
+      {
+        // User's current level was successfully updated in database, continue to next level.
+        goNextLvl();
+      } else
+      {
+        // Update was not successful, redirect to dashboard with error.
+        var error = "User data update unsuccessful! " + data.msg;
+        window.location.replace("dashboard.php?notify=" + error + "&notifyType=2");
+      }
+    }, "json")
+    .fail(function(jqXHR, status, error) {
+      // Something unexpected went wrong, redirect to dashboard with error.
+      error = "An error occurred when updating user data: " + error;
+      window.location.replace("dashboard.php?notify=" + error + "&notifyType=2");
+    });
   }
-  // Do not output anything if user did not reach goal.
+  // Do not output anything if user did not reach goal nor decoy.
 
   /**
    * Rounds passed value to the nearest thousandth.

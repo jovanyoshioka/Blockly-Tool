@@ -14,25 +14,35 @@ class Story
     // Note: The below data changes each level.
 
     // Maze Elements, Images/Coords.
-    this.character  = { img: "", coord: "" };
-    this.boundary   = { img: "", coords: [] };
-    this.goal       = { img: "", coord: "" };
-    this.decoys     = [];
+    this.character  = { img: "",  coord: "" };
+    this.boundary   = { img: "",  coords: [] };
+    this.goal       = { img: "",  coord: "" };
+    this.decoy      = { imgs: [], coords: []};
 
     // Other Maze Components.
-    this.background   = "";
-    this.instructions = "";
-    this.cutscenes  = [];
+    this.background     = "";
+    this.instructions   = "";
+    this.cutscenes      = [];
+    this.finalCutscenes = [];
+
+    // User's current level.
+    this.currLvl = 0;
+    // Total number of levels.
+    this.totalLvls = 0;
   }
 }
 
 /**
  * Initializes Story object and level indicators.
- * @param totalLvls total number of levels for instantiating level indicators.
+ * @param currLvl current level user is on.
+ * @param totalLvls total number of levels.
  */
-function loadStory(totalLvls)
+function loadStory(currLvl, totalLvls)
 {
+  // Instantiate Story object with known data.
   storyObj = new Story();
+  storyObj.currLvl = currLvl;
+  storyObj.totalLvls = totalLvls;
 
   // Instantiate level indicators.
   instLvlIndicators(totalLvls);
@@ -63,12 +73,8 @@ function loadCurrentLevel()
     storyObj.goal.img = data.goalImg;
     storyObj.goal.coord = data.goalCoord;
     // Decoy Images Srcs/Coords.
-    for (var i = 0; i < data.decoyImgs.length; i++)
-    {
-      storyObj.decoys.push(
-        { img: data.decoyImgs[i], coord: data.decoyCoords[i] }
-      );
-    }
+    storyObj.decoy.imgs = data.decoyImgs;
+    storyObj.decoy.coords = data.decoyCoords;
 
     // Initialize other maze components.
     // Background Image Src.
@@ -77,14 +83,21 @@ function loadCurrentLevel()
     storyObj.instructions = data.instructions;
     // Cutscene Images Srcs.
     storyObj.cutscenes = data.cutscnImgs;
+    // Final Cutscene Images Srcs.
+    // Allows last level to show final cutscenes without retrieval from database.
+    storyObj.finalCutscenes = data.finalCutscnImgs;
   }
 
   // Retrieve level data from database.
   $.post("../php/getLevelData.php", {}, function(data) {
     if (data.success)
     {
-      // Level data was successfully retrieved, initialize Story object.
+      // Level data was successfully retrieved.
+      // Initialize Story object.
       initStoryObj(data.data);
+
+      // Transition to level.
+      initCutscene();
     } else
     {
       // Level data was not successfully retrieved, redirect to dashboard with error.
@@ -103,51 +116,6 @@ function loadCurrentLevel()
  * LEVELS *
  **********/
 /**
- * Gets specified story's levels data and formats it into an array.
- * @param title story of which to load levels in formatted array.
- * @returns formatted array of levels data (goal, grid size, pages).
- */
-function getLvlsData(title)
-{
-  // var story = STORIES_DATA.find(element => element.title == title);
-  // var numLevels = MAZES_DATA.find(element => element.title == title).levels.length;
-  var story, numLevels;
-  var pages = [];
-  var levels = [];
-
-  // Loop through each level and format data.
-  // Also format data for cover/intro cutscene pages, i.e. index 0.
-  for (var i = 0; i <= numLevels; i++)
-  {
-    pages = [];
-    // Loop through each page of current level and format source.
-    for (var j = 1; j <= story.pages[i]; j++)
-    {
-      // Page Image Format: "pages_[level]_[pageNum].jpg"
-      pages.push(ASSETS_PATH + title + "/page_" + i + "_" + j + ".jpg");
-    }
-    
-    // Compile level's data into array.
-    // Goal Image Format: "goal_[level].jpg"
-    if (i == 0)
-    {
-      // Cover/Intro Cutscene: only pages.
-      levels.push({
-        pageImgSrcs: pages
-      });
-    } else
-    {
-      levels.push({
-        goalImgSrc: ASSETS_PATH + title + "/goal_" + i + ".png",
-        pageImgSrcs: pages
-      });
-    }
-  }
-
-  return levels;
-}
-
-/**
  * Updates levels indicators to reflect completed and current levels.
  */
 function updateLvlIndicators()
@@ -156,10 +124,10 @@ function updateLvlIndicators()
 
   // Initialize color intensities for each level indicator.
   // Complete => 2.0, Current => 0.4, Incomplete => 0.0
-  for (var i = 1; i <= storyObj.lvlsTotal; i++)
+  for (var i = 1; i <= storyObj.totalLvls; i++)
   {
     intensities.push(
-      i <= storyObj.currLevel ? 2.0 : i == storyObj.currLevel+1 ? 0.4 : 0.0
+      i < storyObj.currLvl ? 2.0 : i == storyObj.currLvl ? 0.4 : 0.0
     );
   }
 
@@ -168,39 +136,46 @@ function updateLvlIndicators()
 }
 
 /**
- * Prepares and proceeds to next level, if one exists.
+ * Goes to next level, if one exists.
  */
 function goNextLvl()
+{
+  // Determine if there is another level for the user to complete.
+  var nextLvlExists = storyObj.totalLvls > storyObj.currLvl;
+
+  // Increment level tracking counter.
+  storyObj.currLvl++;
+
+  // Advance to next level if one exists. If not, user completed story.
+  if (nextLvlExists)
+  {
+    // Load data for current level into Story object.
+    loadCurrentLevel();
+  } else
+  {
+    storyObj.cutscenes = storyObj.finalCutscenes;
+
+    initCutscene();
+  }
+
+}
+
+/**
+ * Initializes current level elements.
+ */
+function initCurrLvl()
 {
   // Update levels indicators.
   updateLvlIndicators();
 
-  // Determine if there is another level for the user to complete.
-  var nextLvlExists = storyObj.lvlsTotal > storyObj.currLevel;
-  
-  // Advance to next level if one exists. If not, user completed story.
-  if (nextLvlExists)
-  {
-    // Increment level tracking counter.
-    storyObj.currLevel++;
+  // Reset simulation and generate next level's maze (blockly.js).
+  resetSim();
 
-    // Reset simulation and generate next level's maze (blockly.js).
-    resetSim();
+  // Clear previous level's code blocks from workspace.
+  workspace.clear();
 
-    // Clear previous level's code blocks from workspace.
-    workspace.clear();
-
-    // TEMPORARY: Change instructions to reflect correct goal and boundary.
-    document.getElementById("charName").innerHTML = STORIES_DATA.find(element => element.title == storyObj.title).character;
-    document.getElementById("goalName").innerHTML = STORIES_DATA.find(element => element.title == storyObj.title).goals[storyObj.currLevel-1];
-    document.getElementById("boundName").innerHTML = STORIES_DATA.find(element => element.title == storyObj.title).boundary;
-  } else
-  {
-    // TEMPORARY
-    setTimeout(function() {
-      alert("USER COMPLETED STORY! GO BACK TO STORY SELECTOR OR LOBBY?");
-    }, SLIDE_IN_DUR);
-  }
+  // Update instructions.
+  document.getElementById("instructions").innerHTML = storyObj.instructions;
 }
 
 /************
@@ -214,7 +189,7 @@ function initCutsceneBtn(numShown)
 {
   var btn = document.getElementById("cutsceneBtn");
 
-  if (storyObj.levels[storyObj.currLevel].pageImgSrcs.length > numShown)
+  if (storyObj.cutscenes.length > numShown)
   {
     // Other images to show in cutscene, set button to show next one.
     btn.onclick = function() {
@@ -234,36 +209,45 @@ function initCutsceneBtn(numShown)
  */
 function initCutscene()
 {
-  var wrapper = document.getElementById("cutsceneWrapper");
   var screen = document.getElementById("cutsceneScreen");
-  var showingImg = document.getElementById("cutsceneImgA");
-  var hiddenImg = document.getElementById("cutsceneImgB");
-  var btn = document.getElementById("cutsceneBtn");
-
-  // "Re-enable" cutscene. Initially "disabled" as it overlaps/blocks app content from user interaction.
-  wrapper.style.pointerEvents = "auto";
-
-  // Set cover as image to be shown.
-  showingImg.src = storyObj.levels[storyObj.currLevel].pageImgSrcs[0];
 
   // Fade in black background.
   screen.classList = "show";
 
-  // Remove any animations from previous cutscenes.
-  // Note: Only possible remaining animation would be slideOut.
-  showingImg.classList.remove("slideOut");
-  hiddenImg.classList.remove("slideOut");
-  
-  // Apply slide/fade in animation.
-  showingImg.classList.add("slideIn");
+  // Show cutscene image and proceed next button if image present to show.
+  // If the level has no cutscenes associated, no need to do below.
+  if (storyObj.cutscenes.length > 0)
+  {
+    var wrapper = document.getElementById("cutsceneWrapper");
+    var showingImg = document.getElementById("cutsceneImgA");
+    var hiddenImg = document.getElementById("cutsceneImgB");
+    var btn = document.getElementById("cutsceneBtn");
 
-  // Show and enable proceed to next button once cover has slid into view.
-  setTimeout(function() {
-    btn.classList.add("show");
-    btn.disabled = false;
-  }, SLIDE_IN_DUR);
+    // "Re-enable" cutscene. Initially "disabled" as it overlaps/blocks app content from user interaction.
+    wrapper.style.pointerEvents = "auto";
 
-  initCutsceneBtn(1);
+    // Set cover as image to be shown.
+    showingImg.src = storyObj.cutscenes[0];
+
+    // Remove any animations from previous cutscenes.
+    // Note: Only possible remaining animation would be slideOut.
+    showingImg.classList.remove("slideOut");
+    hiddenImg.classList.remove("slideOut");
+    
+    // Apply slide/fade in animation.
+    showingImg.classList.add("slideIn");
+
+    // Show and enable proceed to next button once cover has slid into view.
+    setTimeout(function() {
+      btn.classList.add("show");
+      btn.disabled = false;
+    }, SLIDE_IN_DUR);
+
+    initCutsceneBtn(1);
+  } else
+  {
+    endCutscene();
+  }
 }
 
 /**
@@ -304,7 +288,7 @@ function showNextScene(idx)
   }
 
   // Set next image of cutscene to be shown.
-  nextImg.src = storyObj.levels[storyObj.currLevel].pageImgSrcs[idx];
+  nextImg.src = storyObj.cutscenes[idx];
   
   // Bring next image forward.
   prevImg.style.zIndex = "996";
@@ -324,36 +308,59 @@ function showNextScene(idx)
  */
 function endCutscene(numShown)
 {
-  var wrapper = document.getElementById("cutsceneWrapper");
   var screen = document.getElementById("cutsceneScreen");
-  var imgA = document.getElementById("cutsceneImgA");
-  var imgB = document.getElementById("cutsceneImgB");
-  var currImg;
-  var btn = document.getElementById("cutsceneBtn");
 
-  // Determine if image A or image B is currently shown, and thus should slide out.
-  currImg = numShown % 2 == 0 ? imgB : imgA;
+  // Hide cutscene image/button if images were shown.
+  // If the level has no cutscenes associated, no need to do below.
+  if (numShown > 0)
+  {
+    var wrapper = document.getElementById("cutsceneWrapper");
+    var imgA = document.getElementById("cutsceneImgA");
+    var imgB = document.getElementById("cutsceneImgB");
+    var currImg;
+    var btn = document.getElementById("cutsceneBtn");
 
-  // Remove any previous animations, apply slide out animation.
-  currImg.classList.remove("slideIn", "show");
-  currImg.classList.add("slideOut");
-  
-  // Disable and hide proceed to next button indefinitely as no more images for current cutscene.
-  btn.disabled = true;
-  btn.classList.remove("show");
+    // Determine if image A or image B is currently shown, and thus should slide out.
+    currImg = numShown % 2 == 0 ? imgB : imgA;
 
-  // Fade out black screen after image slides out of view.
-  const SLIDE_FADE_DUR = 750;
+    // Remove any previous animations, apply slide out animation.
+    currImg.classList.remove("slideIn", "show");
+    currImg.classList.add("slideOut");
+    
+    // Disable and hide proceed to next button indefinitely as no more images for current cutscene.
+    btn.disabled = true;
+    btn.classList.remove("show");
+
+    // After cutscene complete (screen faded away and app content displayed), 
+    // "disable" cutscene as it overlaps/blocks app content from user interaction.
+    const SCREEN_FADE_DUR = 2000;
+    setTimeout(function() {
+      wrapper.style.pointerEvents = "none";
+    }, SCREEN_FADE_DUR);
+  }
+
+  // Continue to level once cutscene image fades out (if images were shown)
+  // or once black screen finishes fading in (if no images were shown).
+  const SLIDE_FADE_DUR = 1000;
   setTimeout(function() {
+    if (storyObj.currLvl <= storyObj.totalLvls)
+    {
+      // Initialize level elements.
+      initCurrLvl();
+    } else
+    {
+      // Now that final cutscenes have been shown, maze is complete.
+      // Update levels indicators.
+      updateLvlIndicators();
+
+      // TEMPORARY
+      setTimeout(function() {
+        alert("USER COMPLETED STORY! SHOW POP-UP INSTEAD OF THIS.");
+      }, SLIDE_FADE_DUR);
+    }
+
+    // Fade out black screen.
     screen.classList = "hide";
+    
   }, SLIDE_FADE_DUR);
-
-  // After cutscene complete (screen faded away and app content displayed), 
-  // "disable" cutscene as it overlaps/blocks app content from user interaction.
-  const SCREEN_FADE_DUR = 1750;
-  setTimeout(function() {
-    wrapper.style.pointerEvents = "none";
-  }, SCREEN_FADE_DUR);
-
-  goNextLvl();
 }

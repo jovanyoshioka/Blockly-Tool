@@ -45,6 +45,7 @@
   // Verify valid generation parameters were entered.
   if (
     !(isset($_POST['storyID']) && $_POST['storyID'] > 0) // Verify storyID.
+    || !(isset($_POST['customName']) && strlen($_POST['customName']) > 0) // Verify customName (length auto-truncated by SQL).
     || !(isset($_POST['doDecoys'])) // Verify doDecoys.
     || !(isset($_POST['doCutscenes'])) // Verify doCutscenes.
     || !(isset($_POST['difficulty']) && $_POST['difficulty'] >= 0 && $_POST['difficulty'] <= 2) // Verify difficulty.
@@ -63,6 +64,7 @@
   // Retrieve user's valid selected generation parameters.
   // Convert $doDecoys boolean to 0 or 1 for SQL bind_param.
   $storyID       = $_POST['storyID'];
+  $customName    = $_POST['customName'];
   $doDecoys      = $_POST['doDecoys'] === 'true' ? 1 : 0;
   $doCutscenes   = $_POST['doCutscenes'] === 'true' ? true : false;
   $difficulty    = $_POST['difficulty'];
@@ -71,8 +73,9 @@
   // Replace UploaderID => current teacher's ID, Published => 2 (signifying copy/maze table entry).
   $sql = $conn->prepare("
     INSERT INTO
-      stories (Title, Author, Published, UploaderID)
+      stories (Name, Title, Author, Published, UploaderID)
     SELECT
+      ?,
       Title,
       Author,
       2,
@@ -82,7 +85,7 @@
     WHERE
       ID=? AND Published = 1
   ");
-  $sql->bind_param("ii", $_SESSION['id'], $storyID);
+  $sql->bind_param("sii", $customName, $_SESSION['id'], $storyID);
   $sql->execute();
 
   $mazeID = $sql->insert_id;
@@ -119,9 +122,10 @@
   // Note: DecoyImgs/DecoyCoords only duplicated if enabled in generation parameters ($doDecoys).
   $sql = $conn->prepare("
     INSERT INTO
-      mazes (StoryID, LvlNum, CharCoord, BoundCoords, GoalCoord, DecoyImgs, DecoyCoords)
+      mazes (StoryID, Difficulty, LvlNum, CharCoord, BoundCoords, GoalCoord, DecoyImgs, DecoyCoords)
     SELECT
       ?,
+      Difficulty,
       LvlNum,
       CharCoord,
       BoundCoords,

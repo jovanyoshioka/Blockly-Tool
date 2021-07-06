@@ -99,7 +99,10 @@
         </div>
         <div class="showWhenSelected">
           <!-- Selected Story ID -->
-          <input type="hidden" id="storyID" name="storyID" value="0" />
+          <input type="hidden" name="storyID" id="storyID" value="0" />
+          <!-- Maze Custom Name -->
+          <input type="text" name="name" id="name" placeholder="Custom Name, Max: 35" maxlength="35" />
+          <label for="name">Note: This custom name will <span>NOT</span> be displayed to students.</label>
           <!-- Enable/disable decoy goals -->
           <label for="decoyToggle">Include Decoy Goals: </label>
           <input type="checkbox" name="decoyToggle" id="decoyToggle" />
@@ -116,6 +119,7 @@
             <option value="hard">Hard</option>
           </select>
           <br>
+          
           <!-- Container for buttons that perform actions, i.e. generate, preview, and save maze -->
           <div class="actions">
             <!-- Initial option -->

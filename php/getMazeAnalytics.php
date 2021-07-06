@@ -12,23 +12,15 @@
   // Note: mazes are stored in stories with Published = 2; they are copies of published stories.
   $sql = $conn->prepare("
     SELECT DISTINCT
+      stories.Name,
       stories.Title,
       stories.Author,
-      CASE
-        WHEN mazes.Difficulty = 0 THEN '[Easy]'
-        WHEN mazes.Difficulty = 1 THEN '[Medium]'
-        ELSE '[Hard]'
-      END AS Difficulty,
       CASE
         WHEN stories.ID = assignments.StoryID THEN 1
         ELSE 0
       END AS Assigned
     FROM
       stories
-    INNER JOIN
-      mazes
-    ON
-      mazes.StoryID = stories.ID
     LEFT JOIN
       assignments
     ON
@@ -55,7 +47,8 @@
     $row = $result->fetch_assoc();
 
     $mazeInfo = array(
-      "title"    => $row['Title'].' '.$row['Difficulty'],
+      "name"     => $row['Name'],
+      "title"    => $row['Title'],
       "author"   => $row['Author'],
       "assigned" => $row['Assigned'] == 1 ? true : false
     );

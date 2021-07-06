@@ -56,11 +56,7 @@
           ?>
         </h1>
         <h2>Instructions:</h2>
-        <p>
-          You are <span id="charName">undefined</span>.<br />
-          Use the code blocks to navigate through the maze.<br />
-          Reach the <span id="goalName">undefined</span>, avoid the <span id="boundName">undefined</span>!<br />
-        </p>
+        <p id="instructions"><!-- Data from initCurrLvl(); --></p>
       </div>
       <!-- Blockly Coding Space -->
       <div id="workspace"></div>
@@ -101,7 +97,7 @@
     <script type="text/javascript">
       window.addEventListener('load', function () {
         // Load story when app page loaded.
-        loadStory(<?php echo $_SESSION['totalLvls']; ?>);
+        loadStory(<?php echo $_SESSION['currLevel']; ?>, <?php echo $_SESSION['totalLvls']; ?>);
       });
     </script>
   </body>

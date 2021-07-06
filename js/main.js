@@ -656,8 +656,10 @@ function showMazeAnalytics(mazeID)
     {
       // Maze analytics selection was successful.
       // Display maze information.
-      mazeInfoContainer.querySelector("h1").innerHTML = data.mazeInfo.title;
-      mazeInfoContainer.querySelector("h2").innerHTML = "By " + data.mazeInfo.author;
+      mazeInfoContainer.querySelector("h1").innerHTML = data.mazeInfo.name;
+      mazeInfoContainer.querySelector("h1").style.fontSize = "2.35em";
+      mazeInfoContainer.querySelector("h2:nth-of-type(1)").innerHTML = data.mazeInfo.title;
+      mazeInfoContainer.querySelector("h2:nth-of-type(2)").innerHTML = "By " + data.mazeInfo.author;
       // Set assignment status text/button.
       displayMazeAssignment(data.mazeInfo.assigned);
       mazeInfoContainer.querySelector("button").onclick = function() { toggleMazeAssignment(mazeID, data.mazeInfo.assigned); };
