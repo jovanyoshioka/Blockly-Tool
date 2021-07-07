@@ -110,9 +110,13 @@ function unselectStory()
   // Uninitialize (set to 0) selected story ID input.
   document.querySelector("input#storyID").value = 0;
 
-  // Reset generator options, i.e. Include Decoy Goals, Include Cutscenes, Difficulty.
+  // Reset generator options, i.e. Custom Name, Include Decoy Goals, Include Cutscenes, Difficulty.
   // Note: Options container should be last element in form element.
   var optionsContainer = document.querySelector("#chooseAStoryForm form:last-child");
+  for (textField of optionsContainer.querySelectorAll("input[type='text']"))
+  {
+    textField.value = "";
+  }
   for (checkBox of optionsContainer.querySelectorAll("input[type='checkbox']"))
   {
     checkBox.checked = false;

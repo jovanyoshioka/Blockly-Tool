@@ -38,8 +38,9 @@
       mazes.DecoyCoords,
       levels.BckgrndImg,
       levels.Instructions,
-      GROUP_CONCAT(cutscenes.Img ORDER BY cutscenes.CutscnNum) AS CutscnImgs,
-      GROUP_CONCAT(finalCutscenes.Img ORDER BY finalCutscenes.CutscnNum) AS FinalCutscnImgs
+      GROUP_CONCAT(DISTINCT cutscenes.Img ORDER BY cutscenes.CutscnNum) AS CutscnImgs,
+      GROUP_CONCAT(DISTINCT introCutscenes.Img ORDER BY introCutscenes.CutscnNum) AS IntroCutscnImgs,
+      GROUP_CONCAT(DISTINCT finalCutscenes.Img ORDER BY finalCutscenes.CutscnNum) AS FinalCutscnImgs
     FROM
       levels
         INNER JOIN
@@ -47,16 +48,19 @@
         ON mazes.StoryID = levels.StoryID AND mazes.LvlNum = levels.LvlNum
         LEFT JOIN
           cutscenes
-        ON cutscenes.StoryID = levels.StoryID AND cutscenes.LvlNum = (levels.LvlNum-1)
+        ON cutscenes.StoryID = levels.StoryID AND cutscenes.LvlNum = levels.LvlNum
+        LEFT JOIN
+          cutscenes AS introCutscenes
+        ON introCutscenes.StoryID = levels.StoryID AND introCutscenes.LvlNum = (levels.LvlNum-1) AND levels.LvlNum = 1
         LEFT JOIN
           cutscenes AS finalCutscenes
-        ON finalCutscenes.StoryID = levels.StoryID AND finalCutscenes.LvlNum = levels.LvlNum AND ?=?
+        ON finalCutscenes.StoryID = levels.StoryID AND finalCutscenes.LvlNum = (levels.LvlNum+1) AND levels.LvlNum=?
     WHERE
       levels.StoryID=? AND levels.LvlNum=?
     GROUP BY
       levels.ID
   ");
-  $sql->bind_param("iiii", $level, $total, $mazeID, $level);
+  $sql->bind_param("iii", $total, $mazeID, $level);
   $sql->execute();
   $result = $sql->get_result();
 
@@ -100,6 +104,12 @@
       // Return empty array if no cutscenes included.
       isset($row['CutscnImgs'])
         ? explode(",", $row['CutscnImgs']) 
+        : array()
+    ),
+    "introCutscnImgs" => (
+      // Return empty array if no intro cutscenes included.
+      isset($row['IntroCutscnImgs'])
+        ? explode(",", $row['IntroCutscnImgs'])
         : array()
     ),
     "finalCutscnImgs" => (

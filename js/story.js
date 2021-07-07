@@ -83,8 +83,12 @@ function loadCurrentLevel()
     storyObj.instructions = data.instructions;
     // Cutscene Images Srcs.
     storyObj.cutscenes = data.cutscnImgs;
+    // Append introduction cutscene images to first level's cutscene images.
+    // Note: Introduction images separate from first level's cutscene images for teacher convenience when generating (preview, create/edit, etc).
+    for (img of data.introCutscnImgs.reverse())
+      storyObj.cutscenes.unshift(img);
     // Final Cutscene Images Srcs.
-    // Allows last level to show final cutscenes without retrieval from database.
+    // Allows last level to show conclusion cutscenes without separate retrieval from database.
     storyObj.finalCutscenes = data.finalCutscnImgs;
   }
 
