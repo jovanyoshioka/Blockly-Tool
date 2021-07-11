@@ -367,8 +367,8 @@ function moveWithValidator(char)
     // Stop line-by-line execution of program by clearing interval of jsInterpreter loop in blockly.js.
     clearInterval(executor);
 
-    // Notify user.
-    alert("You ran into something!");
+    // Alert user of collision with boundary.
+    displayAppAlert(3);
   }
 }
 
@@ -405,8 +405,8 @@ function checkCompletion()
   {
     if (round(character.x) == round(decoy.x) && round(character.y) == round(decoy.y))
     {
-      // TEMPORARY
-      alert("INCORRECT GOAL! SHOW POP-UP INSTEAD OF THIS.");
+      // Alert user incorrect goal was chosen.
+      displayAppAlert(2);
     }
   }
 
@@ -419,8 +419,18 @@ function checkCompletion()
     $.post("../php/setProgress.php", { nextLevel: storyObj.currLvl+1 }, function(data) {
       if (data.success)
       {
-        // User's current level was successfully updated in database, continue to next level.
-        goNextLvl();
+        // User's current level was successfully updated in database, give option to go to next level.
+        if (storyObj.finalCutscenes.length > 0)
+        {
+          goNextLvl();
+        } else if (storyObj.currLvl == storyObj.totalLvls)
+        {
+          displayAppAlert(1);
+        } else
+        {
+          displayAppAlert(0);
+        }
+        
       } else
       {
         // Update was not successful, redirect to dashboard with error.

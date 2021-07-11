@@ -940,3 +940,51 @@ function deleteStudent(id)
       closeModal(document.querySelector('.modal.show'));
     });
 }
+
+/*******
+ * APP *
+ *******/
+/**
+ * Initializes data and displays alert modal.
+ * @param type 0 => Level Completed, 1 => Story Completed, 2 => Incorrect Goal, 3 => Collided with Boundary
+ */
+function displayAppAlert(type)
+{
+  const ALERT_MODAL_ID = "alertModal";
+
+  var modalNode = document.getElementById(ALERT_MODAL_ID);
+  var msgNode = modalNode.querySelector("div.body h1");
+  var imgNode = modalNode.querySelector("div.body img");
+  var levelCompleteNode = modalNode.querySelector("footer.levelComplete");
+  var storyCompleteNode = modalNode.querySelector("footer.storyComplete");
+  var levelFailNode = modalNode.querySelector("footer.levelFail");
+
+  if (type >= 0 && type <= 3)
+  {
+    // Set alert message.
+    msgNode.innerHTML = type == 0 ? "Level Completed!"
+                    : type == 1 ? "Story Completed!"
+                    : type == 2 ? "Incorrect Goal!"
+                    : type == 3 ? "Collided with Boundary"
+                    : "Error";
+
+    // Set alert icon.
+    imgNode.src = (type == 0 || type == 1) ? "../assets/checkmark.png"
+                : "../assets/xmark.png";
+    
+    // Set alert buttons.
+    levelCompleteNode.style.display = type == 0 ? "block"
+                                    : "none";
+    storyCompleteNode.style.display = type == 1 ? "block"
+                                    : "none";
+    levelFailNode.style.display = (type == 2 || type == 3) ? "block"
+                                : "none";
+
+    // Show alert.
+    openModal(ALERT_MODAL_ID);
+  } else
+  {
+    // Invalid alert type.
+    showNotification("An error occurred when creating an alert!", 2);
+  }
+}

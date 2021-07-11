@@ -81,6 +81,43 @@
       </button>
     </div>
 
+    <!-- Alert Modal -->
+    <div id="alertModal" class="modal">
+      <div class="body">
+        <h1><!-- Data from displayAppAlert(x); --></h1>
+        <img /> <!-- "src" from displayAppAlert(x); -->
+      </div>
+      <!-- Level Completed Options -->
+      <footer class="levelComplete">
+        <a href="dashboard.php">
+          <button class="orangeBtn left">Go to Dashboard</button>
+        </a>
+        <button
+          class="orangeBtn right"
+          onclick="
+            closeModal(this.parentElement.parentElement);
+            goNextLvl()
+          "
+        >
+          Next Level
+        </button>
+      </footer>
+      <!-- Story Completed Options -->
+      <footer class="storyComplete">
+        <a href="dashboard.php">
+          <button class="orangeBtn">Go to Dashboard</button>
+        </a>
+      </footer>
+      <!-- Level Failed Options -->
+      <footer class="levelFail">
+        <button class="orangeBtn" onclick="closeModal(this.parentElement.parentElement)">Continue</button>
+      </footer>
+    </div>
+
+    <!-- Dark background tint for modals (one instance needed for all modals) -->
+    <!-- Note: App modals require user action, so do not allow minimization via background. -->
+    <div class="modalBackground"></div>
+
     <!-- Allows for controlled execution of block code -->
     <script src="../js/interpreter/acorn_interpreter.js"></script>
     <!-- JS-Interpreter API to handle external actions -->

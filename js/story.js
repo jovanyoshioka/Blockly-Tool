@@ -357,9 +357,9 @@ function endCutscene(numShown)
       // Update levels indicators.
       updateLvlIndicators();
 
-      // TEMPORARY
+      // Alert user story is completed.
       setTimeout(function() {
-        alert("USER COMPLETED STORY! SHOW POP-UP INSTEAD OF THIS.");
+        displayAppAlert(1);
       }, SLIDE_FADE_DUR);
     }
 

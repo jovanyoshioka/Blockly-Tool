@@ -216,7 +216,7 @@ p.fail {
   pointer-events: none;
   opacity: 0.0;
   transition: opacity 0.75s;
-  z-index: 997;
+  z-index: 992;
 }
 .notification:hover {
   cursor: pointer;
@@ -276,7 +276,7 @@ p.fail {
   transform: translateY(-100%);
   transition: opacity 0.5s, transform 0.5s;
   pointer-events: none;
-  z-index: 999;
+  z-index: 994;
 }
 .modal.show {
   opacity: 1.0;
@@ -373,7 +373,7 @@ p.fail {
   opacity: 0.0;
   transition: opacity 0.5s;
   pointer-events: none;
-  z-index: 998;
+  z-index: 993;
 }
 .modalBackground.show {
   opacity: 0.75;
@@ -1491,4 +1491,31 @@ body#app button#cutsceneBtn h1 {
   margin: 0;
   padding: 0 10px;
   color: #FFFFFF;
+}
+
+/*********
+ * ALERT *
+ *********/
+body#app div.modal {
+  width: 600px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+body#app div.modal.show {
+  transform: translateY(-50%);
+}
+body#app div.modal div.body {
+  padding: 20px 0 0 0;
+  text-align: center;
+}
+body#app div.modal div.body h1 {
+  font-size: 3em;
+  margin: 0 0 10px 0;
+}
+body#app div.modal div.body img {
+  width: 175px;
+}
+body#app div.modal footer.storyComplete,
+body#app div.modal footer.levelFail {
+  text-align: center;
 }
