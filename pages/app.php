@@ -40,8 +40,8 @@
       </div>
       <!-- Run/Reset Buttons -->
       <div id="btns">
-        <button id="reset" class="orangeBtn" onclick="resetSim()">Reset</button>
-        <button id="run" class="orangeBtn" onclick="runCode()">Run</button>
+        <button id="reset" class="orangeBtn" onclick="resetSim()">&#8634;</button>
+        <button id="run" class="orangeBtn" onclick="runCode()">&#9654;</button>
       </div>
     </div>
     <!-- Blockly workspace: container holding toolbox and block code -->
@@ -59,7 +59,9 @@
         <p id="instructions"><!-- Data from initCurrLvl(); --></p>
       </div>
       <!-- Blockly Coding Space -->
-      <div id="workspace"></div>
+      <div id="workspace">
+        <h1 id="capacity"><!-- Data from initCapTxt(x); --></h1>
+      </div>
       <xml id="toolbox">
         <category name="Movement" colour="180">
           <block type="movement_move_forward"></block>

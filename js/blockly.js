@@ -1,7 +1,11 @@
 window.addEventListener('load', function () {
-  // Inject workspace into DOM.
+  // Initialize default coding workspace.
+  // Note: Block capacity is set in updateWorkspace(x);
   workspace = Blockly.inject("workspace",
     {toolbox: document.getElementById("toolbox")});
+
+  // Dynamically update blocks capacity counter.
+  workspace.addChangeListener(updateCapTxt);
 
   // Update displayed JavaScript when workspace (block code) is manipulated.
   workspace.addChangeListener(updateJS);
@@ -16,6 +20,47 @@ window.addEventListener('load', function () {
   // Set to highlight block of code when executed.
   Blockly.JavaScript.STATEMENT_PREFIX = "highlightBlock(%1);\n";
 });
+
+/**
+ * Updates block capacity counter conditionally.
+ */
+function updateCapTxt()
+{
+  var blocksLeft = workspace.remainingCapacity();
+
+  // Only update counter if finite block capacity is set. Otherwise, <span> will not exist and error thrown.
+  if (blocksLeft != "Infinity")
+    document.querySelector("h1#capacity span").innerHTML = blocksLeft;
+}
+
+/**
+ * Initializes block capacity text/counter.
+ * @param cap block capacity.
+ */
+function initCapTxt(cap)
+{
+  var capacityTxtNode = document.getElementById("capacity");
+
+  // Set text/counter.
+  if (cap != "Infinity")
+    capacityTxtNode.innerHTML = "Blocks Left: <span>" + cap + "</span>";
+  else
+    capacityTxtNode.innerHTML = "No Block Limit";
+}
+
+
+/**
+ * Updates coding workspace attribute(s), i.e. block capacity.
+ * @param cap block capacity.
+ */
+function updateWorkspace(cap)
+{
+  // Update block capacity.
+  workspace.options.maxBlocks = cap;
+
+  // Initialize block capacity text/counter.
+  initCapTxt(cap);
+}
 
 /**
  * Translates block code into JavaScript.

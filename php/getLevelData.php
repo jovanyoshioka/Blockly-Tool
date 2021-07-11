@@ -36,6 +36,7 @@
       mazes.GoalCoord,
       mazes.DecoyImgs,
       mazes.DecoyCoords,
+      mazes.BlockCap,
       levels.BckgrndImg,
       levels.Instructions,
       GROUP_CONCAT(DISTINCT cutscenes.Img ORDER BY cutscenes.CutscnNum) AS CutscnImgs,
@@ -98,6 +99,7 @@
         ? array_map("convertStrToArray", explode("/", $row['DecoyCoords']))
         : array()
     ),
+    "blockCap"     => $row['BlockCap'],
     "bckgrndImg"   => $row['BckgrndImg'],
     "instructions" => $row['Instructions'],
     "cutscnImgs"   => (

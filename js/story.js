@@ -77,6 +77,9 @@ function loadCurrentLevel()
     storyObj.decoy.coords = data.decoyCoords;
 
     // Initialize other maze components.
+    // Block Capacity.
+    // Note: Either "Infinity" or finite limit.
+    storyObj.blockCap = data.blockCap;
     // Background Image Src.
     storyObj.background = data.bckgrndImg;
     // Instructions Text.
@@ -172,11 +175,13 @@ function initCurrLvl()
   // Update levels indicators.
   updateLvlIndicators();
 
-  // Reset simulation and generate next level's maze (blockly.js).
+  // Reset simulation and generate level's maze (blockly.js).
   resetSim();
 
-  // Clear previous level's code blocks from workspace.
+  // Clear previous level's code.
   workspace.clear();
+  // Update coding workspace attribute(s) for level, i.e. block capacity.
+  updateWorkspace(storyObj.blockCap);
 
   // Update instructions.
   document.getElementById("instructions").innerHTML = storyObj.instructions;
