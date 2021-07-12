@@ -74,12 +74,17 @@
       </xml>
     </div>
 
+    <!-- Cutscene -->
     <div id="cutsceneWrapper">
+      <!-- Black Background -->
       <div id="cutsceneScreen"></div>
+      <!-- Cutscene Images -->
       <img id="cutsceneImgA" class="cutsceneImg" />
       <img id="cutsceneImgB" class="cutsceneImg" />
+      <!-- Proceed/Loading Buttons -->
       <button id="cutsceneBtn" disabled>
         <h1>></h1>
+        <img src="../assets/loading.gif" />
       </button>
     </div>
 

@@ -1,8 +1,10 @@
-/*************
- * CONSTANTS *
- *************/
-// Time (ms) until content no longer visible (due to cutscene).
-const SLIDE_IN_DUR = 1750;
+window.addEventListener('load', function () {
+  // Initialize onload listeners to enable proceed to next button for cutscenes once next image loaded.
+  document.getElementById("cutsceneImgA").onload = 
+    function() { document.getElementById("cutsceneBtn").disabled = false; }
+  document.getElementById("cutsceneImgB").onload =
+    function() { document.getElementById("cutsceneBtn").disabled = false; }
+});
 
 /***********
  * CLASSES *
@@ -160,8 +162,8 @@ function goNextLvl()
     loadCurrentLevel();
   } else
   {
+    // Show conclusion cutscene images, i.e. end story.
     storyObj.cutscenes = storyObj.finalCutscenes;
-
     initCutscene();
   }
 
@@ -214,7 +216,7 @@ function initCutsceneBtn(numShown)
 }
 
 /**
- * Initial cutscene display. Slide into view cover image.
+ * Initialize cutscene, i.e. fade in black background and show first image.
  */
 function initCutscene()
 {
@@ -232,10 +234,14 @@ function initCutscene()
     var hiddenImg = document.getElementById("cutsceneImgB");
     var btn = document.getElementById("cutsceneBtn");
 
+    // Temporarily disable while initializing cutscene/showing first image.
+    // Re-enable when next image is loaded or, if such image does not exist, when slide in animation is complete.
+    btn.disabled = true;
+
     // "Re-enable" cutscene. Initially "disabled" as it overlaps/blocks app content from user interaction.
     wrapper.style.pointerEvents = "auto";
 
-    // Set cover as image to be shown.
+    // Initialize first cutscene image.
     showingImg.src = storyObj.cutscenes[0];
 
     // Remove any animations from previous cutscenes.
@@ -246,10 +252,20 @@ function initCutscene()
     // Apply slide/fade in animation.
     showingImg.classList.add("slideIn");
 
-    // Show and enable proceed to next button once cover has slid into view.
+    const SLIDE_IN_DUR = 1750;
     setTimeout(function() {
+      // Show button regardless of if image loaded after slide in animation, but keep disabled until image loaded.
       btn.classList.add("show");
-      btn.disabled = false;
+      
+      if (storyObj.cutscenes[1])
+      {
+        // Load image, and enable cutscene button once loaded via onload listener.
+        hiddenImg.src = storyObj.cutscenes[1];
+      } else
+      {
+        // No next image exists, so just enable cutscene button.
+        btn.disabled = false;
+      }
     }, SLIDE_IN_DUR);
 
     initCutsceneBtn(1);
@@ -270,12 +286,9 @@ function showNextScene(idx)
   var btn = document.getElementById("cutsceneBtn");
   var prevImg, nextImg;
 
-  // Temporarily disable while switching images. Re-enable when fade animation is complete.
-  const FADE_DUR = 1000;
+  // Temporarily disable while switching images.
+  // Re-enable when image after nextImg is loaded or, if such image does not exist, when fade animation is complete.
   btn.disabled = true;
-  setTimeout(function() {
-    btn.disabled = false;
-  }, FADE_DUR);
 
   // Determine which image to show and which to hide based on opacity.
   // Opacity 0.0: Currently hidden, so show. Opacity 1.0: Currently shown, so hide.
@@ -296,8 +309,21 @@ function showNextScene(idx)
     console.error("Could not determine which cutscene image to show/hide.");
   }
 
-  // Set next image of cutscene to be shown.
-  nextImg.src = storyObj.cutscenes[idx];
+  // Initialize the image after nextImg once prevImg element is no longer visible ensuring image is loaded before switching.
+  // Note: This means that nextImg is already loaded from previous function call.
+  // Note: User may not proceed (cutscene button disabled) until image loaded or fade animation complete.
+  const FADE_DUR = 1000;
+  setTimeout(function() {
+    if (storyObj.cutscenes[idx+1])
+    {
+      // Load image, and enable cutscene button once loaded via onload listener.
+      prevImg.src = storyObj.cutscenes[idx+1];
+    } else
+    {
+      // No image after nextImg, so just enable cutscene button.
+      btn.disabled = false;
+    }
+  }, FADE_DUR);
   
   // Bring next image forward.
   prevImg.style.zIndex = "996";

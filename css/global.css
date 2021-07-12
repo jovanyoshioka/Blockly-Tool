@@ -1400,7 +1400,7 @@ body#app div#wsContainer div#workspace h1 {
   padding: 0;
   position: absolute;
   top: 10px;
-  right: 15px;
+  right: 20px;
   font-family: var(--gothic);
   color: var(--rock);
   z-index: 991;
@@ -1476,15 +1476,21 @@ body#app img.cutsceneImg.slideOut {
 
 /* Advance Cutscene Button */
 body#app button#cutsceneBtn {
+  width: 65px;
+  height: 65px;
+  line-height: 65px;
   position: absolute;
   bottom: 20px;
   right: 20px;
   background-color: var(--tnOrange);
   border: none;
   border-radius: 5px;
-  z-index: 998;
+  /* When initializing cutscene, first image slides in after being loaded. */
+  /* Thus, onload enables button before image shown. pointer-events prevents such. */
+  pointer-events: none;
   opacity: 0.0;
   transition: 0.25s background-color, 0.5s opacity;
+  z-index: 998;
 }
 body#app button#cutsceneBtn:hover {
   cursor: pointer;
@@ -1497,11 +1503,28 @@ body#app button#cutsceneBtn:disabled {
   cursor: not-allowed;
   background-color: var(--darkOrange);
 }
+body#app button#cutsceneBtn.show {
+  pointer-events: all;
+}
+/* ">" Icon */
 body#app button#cutsceneBtn h1 {
   font-size: 4em;
   margin: 0;
-  padding: 0 10px;
+  padding: 0;
   color: #FFFFFF;
+}
+/* Loading GIF */
+body#app button#cutsceneBtn img {
+  width: 4em;
+  vertical-align: middle;
+  display: none;
+}
+/* Show ">" when btn enabled, loading GIF when btn disabled. */
+body#app button#cutsceneBtn:disabled h1 {
+  display: none;
+}
+body#app button#cutsceneBtn:disabled img {
+  display: block;
 }
 
 /*********
