@@ -23,7 +23,7 @@
   </head>
   <body id="login">
     <div class="wrapper">
-      <h1>Code a Story</h1>
+      <img src="../assets/logo.png" />
       <div class="forms">
         <!-- For user to select method of login, either as student or teacher -->
         <div id="loginSelector">

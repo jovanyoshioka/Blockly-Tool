@@ -14,11 +14,13 @@
   </head>
   <body id="contact">
     <?php include('../php/navbar.php'); ?>
+
     <!-- Header -->
     <header class="banner">
       <h1>Contact Us</h1>
       <h2>Code a Story Team</h2>
     </header>
+    
     <div class="wrapper">
       <h1>
         If you have any questions or concerns, <br />please reach out to us.

@@ -16,7 +16,7 @@
   switch ($_SESSION['type'])
   {
     case 0:
-      // Student Navigation Bar: Dashboard, Logout
+      // Student Navigation Bar: App, Dashboard, Logout
       echo '
         <nav class="navbar">
           <ul>
@@ -48,7 +48,7 @@
       break;
     case 1:
     case 2:
-      // Teacher/Admin Navigation Bar: Dashboard, Generator, Classes, Contact, Logout
+      // Teacher/Admin Navigation Bar: App, Dashboard, Generator, Classes, Contact, Logout
       // Note: Difference between Teacher and Admin accounts is what the pages display.
       
       // Get class links, stored in variable $classLinks.

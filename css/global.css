@@ -108,6 +108,7 @@ header.banner {
   padding: 15px 0 20px 0;
   text-align: center;
   background-color: var(--tnOrange);
+  z-index: 992;
 }
 header.banner h1,
 header.banner h2 {
@@ -444,12 +445,14 @@ div.levelIndicator.complete {
 
 body#login {
   background-color: var(--smokeyGray);
+  overflow-y: auto;
 }
 /* Centers Content */
 body#login div.wrapper {
   width: 500px;
-  margin: 20vh auto;
+  margin: 2vh auto;
   text-align: center;
+  border-bottom: 2px solid #FFFFFF;
 }
 /* Text */
 body#login div.wrapper h1,
@@ -460,11 +463,9 @@ body#login div.forms form legend {
   color: #FFFFFF;
   font-family: var(--gothic);
 }
-/* "Code a Story" Header */
-body#login div.wrapper h1 {
-  font-size: 4.5em;
-  margin: 0;
-  padding: 0;
+/* Code a Story Logo */
+body#login div.wrapper img {
+  width: 350px;
 }
 /* Button "Label" and Button Outside of <form> */
 body#login div.wrapper h2 {
@@ -487,7 +488,7 @@ body#login div.forms {
 body#login div.forms div#loginSelector,
 body#login div.forms form {
   position: absolute;
-  top: 0;
+  top: 15px;
   left: 0;
   right: 0;
   margin: 0 auto;
@@ -532,7 +533,7 @@ body#login div.forms form input:not([type=submit]):not([type=button]) {
 body#login div.forms form input[type=button],
 body#login div.forms form input[type=submit] {
   font-size: 1.75em;
-  margin: 15px 0 0 0;
+  margin: 15px 0;
   padding: 10px 20px;
 }
 body#login div.forms form#pwdForm input[type=button] {
@@ -546,25 +547,33 @@ body#login div.forms form#pwdForm input[type=button] {
 body#dashboard {
   color: #FFFFFF;
   font-family: var(--gothic);
-  overflow: auto;
+  overflow-y: auto;
 }
 body#dashboard div.wrapper {
   width: 825px;
   margin: 0 auto;
+  text-align: center;
+}
+body#dashboard div.wrapper img {
+  width: 300px;
+  display: inline-block;
+  vertical-align: middle;
 }
 body#dashboard div.wrapper h1 {
-  font-size: 3.25em;
-  margin: 20px 0;
-  text-align: center;
+  font-size: 3.5em;
+  margin-left: 35px;
+  display: inline-block;
 }
 /* Teacher View */
 body#dashboard div.wrapper h2 {
   font-size: 2em;
+  text-align: left;
 }
 body#dashboard div.wrapper p {
   font-size: 1.75em;
   margin: 0;
   padding: 0;
+  text-align: left;
 }
 body#dashboard div.wrapper p a {
   color: var(--tnOrange);
@@ -788,6 +797,7 @@ body#generator section.formContainer {
   transition: transform 0.75s;
   display: none;
   overflow-y: auto;
+  overflow-x: hidden;
   z-index: 3; /* above mode buttons */
 }
 /* Maze Generation General Form Styling */

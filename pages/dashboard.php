@@ -14,6 +14,7 @@
   </head>
   <body id="dashboard">
     <?php include('../php/navbar.php'); ?>
+    
     <?php
       switch ($_SESSION['type'])
       {
@@ -30,7 +31,8 @@
               <h2>'.$_SESSION['fName'].' '.$_SESSION['lName'].'</h2>
             </header>
             <div class="wrapper">
-              <h1>Code a Story</h1>
+              <img src="../assets/logo.png" />
+              <h1>Welcome!</h1>
               <h3>Your Assignments</h3>
               <div class="assignments">
                 '.$assignments.'
@@ -49,7 +51,8 @@
               <h2>'.$_SESSION['fName'].' '.$_SESSION['lName'].'</h2>
             </header>
             <div class="wrapper">
-              <h1>Code a Story</h1>
+              <img src="../assets/logo.png" />
+              <h1>Welcome!</h1>
               <p>
                 &#9679; To get started, use the "Create a Class" option under "Classes &#9660;" on the navigation bar.<br />
                 &#9679; After creating your class, add your students through the "Manage Students" interface.<br />
