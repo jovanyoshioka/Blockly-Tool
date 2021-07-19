@@ -8,7 +8,6 @@
   $mazeID = $_POST['id'];
 
   // Get selected maze's information after verifying teacher and validity of maze, i.e. if it has associated levels.
-  // Note: LvlNum = 0 is for introductory cutscenes, so do not include this in validation.
   // Note: mazes are stored in stories with Published = 2; they are copies of published stories.
   $sql = $conn->prepare("
     SELECT DISTINCT
@@ -33,7 +32,7 @@
         FROM
           levels
         WHERE
-          levels.StoryID = stories.ID AND levels.LvlNum > 0
+          levels.StoryID = stories.ID
       )
   ");
   $sql->bind_param("iii", $_SESSION['classID'], $mazeID, $_SESSION['id']);

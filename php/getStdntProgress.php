@@ -9,7 +9,6 @@
   $mazeID    = $_POST['mazeID'];
 
   // Verify teacher, student, and validity of maze, i.e. if it has associated levels.
-  // Note: LvlNum = 0 is for introductory cutscenes, so do not include this in validation.
   // Note: mazes are stored in stories with Published = 2; they are copies of published stories.
   // Note: $studentID = 0 should be validated as it gets cumulative progress.
   $sql = $conn->prepare("
@@ -25,7 +24,7 @@
         FROM
           levels
         WHERE
-          levels.StoryID = stories.ID AND levels.LvlNum > 0
+          levels.StoryID = stories.ID
       ) AND
       EXISTS (
         SELECT

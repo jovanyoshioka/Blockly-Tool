@@ -22,6 +22,7 @@ class Story
     this.decoy      = { imgs: [], coords: []};
 
     // Other Maze Components.
+    this.blockCap       = "";
     this.background     = "";
     this.instructions   = "";
     this.cutscenes      = [];
@@ -307,6 +308,7 @@ function showNextScene(idx)
   } else
   {
     console.error("Could not determine which cutscene image to show/hide.");
+    return;
   }
 
   // Initialize the image after nextImg once prevImg element is no longer visible ensuring image is loaded before switching.

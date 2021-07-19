@@ -4,7 +4,6 @@
 
   // Retrieve teacher's mazes, stored as copied stories with Published = 2, from database.
   // Only get valid mazes, i.e. those with associated levels.
-  // Note: LvlNum = 0 is for introductory cutscenes, so do not include this in validation.
   $sql = $conn->prepare("
     SELECT DISTINCT
       stories.ID,
@@ -19,7 +18,7 @@
         FROM
           levels
         WHERE
-          levels.StoryID = stories.ID AND levels.LvlNum > 0
+          levels.StoryID = stories.ID
       )
   ");
   $sql->bind_param("i", $_SESSION['id']);

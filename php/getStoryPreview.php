@@ -5,6 +5,9 @@
   $storyID = $_POST["storyID"];
 
   // Get specified story's character, boundary, goal, background, and cutscene images & instructions.
+  // Note: Second SELECT statement retrieves Introduction and Conclusion cutscene images.
+  //   Purposefully after getting levels to order correctly when appending to return array.
+  // Note: Introduction => LvlNum = 0, Conclusion => LvlNum = NumLvls+1
   $sql = $conn->prepare("
     SELECT
       levels.LvlNum,
@@ -20,24 +23,65 @@
           cutscenes
         ON cutscenes.StoryID = levels.StoryID AND cutscenes.LvlNum = levels.LvlNum
     WHERE
-      levels.StoryID = ?
+      levels.StoryID=?
     GROUP BY
       levels.LvlNum
+
+    UNION ALL
+
+    SELECT
+      cutscenes.LvlNum,
+      NULL, NULL, NULL, NULL, NULL,
+      GROUP_CONCAT(cutscenes.Img ORDER BY cutscenes.CutscnNum) AS CutscnImgs
+    FROM
+      cutscenes
+    WHERE
+      cutscenes.StoryID=?
+      AND (
+        cutscenes.LvlNum = 0
+        OR cutscenes.LvlNum = (
+          SELECT
+            COUNT(*)
+          FROM
+            levels
+          WHERE
+            levels.StoryID = cutscenes.StoryID
+        ) + 1
+      )
+    GROUP BY
+      cutscenes.LvlNum
   ");
-  $sql->bind_param("i", $storyID);
+  $sql->bind_param("ii", $storyID, $storyID);
   $sql->execute();
   $results = $sql->get_result();
 
-  $levels = '';
+  $prevLvlNum = 0;
+  $levels = array();
   while ($row = $results->fetch_assoc())
   {
-    // Skip iteration if level 0 (introduction) and no cutscene images existent.
-    if ($row['LvlNum'] == 0 && !isset($row['CutscnImgs'])) continue;
+    $level = '';
+    $isIntro = false;
+    $isConclude = false;
 
-    // Create new level section, add "Introduction" or "Level n" header text.
-    $levels .= '
+    // Determine if current row is Introduction or Conclusion entry.
+    // Note: prevLvlNum will eventually yield highest level number, i.e. the Conclusion row.
+    if ($row['LvlNum'] == 0)
+      $isIntro = true;
+    else if ($row['LvlNum'] > $prevLvlNum && $row['CharImg'] == NULL)
+      $isConclude = true;
+
+    $prevLvlNum = $row['LvlNum'];
+
+    // Create new level section, add "Introduction", "Level n", or "Conclusion" header text.
+    $level .= '
       <section>
-        <h1>'.($row['LvlNum'] == 0 ? 'Introduction' : 'Level '.$row['LvlNum']).'</h1>
+        <h1>
+          '.(
+            $isIntro    ? 'Introduction' : (
+            $isConclude ? 'Conclusion'   
+                        : 'Level '.$row['LvlNum'] )
+          ).'
+        </h1>
         <div class="wrapper">
     ';
 
@@ -60,7 +104,7 @@
     {
       if ($val != NULL)
       {
-        $levels .= '
+        $level .= '
           <div>
             <h2>'.$key.'</h2>
             <img src="'.$val.'" />
@@ -72,7 +116,7 @@
     // Add instructions to level's section.
     if ($row['Instructions'] != NULL)
     {
-      $levels .= '
+      $level .= '
         <div>
           <h2>Instructions</h2>
           <p>'.$row['Instructions'].'</p>
@@ -81,19 +125,25 @@
     }
 
     // Close level section.
-    $levels .= '
+    $level .= '
         </div>
       </section>
     ';
+
+    // Append to levels to be displayed.
+    // Note: Introduction should be first element, Conclusion should be last element.
+    // Note: Levels are ordered from least to greatest via SQL query.
+    if ($isIntro) array_unshift($levels, $level);
+    else array_push($levels, $level);
   }
 
   // If SELECT query yielded no results, add message instead of blank preview modal. 
-  if ($levels == NULL)
+  if (empty($levels))
   {
     echo '<h2>Story data could not be found!</h2>';
   }
 
-  echo $levels;
+  echo implode("", $levels);
 
   $conn->close();
 

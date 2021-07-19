@@ -122,11 +122,12 @@
   // Note: DecoyImgs/DecoyCoords only duplicated if enabled in generation parameters ($doDecoys).
   $sql = $conn->prepare("
     INSERT INTO
-      mazes (StoryID, Difficulty, LvlNum, CharCoord, BoundCoords, GoalCoord, DecoyImgs, DecoyCoords)
+      mazes (StoryID, Difficulty, LvlNum, BlockCap, CharCoord, BoundCoords, GoalCoord, DecoyImgs, DecoyCoords)
     SELECT
       ?,
       Difficulty,
       LvlNum,
+      BlockCap,
       CharCoord,
       BoundCoords,
       GoalCoord,

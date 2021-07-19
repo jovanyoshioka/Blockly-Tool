@@ -6,7 +6,6 @@
 
   // Retrieve total number of levels and students' current levels.
   // Current levels effectively tells what levels are complete, in progress, and not complete.
-  // Note: LvlNum = 0 is for introductory cutscenes, so do not include this in COUNT.
   $sql = $conn->prepare("
     SELECT
       COUNT(DISTINCT levels.ID) AS Total,
@@ -25,7 +24,7 @@
     FROM
       levels
     WHERE
-      levels.StoryID=? AND levels.LvlNum > 0
+      levels.StoryID=?
   ");
   $sql->bind_param("ii", $_SESSION['classID'], $mazeID);
   $sql->execute();
