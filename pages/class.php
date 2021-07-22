@@ -20,11 +20,21 @@
       <h2>Class ID: <?php echo $_SESSION['classID']; ?></h2>
       <div class="tooltip">
         <button
-          onclick="copyText(this.querySelector('.tooltipText'), 'codeastory.utk.edu/pages/login.php?classID=<?php echo $_SESSION['classID']; ?>')"
-          onmouseout="changeTooltipText(this.querySelector('.tooltipText'), 'Copy Student Login Link')"
+          onclick="
+            copyText(
+              this.querySelector('.tooltipText'),
+              'codeastory.utk.edu/pages/login.php?classID=<?php echo $_SESSION['classID']; ?>'
+            )
+          "
+          onmouseout="
+            changeTooltipText(
+              this.querySelector('.tooltipText'),
+              'Copy Student Login Link'
+            )
+          "
         >
           <span class="tooltipText">Copy Student Login Link</span>
-          &#128203;
+          <i class="fas fa-clipboard"></i>
         </button>
       </div>
     </header>
@@ -121,7 +131,9 @@
     <div id="addModal" class="modal studentModal">
       <header>
         <h1>Add Student(s)</h1>
-        <button onclick="closeModal(this.parentElement.parentElement)">&#x2716;</button>
+        <button onclick="closeModal(this.parentElement.parentElement)">
+          <i class="fas fa-times"></i>
+        </button>
       </header>
       <div class="body">
         <p class="msg"></p>
@@ -142,7 +154,9 @@
     <div id="editModal" class="modal studentModal formModal">
       <header>
         <h1>Edit Student</h1>
-        <button onclick="closeModal(this.parentElement.parentElement)">&#x2716;</button>
+        <button onclick="closeModal(this.parentElement.parentElement)">
+          <i class="fas fa-times"></i>
+        </button>
       </header>
       <form id="editStudentForm" action="#" method="POST">
         <div class="body">
@@ -168,7 +182,9 @@
     <div id="delModal" class="modal studentModal">
       <header>
         <h1>Delete Student</h1>
-        <button onclick="closeModal(this.parentElement.parentElement)">&#x2716;</button>
+        <button onclick="closeModal(this.parentElement.parentElement)">
+          <i class="fas fa-times"></i>
+        </button>
       </header>
       <div class="body">
         <p>

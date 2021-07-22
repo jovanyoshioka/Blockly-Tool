@@ -105,9 +105,9 @@ function endProgram()
  */
 function runCode()
 {
-  // Disable run button.
-  // TEMPORARY: Instead, change to a pause/reset button?
-  document.getElementById("run").disabled = true;
+  // Disable run button, enable reset button.
+  document.getElementById("run").style.display = "none";
+  document.getElementById("reset").style.display = "inline-block";
   
   var code = getTranslatedCode(workspace);
   var jsInterpreter = new Interpreter(code, initApi);
@@ -137,6 +137,7 @@ function resetSim()
   // Reset canvas to initial view (using function from canvas.js).
   generateMaze();
 
-  // Enable run button.
-  document.getElementById("run").disabled = false;
+  // Enable run button, disable reset button.
+  document.getElementById("run").style.display = "inline-block";
+  document.getElementById("reset").style.display = "none";
 }

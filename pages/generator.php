@@ -31,7 +31,9 @@
     <div id="previewModal" class="modal storyModal">
       <header>
         <h1><!-- Data from previewStory(x); --></h1>
-        <button onclick="closeModal(this.parentElement.parentElement)">&#x2716;</button>
+        <button onclick="closeModal(this.parentElement.parentElement)">
+          <i class="fas fa-times"></i>
+        </button>
       </header>
       <div class="body">
         <!-- Data from previewStory(x); -->
@@ -42,7 +44,9 @@
     <div id="editModal" class="modal storyModal">
       <header>
         <h1>The Very Hungry Caterpillar Editor</h1>
-        <button onclick="closeModal(this.parentElement.parentElement)">&#x2716;</button>
+        <button onclick="closeModal(this.parentElement.parentElement)">
+          <i class="fas fa-times"></i>
+        </button>
       </header>
       <div class="body">
         <form action="" method="POST">

@@ -2,7 +2,6 @@
  * GLOBALS *
  ***********/
 :root {
-  --canvasSize:  675px;
   /* Colors */
   --tnOrange:    #FF8200;
   --lightOrange: #F2A44F;
@@ -18,7 +17,29 @@
   /* Font */
   --gothic:      'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   /* Global Values */
-  --navHeight:   65px;
+  --canvasSize: 625px;
+  --navHeight:  65px;
+}
+@media only screen and (max-width: 1550px) {
+  :root {
+    --canvasSize: 525px;
+  }
+}
+@media only screen and (max-width: 1250px) {
+  :root {
+    --canvasSize: 425px;
+  }
+}
+@media only screen and (max-width: 1050px) {
+  :root {
+    --canvasSize: 350px;
+    --navHeight: 45px;
+  }
+}
+@media only screen and (max-width: 950px) {
+  :root {
+    --canvasSize: 250px;
+  }
 }
 
 html, body {
@@ -29,9 +50,16 @@ html, body {
   background-color: var(--smokeyGray);
 }
 
+/* Prevent iOS from styling input fields/buttons. */
+textarea,
+input:not([type="date"]) {
+  -webkit-appearance: none;
+}
+
 /* Navigation Bar */
 nav.navbar {
-  height: var(--navHeight);
+  /* Account for 3px as border-bottom increases height. */
+  height: calc(var(--navHeight) - 3px);
   padding: 0 15px 0 25px;
   background-color: #333333;
   border-bottom: 3px solid #FFFFFF;
@@ -100,6 +128,24 @@ nav.navbar ul div.dropdown div.dropdownContent a:not(:last-of-type) {
 nav.navbar ul div.dropdown div.dropdownContent a:hover {
   background-color: var(--lighterGray);
   cursor: pointer;
+}
+@media only screen and (max-width: 1050px) {
+  /* Navigation Bar */
+  nav.navbar {
+    padding: 0 15px 0 20px;
+  }
+  /* Navigation Bar, Links */
+  nav.navbar ul li a {
+    font-size: 1.5em;
+  }
+  /* Navigation Bar, Content of Dropdowns */
+  nav.navbar ul div.dropdown div.dropdownContent {
+    min-width: 135px;
+    margin: 5px 0 0 5px;
+  }
+  nav.navbar ul div.dropdown div.dropdownContent a {
+    font-size: 1.25em;
+  }
 }
 
 /* Page Banner Headers */
@@ -301,8 +347,8 @@ p.fail {
   display: inline-block;
 }
 .modal header button {
-  font-size: 2.25em;
-  margin: 0 5px 0 0;
+  font-size: 2.75em;
+  margin: 5px 7.5px 0 0;
   color: #FFFFFF;
   transition: color 0.25s;
   background-color: transparent;
@@ -520,9 +566,10 @@ body#login div.forms form label {
   margin: 5px 0 0 82.5px;
 }
 body#login div.forms form legend {
-  margin: 5px 0 0 60px;
+  margin: 5px 0 0 67.5px;
 }
 body#login div.forms form input:not([type=submit]):not([type=button]) {
+  width: 300px;
   font-size: 2em;
   margin: 5px 0;
   padding: 10px 15px;
@@ -533,7 +580,7 @@ body#login div.forms form input:not([type=submit]):not([type=button]) {
 body#login div.forms form input[type=button],
 body#login div.forms form input[type=submit] {
   font-size: 1.75em;
-  margin: 15px 0;
+  margin: 15px 0 60px 0;
   padding: 10px 20px;
 }
 body#login div.forms form#pwdForm input[type=button] {
@@ -597,7 +644,7 @@ body#dashboard div.wrapper h4 {
 body#dashboard div.wrapper div.assignment {
   width: 100%;
   height: 135px;
-  margin: 0 0 15px 0;
+  margin: 0 0 60px 0;
   border-radius: 5px;
   background-color: var(--lightGray);
   display: flex;
@@ -610,8 +657,9 @@ body#dashboard div.wrapper div.assignment button {
   padding: 5px 10px;
 }
 /* Check Mark (when assignment complete instead of "Go" Button) */
-body#dashboard div.wrapper div.assignment h1 {
-  margin: 0 27.5px;
+body#dashboard div.wrapper div.assignment i {
+  font-size: 3.25em;
+  margin: 0 17.5px;
   color: var(--green);
 }
 /* Title/Author Text */
@@ -969,8 +1017,10 @@ body#class header h2 {
 /* Copy Student Login Link Button */
 body#class header div.tooltip button {
   font-size: 1.65em;
+  margin-left: 5px;
   padding: 0;
   background-color: transparent;
+  color: #FFFFFF;
   border: none;
   vertical-align: bottom;
 }
@@ -1308,16 +1358,20 @@ body#app div#simContainer {
   flex-flow: column;
   float: left;
 }
-/* Levels Indicators */
+/* Container Above Canvas */
 body#app div#simContainer header {
+  height: 85px;
   padding-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: var(--smokeyGray);
   border-bottom: 7.5px solid var(--tnOrange);
-  text-align: center;
 }
+/* Levels Indicators */
 body#app div#simContainer header div.levelsContainer {
-  width: 65%;
-  margin: 0 auto;
+  width: 400px;
+  margin-left: 30px;
   overflow-x: auto;
   white-space: nowrap;
 }
@@ -1326,12 +1380,82 @@ body#app div#simContainer header div.levelsContainer div {
   color: #FFFFFF;
   font-family: var(--gothic);
 }
+/* Run/Reset Buttons */
+body#app div#simContainer div#btns {
+  margin-right: 25px;
+  background-color: var(--smokeyGray);
+}
+body#app div#simContainer div#btns button.orangeBtn {
+  margin: 7.5px 0 0 0;
+  padding: 10px 15px;
+  font-size: 2.25em;
+}
+body#app div#simContainer div#btns button#reset {
+  display: none;
+}
+@media only screen and (max-width: 1550px) {
+  /* Levels Indicators */
+  body#app div#simContainer header div.levelsContainer {
+    width: 325px;
+  }
+}
+@media only screen and (max-width: 1250px) {
+  /* Levels Indicators */
+  body#app div#simContainer header div.levelsContainer {
+    width: 250px;
+    margin-left: 20px;
+  }
+  /* Run/Reset Buttons */
+  body#app div#simContainer div#btns {
+    margin-right: 17.5px;
+  }
+}
+@media only screen and (max-width: 1050px) {
+  /* Container Above Canvas */
+  body#app div#simContainer header {
+    height: 70px;
+    border-bottom: 5px solid var(--tnOrange);
+  }
+  /* Levels Indicators */
+  body#app div#simContainer header div.levelsContainer {
+    width: 200px;
+    margin-left: 12.5px;
+  }
+  body#app div#simContainer header div.levelsContainer div {
+    width: 40px;
+    height: 40px;
+    font-size: 1.35em;
+    line-height: 40px;
+  }
+  /* Run/Reset Buttons */
+  body#app div#simContainer div#btns {
+    margin-right: 12.5px;
+    background-color: var(--smokeyGray);
+  }
+  body#app div#simContainer div#btns button.orangeBtn {
+    width: 50px;
+    height: 50px;
+    font-size: 1.75em;
+  }
+}
+@media only screen and (max-width: 950px) {
+  /* Levels Indicators */
+  body#app div#simContainer header div.levelsContainer {
+    width: 165px;
+    margin-left: 6.5px;
+  }
+  /* Run/Reset Buttons */
+  body#app div#simContainer div#btns {
+    margin-right: 8.5px;
+  }
+}
 
 /* Canvas */
 body#app div#simContainer div#canvasWrapper {
   width: var(--canvasSize);
   height: var(--canvasSize);
   position: relative;
+  border-bottom: 7.5px solid var(--tnOrange);
 }
 body#app div#simContainer canvas {
   width: 100%;
@@ -1347,18 +1471,10 @@ body#app div#simContainer canvas#storyCanvas {
   z-index: 1;
   background-size: cover;
 }
-
-/* Run/Reset Buttons */
-body#app div#simContainer div#btns {
-  flex-grow: 1;
-  border-top: 7.5px solid var(--tnOrange);
-  background-color: var(--smokeyGray);
-}
-body#app div#simContainer div#btns button.orangeBtn {
-  margin: 7.5px 5px;
-  padding: 5px 12.5px;
-  font-size: 2.25em;
-  float: right;
+@media only screen and (max-width: 1050px) {
+  body#app div#simContainer div#canvasWrapper {
+    border-bottom: 5px solid var(--tnOrange);
+  }
 }
 
 /************************************************
@@ -1400,11 +1516,12 @@ body#app div#wsContainer div#textContainer p {
 
 /* Tool Box & Code Space */
 body#app div#wsContainer div#workspace {
-  /* Subtracting height/padding/border of #textContainer. */
+  /* Subtracting height and padding/border of #textContainer. */
   /* Note: Cannot use "flex-grow: 1" as it will cause toolbox flyout to not work properly. */
-  height: calc(100% - 180px);
+  height: calc(100% - 135px - 40px);
   position: relative;
 }
+/* Text: Block Capacity */
 body#app div#wsContainer div#workspace h1 {
   margin: 0;
   padding: 0;
@@ -1417,6 +1534,33 @@ body#app div#wsContainer div#workspace h1 {
 }
 body#app xml#toolbox {
   display: none;
+}
+
+@media only screen and (max-width: 1050px) {
+  /* Text: Story Title/Author and Instructions */
+  body#app div#wsContainer div#textContainer {
+    height: 75px;
+    border-bottom: 5px solid var(--tnOrange);
+    border-left: 5px solid var(--tnOrange);
+  }
+  body#app div#wsContainer div#textContainer h1 {
+    font-size: 1.5em;
+    padding-bottom: 5px;
+  }
+  body#app div#wsContainer div#textContainer h2 {
+    font-size: 1.25em;
+  }
+  body#app div#wsContainer div#textContainer p {
+    font-size: 1em;
+  }
+  /* Tool Box & Code Space */
+  body#app div#wsContainer div#workspace {
+    height: calc(100% - 75px - 40px);
+  }
+  /* Text: Block Capacity */
+  body#app div#wsContainer div#workspace h1 {
+    font-size: 1.5em;
+  }
 }
 
 /*************
@@ -1434,6 +1578,11 @@ body#app xml#toolbox {
 
 /* Prevent cutscene elements from blocking app content. */
 body#app div#cutsceneWrapper {
+  width: 100%;
+  height: calc(100% - var(--navHeight));
+  position: relative;
+  top: 0;
+  left: 0;
   pointer-events: none;
 }
 
@@ -1450,9 +1599,9 @@ body#app div#cutsceneScreen.hide {
 /* Black Transition Background */
 body#app div#cutsceneScreen {
   width: 100%;
-  height: calc(100% - var(--navHeight));
+  height: 100%;
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   background-color: #000000;
   opacity: 1.0;
@@ -1462,9 +1611,9 @@ body#app div#cutsceneScreen {
 
 /* Cutscene Images and Animations */
 body#app img.cutsceneImg {
-  height: calc(100% - var(--navHeight));
+  height: 100%;
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   right: 0;
   margin: 0 auto;
@@ -1486,9 +1635,8 @@ body#app img.cutsceneImg.slideOut {
 
 /* Advance Cutscene Button */
 body#app button#cutsceneBtn {
-  width: 65px;
-  height: 65px;
-  line-height: 65px;
+  width: 70px;
+  height: 70px;
   position: absolute;
   bottom: 20px;
   right: 20px;
@@ -1517,10 +1665,8 @@ body#app button#cutsceneBtn.show {
   pointer-events: all;
 }
 /* ">" Icon */
-body#app button#cutsceneBtn h1 {
+body#app button#cutsceneBtn i {
   font-size: 4em;
-  margin: 0;
-  padding: 0;
   color: #FFFFFF;
 }
 /* Loading GIF */
@@ -1530,7 +1676,7 @@ body#app button#cutsceneBtn img {
   display: none;
 }
 /* Show ">" when btn enabled, loading GIF when btn disabled. */
-body#app button#cutsceneBtn:disabled h1 {
+body#app button#cutsceneBtn:disabled i {
   display: none;
 }
 body#app button#cutsceneBtn:disabled img {

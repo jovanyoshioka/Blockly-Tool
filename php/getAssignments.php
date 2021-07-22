@@ -40,7 +40,7 @@
   while ($row = $results->fetch_assoc())
   {
     // Display "Go" Button if assignment not yet complete. Otherwise, display check mark.
-    $btn = '<h1>&check;</h1>';
+    $btn = '<i class="fas fa-check"></i>';
     if ($row['CurrLevel'] <= $row['Total'])
     {
       $btn = '

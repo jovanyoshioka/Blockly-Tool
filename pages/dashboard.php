@@ -54,7 +54,7 @@
               <img src="../assets/logo.png" />
               <h1>Welcome!</h1>
               <p>
-                &#9679; To get started, use the "Create a Class" option under "Classes &#9660;" on the navigation bar.<br />
+                &#9679; To get started, use the "Create a Class" option under "Classes <i class="fas fa-caret-down"></i>" on the navigation bar.<br />
                 &#9679; After creating your class, add your students through the "Manage Students" interface.<br />
                 &#9679; Once your students are added, use the 
                 <a href="generator.php">Generator</a>

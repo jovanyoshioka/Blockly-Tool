@@ -9,6 +9,7 @@
     <meta name="author" content="Jovan Yoshioka">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="../css/global.css">
+    <link rel="stylesheet" type="text/css" href="../assets/fontawesome-5.15.3/css/all.min.css">
     <script src="../js/main.js"></script>
     <script src="../js/jquery-3.6.0.min.js"></script>
   ';

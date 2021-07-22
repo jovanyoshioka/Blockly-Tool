@@ -31,17 +31,21 @@
           <!-- Default contents; levels should be filled with JavaScript. -->
           <div class="levelIndicator">0</div>
         </div>
+        <!-- Run/Reset Buttons -->
+        <div id="btns">
+          <button id="reset" class="orangeBtn" onclick="resetSim()">
+            <i class="fas fa-undo"></i>
+          </button>
+          <button id="run" class="orangeBtn" onclick="runCode()">
+            <i class="fas fa-play"></i>
+          </button>
+        </div>
       </header>
       <!-- Character and other elements canvas -->
       <!-- Note: Separate because applying transformations to character; can not do this with one canvas. -->
       <div id="canvasWrapper">
         <canvas id="charCanvas"></canvas>
         <canvas id="storyCanvas"></canvas>
-      </div>
-      <!-- Run/Reset Buttons -->
-      <div id="btns">
-        <button id="reset" class="orangeBtn" onclick="resetSim()">&#8634;</button>
-        <button id="run" class="orangeBtn" onclick="runCode()">&#9654;</button>
       </div>
     </div>
     <!-- Blockly workspace: container holding toolbox and block code -->
@@ -83,7 +87,7 @@
       <img id="cutsceneImgB" class="cutsceneImg" />
       <!-- Proceed/Loading Buttons -->
       <button id="cutsceneBtn" disabled>
-        <h1>></h1>
+        <i class="fas fa-arrow-right"></i>
         <img src="../assets/loading.gif" />
       </button>
     </div>
@@ -129,8 +133,6 @@
     <script src="../js/interpreter/acorn_interpreter.js"></script>
     <!-- JS-Interpreter API to handle external actions -->
     <script src="../js/interpreterAPI.js"></script>
-    <!-- TEMPORARY: Story/Maze Data -->
-    <script src="../js/data.js"></script>
     <!-- Using blockly library -->
     <script src="../js/blockly.js"></script>
     <!-- Handles stories' cutscenes -->

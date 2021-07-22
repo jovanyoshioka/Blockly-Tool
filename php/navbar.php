@@ -24,7 +24,7 @@
           </ul>
           <ul>
             <div class="dropdown">
-              <li><a href="javascript:void(0);">Hello, '.$_SESSION['fName'].' &#9660;</a></li>
+              <li><a href="javascript:void(0);">Hello, '.$_SESSION['fName'].' <i class="fas fa-caret-down"></i></a></li>
               <div class="dropdownContent">
                 <a href="../php/logout.php">Logout</a>
               </div>
@@ -36,12 +36,18 @@
         <div class="notification" onclick="hideNotification()">
           <p>
             <!-- Corresponding icon to notification type is displayed -->
-            <span class="success">&check;</span>
-            <span class="fail">&#9888;</span>
+            <span class="success">
+              <i class="fas fa-check"></i>
+            </span>
+            <span class="fail">
+              <i class="fas fa-exclamation-triangle"></i>
+            </span>
             <span class="msg">
               <!-- Message from showNotification(a,b); -->
             </span>
-            <span>&#x2716;</span>
+            <span>
+              <i class="fas fa-times"></i>
+            </span>
           </p>
         </div>
       ';
@@ -61,7 +67,7 @@
             <li><a href="dashboard.php" class="'.$pages["dashboard"].'">Dashboard</a></li>
             <li><a href="generator.php" class="'.$pages["generator"].'">Generator</a></li>
             <div class="dropdown">
-              <li><a href="javascript:void(0);" class="'.$pages["class"].'">Classes &#9660;</a></li>
+              <li><a href="javascript:void(0);" class="'.$pages["class"].'">Classes <i class="fas fa-caret-down"></i></a></li>
               <div class="dropdownContent">
                 '.$classLinks.'
                 <a onclick="openModal(&apos;createClassModal&apos;)" href="#">Create a Class</a>
@@ -71,7 +77,7 @@
           </ul>
           <ul>
             <div class="dropdown">
-              <li><a href="javascript:void(0);">Hello, '.$_SESSION['fName'].' &#9660;</a></li>
+              <li><a href="javascript:void(0);">Hello, '.$_SESSION['fName'].' <i class="fas fa-caret-down"></i></a></li>
               <div class="dropdownContent">
                 <a href="../php/logout.php">Logout</a>
               </div>
@@ -83,12 +89,18 @@
         <div class="notification" onclick="hideNotification()">
           <p>
             <!-- Corresponding icon to notification type is displayed -->
-            <span class="success">&check;</span>
-            <span class="fail">&#9888;</span>
+            <span class="success">
+              <i class="fas fa-check"></i>
+            </span>
+            <span class="fail">
+              <i class="fas fa-exclamation-triangle"></i>
+            </span>
             <span class="msg">
               <!-- Message from showNotification(a,b); -->
             </span>
-            <span>&#x2716;</span>
+            <span>
+              <i class="fas fa-times"></i>
+            </span>
           </p>
         </div>
 
@@ -99,7 +111,9 @@
         <div id="createClassModal" class="modal formModal">
           <header>
             <h1>Create a Class</h1>
-            <button onclick="closeModal(this.parentElement.parentElement)">&#x2716;</button>
+            <button onclick="closeModal(this.parentElement.parentElement)">
+              <i class="fas fa-times"></i>
+            </button>
           </header>
           <form id="createClassForm" action="#" method="POST">
             <div class="body">
