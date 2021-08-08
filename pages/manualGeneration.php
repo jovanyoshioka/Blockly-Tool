@@ -69,7 +69,7 @@
 
     <script>
 
-      const UNITS_PER_LINE = 7;
+      const UNITS_PER_LINE = 13;
 
       var points = [];
 
@@ -196,7 +196,6 @@
           // Change type within points array to later be formatted for insertion into database.
           // Note: points[row][col] <=> points[y][x]
           points[y][x] = parseInt(type);
-          console.log(points);
 
           // Change color of dot on canvas based on type.
           // 0 => White, 1 => Orange, 2 => Purple, 3 => Lime, 4 => Red

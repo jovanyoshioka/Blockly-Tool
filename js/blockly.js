@@ -107,7 +107,7 @@ function runCode()
 {
   // Disable run button, enable reset button.
   document.getElementById("run").style.display = "none";
-  document.getElementById("reset").style.display = "inline-block";
+  document.getElementById("reset").style.display = "block";
   
   var code = getTranslatedCode(workspace);
   var jsInterpreter = new Interpreter(code, initApi);
@@ -138,6 +138,6 @@ function resetSim()
   generateMaze();
 
   // Enable run button, disable reset button.
-  document.getElementById("run").style.display = "inline-block";
+  document.getElementById("run").style.display = "block";
   document.getElementById("reset").style.display = "none";
 }

@@ -52,7 +52,7 @@ html, body {
 
 /* Prevent iOS from styling input fields/buttons. */
 textarea,
-input:not([type="date"]) {
+input:not([type="date"]):not([type="checkbox"]) {
   -webkit-appearance: none;
 }
 
@@ -1386,11 +1386,14 @@ body#app div#simContainer div#btns {
   background-color: var(--smokeyGray);
 }
 body#app div#simContainer div#btns button.orangeBtn {
+  width: 65px;
+  height: 65px;
   margin: 7.5px 0 0 0;
-  padding: 10px 15px;
+  padding: 10px 0;
   font-size: 2.25em;
 }
 body#app div#simContainer div#btns button#reset {
+  padding: 10px 11px 10px 15px;
   display: none;
 }
 @media only screen and (max-width: 1550px) {
@@ -1427,7 +1430,7 @@ body#app div#simContainer div#btns button#reset {
     font-size: 1.35em;
     line-height: 40px;
   }
-  /* Run/Reset Buttons */
+  /* Run/Reset Button */
   body#app div#simContainer div#btns {
     margin-right: 12.5px;
     background-color: var(--smokeyGray);
@@ -1640,6 +1643,7 @@ body#app button#cutsceneBtn {
   position: absolute;
   bottom: 20px;
   right: 20px;
+  padding: 0;
   background-color: var(--tnOrange);
   border: none;
   border-radius: 5px;
@@ -1672,7 +1676,7 @@ body#app button#cutsceneBtn i {
 /* Loading GIF */
 body#app button#cutsceneBtn img {
   width: 4em;
-  vertical-align: middle;
+  margin: 0 auto;
   display: none;
 }
 /* Show ">" when btn enabled, loading GIF when btn disabled. */
