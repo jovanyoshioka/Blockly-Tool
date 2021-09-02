@@ -22,7 +22,7 @@
     <script src="../js/blockly/msg/js/en.js"></script> <!-- Language -->
 
     <!-- Custom blocks -->
-    <script src="../js/movement_blocks.js"></script>
+    <script src="../js/customBlocks.js"></script>
 
     <!-- Instructions, Story Canvas, and Run/Reset container -->
     <div id="simContainer">
@@ -34,7 +34,7 @@
         <!-- Run/Reset Buttons -->
         <div id="btns">
           <button id="reset" class="orangeBtn" onclick="resetSim()">
-            <i class="fas fa-undo"></i>
+            <i class="fas fa-sync-alt"></i>
           </button>
           <button id="run" class="orangeBtn" onclick="runCode()">
             <i class="fas fa-play"></i>
@@ -65,15 +65,43 @@
       <!-- Blockly Coding Space -->
       <div id="workspace">
         <h1 id="capacity"><!-- Data from initCapTxt(x); --></h1>
+        <div id="modes">
+          <button class="orangeBtn" onclick="setMode(false)" disabled>Text</button>
+          <button class="orangeBtn" onclick="setMode(true)">Image</button>
+        </div>
       </div>
-      <xml id="toolbox">
+      <xml id="textToolbox">
         <category name="Movement" colour="180">
           <block type="movement_move_forward"></block>
-          <block type="movement_turn_lr"></block>
+          <block type="movement_turn_left"></block>
+          <block type="movement_turn_right"></block>
         </category>
-        <category name="Loops" colour="300">
+        <category name="Loops" colour="%{BKY_LOOPS_HUE}">
           <block type="controls_repeat_ext"></block>
+        </category>
+        <category name="Numbers" colour="%{BKY_MATH_HUE}">
           <block type="math_number"></block>
+        </category>
+      </xml>
+      <xml id="imgToolbox">
+        <category name="Movement" colour="180">
+          <block type="movement_move_forward_img"></block>
+          <block type="movement_turn_left_img"></block>
+          <block type="movement_turn_right_img"></block>
+        </category>
+        <category name="Loops" colour="%{BKY_LOOPS_HUE}">
+          <block type="controls_repeat_ext_img"></block>
+        </category>
+        <category name="Numbers" colour="%{BKY_MATH_HUE}">
+          <block type="math_number_1"></block>
+          <block type="math_number_2"></block>
+          <block type="math_number_3"></block>
+          <block type="math_number_4"></block>
+          <block type="math_number_5"></block>
+          <block type="math_number_6"></block>
+          <block type="math_number_7"></block>
+          <block type="math_number_8"></block>
+          <block type="math_number_9"></block>
         </category>
       </xml>
     </div>

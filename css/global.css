@@ -1393,9 +1393,9 @@ body#app div#simContainer div#btns button.orangeBtn {
   font-size: 2.25em;
 }
 body#app div#simContainer div#btns button#reset {
-  padding: 10px 11px 10px 15px;
   display: none;
 }
+body#app .testing { font-size: 50px !important; }
 @media only screen and (max-width: 1550px) {
   /* Levels Indicators */
   body#app div#simContainer header div.levelsContainer {
@@ -1530,10 +1530,33 @@ body#app div#wsContainer div#workspace h1 {
   padding: 0;
   position: absolute;
   top: 10px;
-  right: 20px;
+  right: 25px;
   font-family: var(--gothic);
   color: var(--rock);
   z-index: 991;
+}
+/* Button: Text/Image Blocks Toggle */
+body#app div#wsContainer div#workspace div#modes {
+  position: absolute;
+  top: 55px;
+  right: 25px;
+  z-index: 991;
+}
+body#app div#wsContainer div#workspace div#modes button {
+  font-size: 1.75em;
+  margin: 0;
+  padding: 5px 10px;
+}
+body#app div#wsContainer div#workspace div#modes button:nth-of-type(1) {
+  float: left;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: 2px solid #FFFFFF;
+}
+body#app div#wsContainer div#workspace div#modes button:nth-of-type(2) {
+  float: right;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 body#app xml#toolbox {
   display: none;
@@ -1563,6 +1586,13 @@ body#app xml#toolbox {
   /* Text: Block Capacity */
   body#app div#wsContainer div#workspace h1 {
     font-size: 1.5em;
+  }
+  /* Button: Text/Image Blocks Toggle */
+  body#app div#wsContainer div#workspace div#modes {
+    top: 40px;
+  }
+  body#app div#wsContainer div#workspace div#modes button {
+    font-size: 1.25em;
   }
 }
 
