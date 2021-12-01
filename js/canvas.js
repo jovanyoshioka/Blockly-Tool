@@ -175,7 +175,10 @@ function generateMaze()
   levelData.forEach(instElements);
 
   // Display story background.
-  document.getElementById("storyCanvas").style.backgroundImage = "url(" + storyObj.background + ")";
+  document.getElementById("storyCanvas").style.backgroundImage = `linear-gradient(
+    rgba(66, 67, 67, 0.5), 
+    rgba(66, 67, 67, 0.5)
+  ), url(` + storyObj.background + `)`;
 
   /**
    * Calculate size of canvas, i.e. canvas.unitsPerLine, by finding largest upper bound, either of x or y.

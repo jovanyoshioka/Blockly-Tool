@@ -183,8 +183,11 @@ function initCurrLvl()
 
   // Clear previous level's code.
   workspace.clear();
-  // Update coding workspace attribute(s) for level, i.e. block capacity.
-  updateWorkspace(storyObj.blockCap);
+  // Re-initialize run block.
+  var blockXML = Blockly.Xml.textToDom("<xml><block type='run' deletable='false'></block></xml>");
+  Blockly.Xml.domToWorkspace(blockXML, workspace);
+  // Update coding workspace block capacity.
+  initCap(storyObj.blockCap);
 
   // Update instructions.
   document.getElementById("instructions").innerHTML = storyObj.instructions;

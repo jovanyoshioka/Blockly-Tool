@@ -198,7 +198,8 @@ function generateMaze(formObj, btnNode)
 {
   const FAIL_MSG = "Generation unsuccessful! ";
   var inputs = formObj.elements;
-  
+  var difficulty;
+
   // Temporarily disable "Generate" button to prevent multiple generations.
   btnNode.disabled = true;
 
@@ -214,6 +215,12 @@ function generateMaze(formObj, btnNode)
     return;
   }
 
+  // TEMPORARY: "Medium" disabled, so inputs["difficulty"].selectedIndex
+  // does not work as "Hard" is index 0 when "Medium" not present.
+  difficulty = inputs["difficulty"].value == "easy"   ? 0
+             : inputs["difficulty"].value == "medium" ? 1
+             : 2;
+
   // Save generated maze's data into database.
   // Note: data is validated in PHP script.
   // TEMPORARY: for prototype version, all maze options are premade, so no actual maze generation is taking place.
@@ -224,7 +231,7 @@ function generateMaze(formObj, btnNode)
       customName:  inputs["name"].value,
       doDecoys:    inputs["decoyToggle"].checked,
       doCutscenes: inputs["cutsceneToggle"].checked,
-      difficulty:  inputs["difficulty"].selectedIndex
+      difficulty:  difficulty
     },
     function(data)
     {

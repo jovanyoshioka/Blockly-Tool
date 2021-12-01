@@ -460,9 +460,9 @@ div.formModal form label {
   font-family: var(--gothic);
 }
 div.formModal form input:not([type="submit"]) {
-  font-size: 2em;
-  margin: 5px 0;
-  padding: 10px 15px;
+  font-size: 1.85em !important;
+  margin: 5px 0 !important;
+  padding: 10px !important;
   font-family: var(--gothic);
   border: none;
   border-radius: 5px;
@@ -644,11 +644,14 @@ body#dashboard div.wrapper h4 {
 body#dashboard div.wrapper div.assignment {
   width: 100%;
   height: 135px;
-  margin: 0 0 60px 0;
+  margin: 0 0 15px 0;
   border-radius: 5px;
   background-color: var(--lightGray);
   display: flex;
   align-items: center;
+}
+body#dashboard div.wrapper div.assignment:last-of-type {
+  margin: 0 0 60px 0;
 }
 /* "Go" Button */
 body#dashboard div.wrapper div.assignment button {
@@ -1082,6 +1085,7 @@ body#class div.mazesContainer section {
 body#class div.mazesContainer section#mazeInfo {
   width: 30%;
   padding-right: 2%;
+  position: relative;
   justify-content: center;
   align-items: center;
 }
@@ -1113,11 +1117,21 @@ body#class div.mazesContainer section#mazeInfo p {
 body#class div.mazesContainer section#mazeInfo p span {
   color: var(--green);
 }
-/* Assign/Unassign Button */
+/* Assign/Unassign and Delete Buttons */
 body#class div.mazesContainer section#mazeInfo button {
   font-size: 1.5em;
-  padding: 10px 10px;
   display: none; /* default */
+}
+/* Assign/Unassign */
+body#class div.mazesContainer section#mazeInfo button.assign {
+  padding: 10px 10px;
+}
+/* Delete Button */
+body#class div.mazesContainer section#mazeInfo button.delete {
+  padding: 10px 12.5px;
+  position: absolute;
+  bottom: 0;
+  right: 15px;
 }
 
 /* Student Selection */
@@ -1310,7 +1324,7 @@ body#class div#addModal div.body div.foundContainer div {
   border-radius: 2.5px;
 }
 
-/* Delete Student Modal */
+/* Delete Student/Maze Modal */
 body#class div#delModal {
   width: 400px;
 }
@@ -1321,6 +1335,9 @@ body#class div#delModal div.body p {
 }
 body#class div#delModal div.body p span {
   font-weight: 900;
+}
+body#class div#delModal div.body p span.u {
+  text-decoration: underline;
 }
 
 /*********************
@@ -1393,9 +1410,9 @@ body#app div#simContainer div#btns button.orangeBtn {
   font-size: 2.25em;
 }
 body#app div#simContainer div#btns button#reset {
-  padding: 10px 11px 10px 15px;
   display: none;
 }
+body#app .testing { font-size: 50px !important; }
 @media only screen and (max-width: 1550px) {
   /* Levels Indicators */
   body#app div#simContainer header div.levelsContainer {
@@ -1530,10 +1547,33 @@ body#app div#wsContainer div#workspace h1 {
   padding: 0;
   position: absolute;
   top: 10px;
-  right: 20px;
+  right: 25px;
   font-family: var(--gothic);
   color: var(--rock);
   z-index: 991;
+}
+/* Button: Text/Image Blocks Toggle */
+body#app div#wsContainer div#workspace div#modes {
+  position: absolute;
+  top: 55px;
+  right: 25px;
+  z-index: 991;
+}
+body#app div#wsContainer div#workspace div#modes button {
+  font-size: 1.75em;
+  margin: 0;
+  padding: 5px 10px;
+}
+body#app div#wsContainer div#workspace div#modes button:nth-of-type(1) {
+  float: left;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: 2px solid #FFFFFF;
+}
+body#app div#wsContainer div#workspace div#modes button:nth-of-type(2) {
+  float: right;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 body#app xml#toolbox {
   display: none;
@@ -1563,6 +1603,13 @@ body#app xml#toolbox {
   /* Text: Block Capacity */
   body#app div#wsContainer div#workspace h1 {
     font-size: 1.5em;
+  }
+  /* Button: Text/Image Blocks Toggle */
+  body#app div#wsContainer div#workspace div#modes {
+    top: 40px;
+  }
+  body#app div#wsContainer div#workspace div#modes button {
+    font-size: 1.25em;
   }
 }
 

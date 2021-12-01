@@ -584,7 +584,7 @@ function displayMazeAssignment(isAssigned)
   statusTxtNode.style.color = isAssigned? "#32CD32" : "#FF3131";
   statusTxtNode.innerHTML   = isAssigned ? "Assigned" : "Not Assigned";
 
-  mazeInfoContainer.querySelector("button").innerHTML   = isAssigned ? "Unassign" : "Assign";
+  mazeInfoContainer.querySelector("button.assign").innerHTML   = isAssigned ? "Unassign" : "Assign";
 }
 /**
  * Toggles assignment of specified maze.
@@ -600,7 +600,7 @@ function toggleMazeAssignment(mazeID, isAssigned)
       showNotification(data.msg, 1);
       // Update assignment status text/button.
       displayMazeAssignment(!isAssigned);
-      document.querySelector("#mazeInfo button").onclick = function() { toggleMazeAssignment(mazeID, !isAssigned); };
+      document.querySelector("#mazeInfo button.assign").onclick = function() { toggleMazeAssignment(mazeID, !isAssigned); };
     } else
     {
       // Maze assignment toggle was unsuccessful.
@@ -610,6 +610,59 @@ function toggleMazeAssignment(mazeID, isAssigned)
     .fail(function(jqXHR, status, error) {
       // Something unexpected went wrong.
       showNotification("An error occurred when toggling maze assignment: " + error, 2);
+    });
+}
+/**
+ * Initializes data and displays delete maze confirmation modal.
+ * @param id Maze's ID number.
+ * @param name Maze's custom name.
+ * @param title Maze's story title.
+ */
+function displayDelMaze(id, name, title)
+{
+  var modalNode = document.getElementById("delModal");
+
+  // Set header text to "Delete Maze."
+  // This is required as the same modal is used for deleting students as well.
+  modalNode.querySelector("header h1").innerHTML =
+    "Delete Maze";
+
+  // Set confirmation message with maze's custom name, story title, and story author.
+  modalNode.querySelector("div.body p").innerHTML =
+    "Are you sure you want to delete <span>" + name + "</span> featuring <span>" + title + "</span> from <span class='u'>ALL</span> classes?";
+
+  // Set "Confirm" button to delete student with passed id.
+  // Must use function() { deleteStudent() }
+  modalNode.querySelector("footer button:nth-of-type(2)").onclick = function() { deleteMaze(id); };
+
+  // Open delete student modal.
+  openModal("delModal");
+}
+/**
+ * Delete maze and any associated data, e.g., student progress, in database.
+ * @param id Maze's ID number.
+ */
+function deleteMaze(id)
+{
+  $.post("../php/deleteMaze.php", { id: id }, function(data) {
+    if (data.success)
+    {
+      // Deletion was successful. Notify user.
+      // TEMPORARY: Reload page with notification for default "Maze Analytics" display.
+      window.location.href = data.msg;
+    } else
+    {
+      // Deletion was unsuccessful. Notify user.
+      showNotification("Maze deletion unsuccessful! " + data.msg, 2);
+    }
+  }, "json")
+    .fail(function(jqXHR, status, error) {
+      // Something unexpected went wrong.
+      showNotification("An error occurred when deleting maze: " + error, 2);
+    })
+    .always(function() {
+      // Close delete student modal in all outcomes.
+      closeModal(document.querySelector('.modal.show'));
     });
 }
 /**
@@ -636,7 +689,8 @@ function showMazeAnalytics(mazeID)
       container.style.clipPath = "none";
       // Show maze assignment status text and button.
       mazeInfoContainer.querySelector("p").style.display      = "block";
-      mazeInfoContainer.querySelector("button").style.display = "block";
+      mazeInfoContainer.querySelector("button.assign").style.display = "block";
+      mazeInfoContainer.querySelector("button.delete").style.display = "block";
       // Show student selection and progress analytics containers.
       studentsContainer.style.display  = "flex";
       analyticsContainer.style.display = "flex";
@@ -662,7 +716,8 @@ function showMazeAnalytics(mazeID)
       mazeInfoContainer.querySelector("h2:nth-of-type(2)").innerHTML = "By " + data.mazeInfo.author;
       // Set assignment status text/button.
       displayMazeAssignment(data.mazeInfo.assigned);
-      mazeInfoContainer.querySelector("button").onclick = function() { toggleMazeAssignment(mazeID, data.mazeInfo.assigned); };
+      mazeInfoContainer.querySelector("button.assign").onclick = function() { toggleMazeAssignment(mazeID, data.mazeInfo.assigned); };
+      mazeInfoContainer.querySelector("button.delete").onclick = function() { displayDelMaze(mazeID, data.mazeInfo.name, data.mazeInfo.title); };
 
       // Instantiate levels indicators elements.
       instLvlIndicators(data.mazeProgress.length-1);
@@ -683,8 +738,9 @@ function showMazeAnalytics(mazeID)
  * Displays specified student's progress on currently selected maze.
  * Also displays cumulative progress if studentID passed as 0.
  * @param studentID ID of student to get progress on. Pass 0 for cumulative.
+ * @param studentName Name of student as first name and first initial of last name, e.g., "John S."
  */
-function getStudentProgress(studentID)
+function getStudentProgress(studentID, studentName)
 {
   // Get currently selected maze via <select> input.
   var mazeID = document.getElementById("mazeInfo").querySelector("select").value;
@@ -695,6 +751,9 @@ function getStudentProgress(studentID)
     {
       // Display retrieved levels progression, either student or cumulative as defined by studentID.
       displayProgress(data.progress);
+
+      // Update displayed student name.
+      document.getElementById("studentSelect").querySelector("h1").innerHTML = studentName;
     } else
     {
       // Student progression selection was unsuccessful.
@@ -900,6 +959,11 @@ function editStudent(e, formObj)
 function displayDelStudent(id, name)
 {
   var modalNode = document.getElementById("delModal");
+
+  // Set header text to "Delete Student."
+  // This is required as the same modal is used for deleting mazes as well.
+  modalNode.querySelector("header h1").innerHTML =
+    "Delete Student";
 
   // Set confirmation message with student's full name.
   modalNode.querySelector("div.body p").innerHTML =
