@@ -119,8 +119,10 @@
           <label for="difficulty">Difficulty: </label>
           <select name="difficulty" id="difficulty">
             <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
             <option value="hard">Hard</option>
+            <!-- Disabled for Demo.
+            <option value="medium">Medium</option>
+            -->
           </select>
           <br>
           

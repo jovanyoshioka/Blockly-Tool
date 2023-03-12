@@ -38,7 +38,9 @@
   // If class page, verify user is teacher of the class.
   if ($currPage == "class" && isset($_GET['id']))
   {
-    $classID = $_GET['id'];
+    // Get class id and name from URL, set by navigation bar link.
+    $classID   = $_GET['id'];
+    $className = $_GET['name'];
     
     // Consult database to determine if user is teacher of the class specified in URL.
     include("sqlConnect.php");
@@ -60,7 +62,8 @@
     if ($result->num_rows > 0)
     {
       // User is teacher of class, update session.
-      $_SESSION['classID'] = $classID;
+      $_SESSION['classID']   = $classID;
+      $_SESSION['className'] = $className;
     } else
     {
       // User is not teacher of the class, redirect to dashboard.

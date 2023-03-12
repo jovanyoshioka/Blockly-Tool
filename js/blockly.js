@@ -83,6 +83,145 @@ function setToolbox(isImage)
   workspace.updateToolbox(toolboxNode);
 }
 
+// Return [number of blocks to skip, block]
+function makeLoop(block)
+{
+  var toSkip = 0;
+  var times, temp;
+  var doXML = "";
+  var str = "";
+  var response = [];
+
+  times = block.getInputTargetBlock("TIMES");
+  if (times !== null)
+  {
+    toSkip++;
+    times = '<block type="math_number"><field name="NUM">' + times.type[times.type.length - 1] + '</field></block>"';
+  }
+  else times = "";
+  
+  temp = block.getInputTargetBlock("DO");
+  if (temp !== null)
+  {
+    if (temp.type == "controls_repeat_ext_img")
+    {
+      response = makeLoop(temp);
+      toSkip += response[0];
+      doXML += response[1];
+    } else
+    {
+      str = temp.type;
+      str = str.replace("_img", "");
+      doXML += '<block type="' + str + '">%</block>';
+    }
+    toSkip++;
+
+    while (temp = temp.getNextBlock())
+    {
+      if (temp.type == "controls_repeat_ext_img")
+      {
+        response = makeLoop(temp);
+        toSkip += response[0];
+        if (doXML.indexOf("%") != -1) doXML = doXML.replace('%', '<next>' + response[1] + '</next>');
+        else doXML += response[1];
+      } else
+      {
+        str = temp.type;
+        str = str.replace("_img", "");
+        if (doXML.indexOf("%") != -1) doXML = doXML.replace('%', '<next><block type="' + str + '">%</block></next>');
+        else doXML += '<block type="' + str + '">%</block>';
+      }
+      toSkip++;
+    }
+
+    doXML = doXML.replace("%", "");
+  }
+  
+  blockText = `
+    <block type='controls_repeat_ext'>
+      <value name='TIMES'>
+        ` + times + `
+      </value>
+      <statement name='DO'>
+        ` + doXML + `
+      </statement>
+      %
+    </block>
+  `;
+
+  return [toSkip, blockText];
+}
+
+// Return [number of blocks to skip, block]
+function makeLoopImg(block)
+{
+  var toSkip = 0;
+  var times, temp;
+  var doXML = "";
+  var str = "";
+  var response = [];
+
+  times = block.getInputTargetBlock("TIMES");
+  if (times !== null)
+  {
+    toSkip++;
+    times = times < 0 ? times = 0
+          : times > 9 ? times = 9
+          : times;
+    times = '<block type="math_number_' + times + '"></block>';
+  }
+  else times = "";
+  
+  temp = block.getInputTargetBlock("DO");
+  if (temp !== null)
+  {
+    if (temp.type == "controls_repeat_ext")
+    {
+      response = makeLoopImg(temp);
+      toSkip += response[0];
+      doXML += response[1];
+    } else
+    {
+      str = temp.type;
+      doXML += '<block type="' + str + '_img">%</block>';
+    }
+    toSkip++;
+
+    while (temp = temp.getNextBlock())
+    {
+      if (temp.type == "controls_repeat_ext")
+      {
+        response = makeLoopImg(temp);
+        toSkip += response[0];
+        if (doXML.indexOf("%") != -1) doXML = doXML.replace('%', '<next>' + response[1] + '</next>');
+        else doXML += response[1];
+      } else
+      {
+        str = temp.type;
+        if (doXML.indexOf("%") != -1) doXML = doXML.replace('%', '<next><block type="' + str + '_img">%</block></next>');
+        else doXML += '<block type="' + str + '_img">%</block>';
+      }
+      toSkip++;
+    }
+
+    doXML = doXML.replace("%", "");
+  }
+  
+  blockText = `
+    <block type='controls_repeat_ext_img'>
+      <value name='TIMES'>
+        ` + times + `
+      </value>
+      <statement name='DO'>
+        ` + doXML + `
+      </statement>
+      %
+    </block>
+  `;
+
+  return [toSkip, blockText];
+}
+
 /**
  * Toggle whether using text or image code blocks, i.e., mode.
  * @param isImage If true, use image code blocks. If false, text code blocks.
@@ -100,16 +239,11 @@ function setMode(isImage)
   // Get all blocks.
   var parentCoords = [];
   var parents = workspace.getTopBlocks();
-  var allBlocks = [];
   parents.forEach(function(parentBlock) {
     parentCoords.push(parentBlock.getRelativeToSurfaceXY());
-    var blocks = parentBlock.getDescendants();
-    allBlocks.push(blocks);
-  });
 
-  // Stop from continuing.
-  allBlocks.forEach(function(blocks) {
-    if ((blocks[0].type == "run" && isImage) || (blocks[0].type == "run_img" && !isImage))
+    // Stop from continuing.
+    if ((parentBlock.type == "run" && isImage) || (parentBlock.type == "run_img" && !isImage))
       return;
   });
 
@@ -117,108 +251,48 @@ function setMode(isImage)
   var toAppend = [];
   var k = 0;
   var times, temp, doXML, toSkip;
-  allBlocks.forEach(function(blocks) {
+  var response = [];
+  var currBlock;
+  parents.forEach(function(parentBlock) {
     toAppend.push([]);
     
-    for (var i = 0; i < blocks.length; i++)
+    currBlock = parentBlock;
+
+    do
     {
       times = null;
       temp = null;
       doXML = ``;
+      blockText = "";
       toSkip = 0;
-      if (blocks[i].type == "run") {
+      if (currBlock.type == "run") {
         blockText = "<block type='run_img' deletable='false'></block>";
-      } else if (blocks[i].type == "run_img") {
+      } else if (currBlock.type == "run_img") {
         blockText = "<block type='run' deletable='false'></block>";
-      } else if (blocks[i].type == "movement_move_forward") {
+      } else if (currBlock.type == "movement_move_forward") {
         blockText = "<block type='movement_move_forward_img'></block>";
-      } else if (blocks[i].type == "movement_move_forward_img") {
+      } else if (currBlock.type == "movement_move_forward_img") {
         blockText = "<block type='movement_move_forward'></block>";
-      } else if (blocks[i].type == "movement_turn_left") {
+      } else if (currBlock.type == "movement_turn_left") {
         blockText = "<block type='movement_turn_left_img'></block>";
-      } else if (blocks[i].type == "movement_turn_left_img") {
+      } else if (currBlock.type == "movement_turn_left_img") {
         blockText = "<block type='movement_turn_left'></block>";
-      } else if (blocks[i].type == "movement_turn_right") {
+      } else if (currBlock.type == "movement_turn_right") {
         blockText = "<block type='movement_turn_right_img'></block>";
-      } else if (blocks[i].type == "movement_turn_right_img") {
+      } else if (currBlock.type == "movement_turn_right_img") {
         blockText = "<block type='movement_turn_right'></block>";
-      } else if (blocks[i].type == "controls_repeat_ext") {
-        times = blocks[i].getInputTargetBlock("TIMES");
-        if (times !== null)
-        {
-          toSkip++;
-          times = times < 0 ? times = 0
-                : times > 9 ? times = 9
-                : times;
-          times = '<block type="math_number_' + times + '"></block>';
-        }
-        else times = "";
-        
-        temp = blocks[i].getInputTargetBlock("DO");
-        if (temp !== null)
-        {
-          toSkip++;
-          doXML += '<block type="' + temp.type + '_img">%</block>';
-          while (temp = temp.getNextBlock())
-          {
-            toSkip++;
-            doXML = doXML.replace('%', '<next><block type="' + temp.type + '_img">%</block></next>');
-          }
-          doXML = doXML.replace('%', '');
-        }
-        
-        blockText = `
-          <block type='controls_repeat_ext_img'>
-            <value name='TIMES'>
-              ` + times + `
-            </value>
-            <statement name='DO'>
-              ` + doXML + `
-            </statement>
-          </block>
-        `;
-
-        i += toSkip;
-      } else if (blocks[i].type == "controls_repeat_ext_img") {
-        times = blocks[i].getInputTargetBlock("TIMES");
-        if (times !== null)
-        {
-          toSkip++;
-          times = '<block type="math_number"><field name="NUM">' + times.type[times.type.length - 1] + '</field></block>"';
-        }
-        else times = "";
-        
-        temp = blocks[i].getInputTargetBlock("DO");
-        if (temp !== null)
-        {
-          toSkip++;
-          str = temp.type;
-          str = str.replace("_img", "");
-          doXML += '<block type="' + str + '">%</block>';
-          while (temp = temp.getNextBlock())
-          {
-            toSkip++;
-            str = temp.type;
-            str = str.replace("_img", "");
-            doXML = doXML.replace('%', '<next><block type="' + str + '">%</block></next>');
-          }
-          doXML = doXML.replace('%', '');
-        }
-        
-        blockText = `
-          <block type='controls_repeat_ext'>
-            <value name='TIMES'>
-              ` + times + `
-            </value>
-            <statement name='DO'>
-              ` + doXML + `
-            </statement>
-          </block>
-        `;
-
-        i += toSkip;
-      } else if (blocks[i].type == "math_number") {
-        times = blocks[i].getFieldValue("NUM");
+      } else if (currBlock.type == "controls_repeat_ext") {
+        response = [];
+        response = makeLoopImg(currBlock);
+        blockText = response[1];
+        blockText = blockText.replace('%', '');
+      } else if (currBlock.type == "controls_repeat_ext_img") {
+        response = [];
+        response = makeLoop(currBlock);
+        blockText = response[1];
+        blockText = blockText.replace('%', '');
+      } else if (currBlock.type == "math_number") {
+        times = currBlock.getFieldValue("NUM");
         times = times < 0 ? times = 0
                 : times > 9 ? times = 9
                 : times;
@@ -226,13 +300,13 @@ function setMode(isImage)
       } else
       {
         // TEMPORARY: Image math_number_x block.
-        str = blocks[i].type;
+        str = currBlock.type;
         blockText = '<block type="math_number"><field name="NUM">' + str[str.length - 1] + '</field></block>';
       }
 
       blockXML = Blockly.Xml.textToDom(blockText);
       toAppend[k].push(blockXML);
-    }
+    } while (currBlock = currBlock.getNextBlock());
     k++;
   });
 

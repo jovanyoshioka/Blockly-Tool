@@ -39,7 +39,7 @@
 
   // Cumulative option for "Levels Progression" selection buttons.
   $studentsBtns .= '
-    <button onclick="getStudentProgress(0)">Cumulative</button>
+    <button onclick="getStudentProgress(0, \'Cumulative\')">Cumulative</button>
   ';
 
   // Format retrieved data into table rows and buttons.
@@ -66,7 +66,7 @@
               &apos;'.$row['Birthday'].'&apos;
             )"
           >
-            Edit
+            Edit <i class="fas fa-user-edit"></i>
           </button>
           <button
             class="orangeBtn"
@@ -75,7 +75,7 @@
               &apos;'.$row['FName'].' '.$row['LName'].'&apos;
             )"
           >
-            Delete
+            Delete <i class="fas fa-trash-alt"></i>
           </button>
         </td>
       </tr>
@@ -83,7 +83,7 @@
 
     // Format data as button for "Levels Progression" student selection.
     $studentsBtns .= '
-      <button onclick="getStudentProgress('.$row['ID'].')">'.$row['LName'].', '.$row['FName'].'</button>
+      <button onclick="getStudentProgress('.$row['ID'].', \''.$row['FName'].' '.$row['LName'][0].'.\')">'.$row['LName'].', '.$row['FName'].'</button>
     ';
   }
 

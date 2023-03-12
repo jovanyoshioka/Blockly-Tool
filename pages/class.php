@@ -55,12 +55,15 @@
           <span><!-- Assigned/Not Assigned from displayMazeAssignment(x); --></span>
         </p>
         <!-- onclick from showMazeAnalytics(x); -->
-        <button class="orangeBtn">Unassign</button>
+        <button class="orangeBtn assign"><!-- Text from displayMazeAssignment(x); --></button>
+        <button class="orangeBtn delete"><i class="fas fa-trash-alt"></i></button>
       </section>
 
       <!-- Student Selection -->
       <section id="studentSelect">
-        <h1>Cumulative</h1>
+        <h1>
+          Cumulative <!-- Default Cumulative; Data from getStudentProgress(a,b); -->
+        </h1>
         <div>
           <!-- Data from getStudents(); -->
         </div>
@@ -111,7 +114,7 @@
             )
           "
         />
-        <button class="orangeBtn right" onclick="openModal('addModal')">Add Student(s)</button>
+        <button class="orangeBtn right" onclick="openModal('addModal')">Add Student(s) <i class="fas fa-user-plus"></i></button>
       </div>
       <table>
         <thead>
@@ -178,22 +181,22 @@
       </form>
     </div>
 
-    <!-- Modal for deleting a student -->
+    <!-- Modal for deleting a student or maze -->
     <div id="delModal" class="modal studentModal">
       <header>
-        <h1>Delete Student</h1>
+        <h1><!-- Header from displayDelStudent(a,b); or displayDelMaze(a,b,c); --></h1>
         <button onclick="closeModal(this.parentElement.parentElement)">
           <i class="fas fa-times"></i>
         </button>
       </header>
       <div class="body">
         <p>
-          <!-- Message from displayDelStudent(a,b); -->
+          <!-- Message from displayDelStudent(a,b); or displayDelMaze(a,b,c); -->
         </p>
       </div>
       <footer>
         <button class="orangeBtn left" onclick="closeModal(document.querySelector('.modal.show'))">Cancel</button>
-        <!-- onclick from displayDelStudent(a,b); -->
+        <!-- onclick from displayDelStudent(a,b); or displayDelMaze(a,b,c); -->
         <button class="orangeBtn right">Confirm</button>
       </footer>
     </div>
@@ -207,5 +210,17 @@
         $("form#editStudentForm").submit(function(e) { editStudent(e, this); });
       });
     </script>
+
+    <?php
+      // Show any refresh notifications present in URL.
+      if (isset($_GET['notify']) && isset($_GET['notifyType']))
+      {
+        echo '
+          <script type="text/javascript">
+            showNotification("'.$_GET['notify'].'", '.$_GET['notifyType'].');
+          </script>
+        ';
+      }
+    ?>
   </body>
 </html>
