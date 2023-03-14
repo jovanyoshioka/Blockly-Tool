@@ -456,6 +456,15 @@ function setPassword(e, formObj)
       displayFormMsg(msgNode, FAIL_MSG + "<br />Please try again later.", 2);
     });
 }
+/**
+ * Continue as a guest account, i.e., no authentication.
+ */
+function loginGuest()
+{
+  // Dashboard will detect guest account via empty session variable and display correct interface.
+  window.location.href = "dashboard.php";
+}
+
 
 /***********
  * CLASSES *

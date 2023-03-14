@@ -1,10 +1,18 @@
 <?php
 
+  // Verify guest is authorized to be on the current page.
+  $guestPages = array(
+    "dashboard",
+    "app",
+    "contact"
+  );
+
   // Verify user is logged in.
+  // For guests (i.e., 'id' not set), allowed to access $guestPages.
   // For teachers, also verify password does not need to be set before accessing web app.
   if (
-    (!isset($_SESSION['id'])) ||
-    (isset($_SESSION['tempPwd']) && $_SESSION['tempPwd'])
+    (!isset($_SESSION['id']) && !in_array($currPage, $guestPages))
+    || (isset($_SESSION['tempPwd']) && $_SESSION['tempPwd'])
   )
   {
     // User not logged in, redirect to login.
@@ -14,6 +22,7 @@
 
   // Verify user is authorized to be on the current page.
   // Note: no verification is done for web app admins as they should have access to everything.
+  // Note: verification already done for guest, above.
   $studentPages = array(
     "dashboard",
     "app"
@@ -26,8 +35,11 @@
     "app"
   );
   if (
-    ($_SESSION['type'] == 0 && !in_array($currPage, $studentPages)) ||
-    ($_SESSION['type'] == 1 && !in_array($currPage, $teacherPages))
+    isset($_SESSION['id'])
+    && (
+      ($_SESSION['type'] == 0 && !in_array($currPage, $studentPages)) ||
+      ($_SESSION['type'] == 1 && !in_array($currPage, $teacherPages))
+    )
   )
   {
     // Student/Teacher not permitted on current page, so redirect to dashboard.
@@ -78,6 +90,7 @@
   }
 
   // If app page, verify student user is assigned to complete the maze specified in URL.
+  // TODO: Verify that guest account is authorized (only accessing a default maze, not a class' maze).
   if ($currPage == "app" && isset($_GET['id']))
   {
     $mazeID = $_GET['id'];

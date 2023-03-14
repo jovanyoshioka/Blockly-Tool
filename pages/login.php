@@ -30,6 +30,7 @@
           <h2>Login as...</h2>
           <button onclick="switchFormTabs('loginSelector', 'studentForm')" class="orangeBtn">Student</button>
           <button onclick="switchFormTabs('loginSelector', 'teacherForm')" class="orangeBtn">Teacher</button>
+          <button onclick="loginGuest()" class="orangeBtn">Guest</button>
         </div>
 
         <!-- Login as student form -->

@@ -526,6 +526,10 @@ body#login div.wrapper button {
   padding: 10px 7.5px;
   display: block;
 }
+/* "Guest" login button farther from other login buttons */
+body#login div.wrapper button:last-of-type {
+  margin-top: 35px;
+}
 /* Positions forms below "Code a Story" header */
 body#login div.forms {
   position: relative;
@@ -681,6 +685,162 @@ body#dashboard div.wrapper div.levels {
   display: inline-block;
   vertical-align: top;
   overflow-x: auto;
+}
+/* Guest View */
+body#dashboard div.wrapper p.description {
+  width: calc(825px - 300px - 40px); /* wrapper - logo - margin */
+  font-size: 1.75em;
+  margin-left: 35px;
+  display: inline-block;
+  vertical-align: middle;
+}
+body#dashboard div.wrapper p.description span {
+  font-size: 1.5em;
+}
+/* TODO: mobile compatability. */
+body#dashboard div.container {
+  width: calc(450px * 3 + 15px * 6 + 10px);
+  margin: 25px auto 0 auto;
+}
+body#dashboard div.container p {
+  font-size: 1.75em;
+  margin: 0 0 15px 15px;
+  padding: 0;
+}
+body#dashboard div.container p span {
+  font-size: 1.5em;
+}
+body#dashboard div.container div.maze {
+  width: 450px;
+  height: 400px;
+  margin: 0 15px 25px 15px;
+  display: inline-block;
+  vertical-align: top;
+  overflow: hidden;
+}
+body#dashboard div.container div.maze div.info {
+  width: calc(100% - 6px); /* minus 6px for border */
+  height: 330px;
+  background-color: #ffffff;
+  border: 3px solid #ffffff;
+  border-radius: 5px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+body#dashboard div.container div.maze div.info figure {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+body#dashboard div.container div.maze div.info figure img {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: 2;
+}
+/* TEMPORARY START */
+body#dashboard div.container div.maze:first-of-type div.info figure img {
+  height: 100%;
+}
+body#dashboard div.container div.maze:last-of-type div.info figure img {
+  width: 100%;
+}
+/* TEMPORARY END */
+body#dashboard div.container div.maze div.info figure img.blur {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  filter: blur(8px);
+  -webkit-filter: blur(8px);
+  z-index: 1;
+}
+body#dashboard div.container div.maze div.info div.textWrapper {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
+  left: 0;
+  transition: opacity 0.5s;
+  z-index: 3;
+}
+body#dashboard div.container div.maze div.info:hover div.textWrapper {
+  opacity: 0.0;
+}
+body#dashboard div.container div.maze div.info div.textWrapper div.text {
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  color: #ffffff;
+  text-align: center;
+  z-index: 5;
+}
+body#dashboard div.container div.maze div.info div.textWrapper div.text h1,
+body#dashboard div.container div.maze div.info div.textWrapper div.text h2 {
+  margin: 0;
+  padding: 0;
+}
+body#dashboard div.container div.maze div.info div.textWrapper div.text h1 {
+  font-size: 2em;
+}
+body#dashboard div.container div.maze div.info div.textWrapper div.text h2 {
+  font-size: 1.75em;
+}
+body#dashboard div.container div.maze div.info div.textWrapper div.background {
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+  opacity: 0.65;
+  z-index: 4;
+}
+body#dashboard div.container div.maze div.controls {
+  width: 100%;
+  height: calc(400px - 330px); /* maze height - info height */
+  padding-top: 15px;
+}
+/*DESIGN 2*/
+body#dashboard div.container div.maze div.controls input[type="checkbox"] {
+  width: 30px;
+  height: 30px;
+  margin: -10px 0 0 0;
+  vertical-align: middle;
+}
+body#dashboard div.container div.maze div.controls label {
+  font-size: 1.75em;
+  margin-left: 2.5px;
+}
+body#dashboard div.container div.maze div.controls select {
+  float: right;
+  margin: -2.5px 10px 0 0;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--tnOrange);
+  color: #FFFFFF;
+  font-size: 1.75em;
+  font-weight: bold;
+}
+body#dashboard div.container div.maze div.controls select:focus {
+  outline: none;
+}
+body#dashboard div.container div.maze div.controls button {
+  width: auto;
+  font-size: 1.5em;
+  margin-top: -5px;
+  padding: 10px 12.5px;
+  float: right;
 }
 
 /***********************
