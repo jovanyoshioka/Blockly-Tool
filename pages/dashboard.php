@@ -82,6 +82,10 @@
       } else
       {
         // Guest Dashboard: Default Mazes
+
+        // Get guest's mazes, i.e., default mazes by the Code a Story team (UploaderID = 0), stored in variable $mazes.
+        include('../php/getGuestMazes.php');
+
         echo '
           <!-- Header -->
           <header class="banner">
@@ -101,59 +105,7 @@
               <span>Get started!</span><br />
               Select a story below, follow its plot, then traverse the maze using block-based code! Reach the goal, and avoid barriers. Beware of fake goals. Don\'t have the book? Choose to play with cutscenes!
             </p>
-            <!-- Data from x(); -->
-            <!-- TEMP NOTE: GET THE MAZES THAT WERE UPLOADED/CREATED BY DEFAULT USER -->
-            <div class="maze">
-              <!-- Story cover, title, author, w/ or w/out cutscenes -->
-              <div class="info">
-                <figure>
-                  <img src="../assets/green_eggs_and_ham/page_0_1.jpg" />
-                  <img src="../assets/green_eggs_and_ham/page_0_1.jpg" class="blur" />
-                </figure>
-                <div class="textWrapper">
-                  <div class="text">
-                    <h1>Green Eggs and Ham</h1>
-                    <h2>Dr. Seuss</h2>
-                  </div>
-                  <div class="background"></div>
-                </div>
-              </div>
-              <div class="controls">
-                <input type="checkbox" name="cutscene-0" id="cutscene-0" />
-                <label for="cutscene-0">Cutscenes</label>
-                <button class="orangeBtn test"><i class="fas fa-play"></i></button>
-                <select name="difficulty-0" id="difficulty-0">
-                  <option value="easy">Easy</option>
-                  <option value="hard">Hard</option>
-                </select>
-              </div>
-            </div>
-            <div class="maze">
-              <!-- Story cover, title, author, w/ or w/out cutscenes -->
-              <div class="info">
-                <figure>
-                  <img src="../assets/the_very_hungry_caterpillar/page_0_1.jpg" />
-                  <img src="../assets/the_very_hungry_caterpillar/page_0_1.jpg" class="blur" />
-                </figure>
-                <div class="textWrapper">
-                  <div class="text">
-                    <h1>The Very Hungry Caterpillar</h1>
-                    <h2>Eric Carle</h2>
-                  </div>
-                  <div class="background"></div>
-                </div>
-              </div>
-              <div class="controls">
-                <input type="checkbox" name="cutscene-0" id="cutscene-0" />
-                <label for="cutscene-0">Cutscenes</label>
-                <button class="orangeBtn test"><i class="fas fa-play"></i></button>
-                <select name="difficulty-0" id="difficulty-0">
-                  <option value="easy">Easy</option>
-                  <option value="hard">Hard</option>
-                </select>
-              </div>
-            </div>
-          </div>
+            '.$mazes.'
         ';
       }
     ?>

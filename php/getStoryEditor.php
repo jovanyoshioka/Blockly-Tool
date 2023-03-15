@@ -1,6 +1,6 @@
 <?php
 
-  // TEMPORARY
+  // TEMPORARY: This was the concept behind the "Make Your Own Story" generator.
   echo '
     <section>
       <h1>Level 2</h1>

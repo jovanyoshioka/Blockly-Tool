@@ -73,11 +73,12 @@
   // Replace UploaderID => current teacher's ID, Published => 2 (signifying copy/maze table entry).
   $sql = $conn->prepare("
     INSERT INTO
-      stories (Name, Title, Author, Published, UploaderID)
+      stories (Name, Title, Author, Cover, Published, UploaderID)
     SELECT
       ?,
       Title,
       Author,
+      Cover,
       2,
       ?
     FROM
