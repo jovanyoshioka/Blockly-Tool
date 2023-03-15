@@ -697,7 +697,6 @@ body#dashboard div.wrapper p.description {
 body#dashboard div.wrapper p.description span {
   font-size: 1.5em;
 }
-/* TODO: mobile compatability. */
 body#dashboard div.container {
   width: calc(450px * 3 + 15px * 6 + 10px);
   margin: 25px auto 0 auto;
@@ -804,7 +803,6 @@ body#dashboard div.container div.maze div.controls {
   height: calc(400px - 330px); /* maze height - info height */
   padding-top: 15px;
 }
-/*DESIGN 2*/
 body#dashboard div.container div.maze div.controls input[type="checkbox"] {
   width: 30px;
   height: 30px;
@@ -835,6 +833,37 @@ body#dashboard div.container div.maze div.controls button {
   margin-top: -5px;
   padding: 10px 12.5px;
   float: right;
+}
+/* Two mazes per row */
+@media only screen and (max-width: 1550px) {
+  body#dashboard div.container {
+    width: calc(450px * 2 + 15px * 4 + 10px);
+  }
+}
+/* One maze per row */
+@media only screen and (max-width: 1050px) {
+  body#dashboard div.container {
+    width: auto;
+    padding: 0 25px;
+  }
+  body#dashboard div.container p {
+    margin: 0 0 15px 0;
+  }
+  body#dashboard div.container div.maze {
+    display: block;
+    margin: 0 auto 25px auto;
+  }
+}
+/* Logo and "Welcome!" message on separate lines */
+@media only screen and (max-width: 950px) {
+  body#dashboard div.wrapper {
+    width: auto;
+  }
+  body#dashboard div.wrapper p.description {
+    width: auto;
+    display: block;
+    margin: 0 25px;
+  }
 }
 
 /***********************
