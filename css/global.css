@@ -856,7 +856,7 @@ body#dashboard div.container div.maze div.controls button {
 }
 /* Logo and "Welcome!" message on separate lines */
 @media only screen and (max-width: 950px) {
-  body#dashboard div.wrapper {
+  body#dashboard div.guest {
     width: auto;
   }
   body#dashboard div.wrapper p.description {

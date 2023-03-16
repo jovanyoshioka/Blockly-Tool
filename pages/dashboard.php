@@ -92,7 +92,7 @@
             <h1>Dashboard</h1>
             <h2>Guest</h2>
           </header>
-          <div class="wrapper">
+          <div class="wrapper guest">
             <img src="../assets/logo.png" />
             <p class="description">
               <span>Welcome!</span><br />

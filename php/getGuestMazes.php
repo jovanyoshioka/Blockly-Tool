@@ -88,7 +88,7 @@
   {
     // No mazes found, so change message to reflect such.
     $mazes = '
-      <h4>No mazes found. Please try again later.</h4>
+      <p>No mazes found. Please try again later.</p>
     ';
   }
 
