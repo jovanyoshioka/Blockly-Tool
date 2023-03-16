@@ -73,12 +73,22 @@
           <!-- ID to determine which checkbox/select elements to reference when play button clicked -->
           <input type="checkbox" name="cutscenes'.$row["ID"].'" id="cutscenes'.$row["ID"].'" />
           <label for="cutscene-0">Cutscenes</label>
-          <button class="orangeBtn"><i class="fas fa-play"></i></button>
+          <button class="orangeBtn" onclick="playMaze('.$row['ID'].', \''.$row['Title'].'\', \''.$row['Author'].'\')">
+            <i class="fas fa-play"></i>
+          </button>
           <select name="difficulty'.$row["ID"].'" id="difficulty'.$row["ID"].'">
             '.$difficulties.'
           </select>
         </div>
       </div>
+    ';
+  }
+  
+  if ($mazes == '')
+  {
+    // No mazes found, so change message to reflect such.
+    $mazes = '
+      <h4>No mazes found. Please try again later.</h4>
     ';
   }
 

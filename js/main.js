@@ -1014,6 +1014,28 @@ function deleteStudent(id)
     });
 }
 
+/*************
+ * DASHBOARD *
+ *************/
+/**
+ * Redirect guest user to app interface with appropriate URL parameters (including difficulty/cutscene selections).
+ * @param storyID ID of requested story to initialize app with
+ * @param title Title of requested story
+ * @param author Author of requested story
+ */
+function playMaze(storyID, title, author)
+{
+  // Retrieve difficulty and cutscene selections.
+  var difficulty = document.getElementById("difficulty" + storyID).value;
+  // Note: set cutscenes as 0/1 for boolean check in back-end since true/false will convert to a string in URL.
+  var cutscenes = document.getElementById("cutscenes" + storyID).checked ? 1 : 0;
+
+  // Redirect user to app interface with appropriate URL parameters.
+  //   App will verify these parameters are valid.
+  var path = "app.php?id=" + storyID + "&difficulty=" + difficulty + "&cutscenes=" + cutscenes + "&title=" + title + "&author=" + author;
+  window.location.href = path;
+}
+
 /*******
  * APP *
  *******/

@@ -5,6 +5,7 @@
   $currPage = "app";
 
   // Verify user is logged in and authorized.
+  // Note: guests will be allowed access to default mazes (i.e., UploaderID=0).
   include('../php/verifyAuthorization.php');
 ?>
 <!DOCTYPE html>
@@ -171,7 +172,13 @@
     <script type="text/javascript">
       window.addEventListener('load', function () {
         // Load story when app page loaded.
-        loadStory(<?php echo $_SESSION['currLevel']; ?>, <?php echo $_SESSION['totalLvls']; ?>);
+        <?php
+          if (isset($_SESSION['id'])) {
+            echo 'loadStory('.$_SESSION['currLevel'].', '.$_SESSION['totalLvls'].');';
+          } else {
+            echo 'alert("Welcome, Guest!");';
+          }
+        ?>
       });
     </script>
   </body>

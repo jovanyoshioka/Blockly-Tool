@@ -89,10 +89,10 @@
     exit;
   }
 
-  // If app page, verify student user is assigned to complete the maze specified in URL.
-  // TODO: Verify that guest account is authorized (only accessing a default maze, not a class' maze).
-  if ($currPage == "app" && isset($_GET['id']))
+  // For app page...
+  if ($currPage == "app" && isset($_GET['id']) && isset($_SESSION['id']))
   {
+    // Verify student user is assigned to complete the maze specified in URL.
     $mazeID = $_GET['id'];
 
     // Consult database to determine if student user is assigned and has not yet completed this maze.
@@ -132,6 +132,56 @@
     } else
     {
       // Student user is not assigned or has already completed this maze, redirect to dashboard.
+      header('Location: dashboard.php?notify=You are not authorized to access that maze!&notifyType=2');
+      exit;
+    }
+  } else if ($currPage == "app" && isset($_GET['id']) && isset($_GET['difficulty']) && isset($_GET['cutscenes']))
+  {
+    // If guest (!isset($_SESSION['id'])), verify requested maze (with selected difficulty/cutscenes options) is a valid 
+    //   default maze (i.e., UploaderID=0 and Published=1).
+    $mazeID = $_GET['id'];
+    $difficulty = $_GET['difficulty'];
+    $cutscenes = $_GET['cutscenes'];
+
+    // Consult database to determine if guest user is requesting a valid maze.
+    include("sqlConnect.php");
+
+    // In addition to authorization, get total number of levels for maze as well.
+    // Note: only check if cutscenes exist if the cutscenes option was selected.
+    $query = '
+      SELECT
+        COUNT(DISTINCT mazes.LvlNum) AS Total
+      FROM
+        mazes
+      INNER JOIN
+        stories
+      ON
+        stories.ID = mazes.StoryID AND stories.Published=1 AND stories.UploaderID=0
+    ';
+    if ($cutscenes)
+    {
+      $query .= '
+        INNER JOIN
+          cutscenes
+        ON
+          cutscenes.StoryID = mazes.StoryID
+      ';
+    }
+    $query .= '
+      WHERE
+        mazes.StoryID=? AND mazes.Difficulty=?
+    ';
+    $sql = $conn->prepare($query);
+    $sql->bind_param("ii", $mazeID, $difficulty);
+    $sql->execute();
+    $result = $sql->get_result();
+
+    // Determine if guest user is requesting a valid maze.
+    //   If so, proceed to app interface.
+    $row = $result->fetch_assoc();
+    if (!$row || $row['Total'] <= 0)
+    {
+      // Guest user requesting an invalid maze, redirect to dashboard.
       header('Location: dashboard.php?notify=You are not authorized to access that maze!&notifyType=2');
       exit;
     }
