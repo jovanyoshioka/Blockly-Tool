@@ -21,29 +21,33 @@
     exit;
   }
 
-  // Update user's current level in database.
-  $sql = $conn->prepare("
-    UPDATE
-      progress
-    SET
-      CurrLevel=?
-    WHERE
-      StudentID=? AND StoryID=?
-  ");
-  $sql->bind_param("iii", $nextLevel, $_SESSION['id'], $_SESSION['mazeID']);
-  $sql->execute();
-
-  $conn->close();
-
-  if ($sql->affected_rows == 0)
+  // Update user's current level in database, for signed in users.
+  // For guests, not tracking progress so simply increment $_SESSION['currLevel] to proceed to next level.
+  if (isset($_SESSION['id']))
   {
-    // Notify user of failure to update database.
-    $msg = "Database update failed.";
-    echo json_encode(array(
-      "success" => false,
-      "msg"     => $msg
-    ));
-    exit;
+    $sql = $conn->prepare("
+      UPDATE
+        progress
+      SET
+        CurrLevel=?
+      WHERE
+        StudentID=? AND StoryID=?
+    ");
+    $sql->bind_param("iii", $nextLevel, $_SESSION['id'], $_SESSION['mazeID']);
+    $sql->execute();
+
+    $conn->close();
+
+    if ($sql->affected_rows == 0)
+    {
+      // Notify user of failure to update database.
+      $msg = "Database update failed.";
+      echo json_encode(array(
+        "success" => false,
+        "msg"     => $msg
+      ));
+      exit;
+    }
   }
 
   // Update session and return success.

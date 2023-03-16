@@ -72,7 +72,7 @@
         <div class="controls">
           <!-- ID to determine which checkbox/select elements to reference when play button clicked -->
           <input type="checkbox" name="cutscenes'.$row["ID"].'" id="cutscenes'.$row["ID"].'" />
-          <label for="cutscene-0">Cutscenes</label>
+          <label for="cutscenes'.$row["ID"].'">Cutscenes</label>
           <button class="orangeBtn" onclick="playMaze('.$row['ID'].', \''.$row['Title'].'\', \''.$row['Author'].'\')">
             <i class="fas fa-play"></i>
           </button>

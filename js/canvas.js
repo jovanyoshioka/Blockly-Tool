@@ -433,7 +433,6 @@ function checkCompletion()
         {
           displayAppAlert(0);
         }
-        
       } else
       {
         // Update was not successful, redirect to dashboard with error.

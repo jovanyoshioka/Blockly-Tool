@@ -172,13 +172,7 @@
     <script type="text/javascript">
       window.addEventListener('load', function () {
         // Load story when app page loaded.
-        <?php
-          if (isset($_SESSION['id'])) {
-            echo 'loadStory('.$_SESSION['currLevel'].', '.$_SESSION['totalLvls'].');';
-          } else {
-            echo 'alert("Welcome, Guest!");';
-          }
-        ?>
+        <?php echo 'loadStory('.$_SESSION['currLevel'].', '.$_SESSION['totalLvls'].');'; ?>
       });
     </script>
   </body>

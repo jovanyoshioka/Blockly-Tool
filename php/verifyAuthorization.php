@@ -147,7 +147,8 @@
     include("sqlConnect.php");
 
     // In addition to authorization, get total number of levels for maze as well.
-    // Note: only check if cutscenes exist if the cutscenes option was selected.
+    // Note: Only check if cutscenes exist if the cutscenes option was selected.
+    // Note: Adding "GROUP BY mazes.StoryID" as it returns NULL row instead of 0 if results could not be found, for easier value check below.
     $query = '
       SELECT
         COUNT(DISTINCT mazes.LvlNum) AS Total
@@ -170,16 +171,24 @@
     $query .= '
       WHERE
         mazes.StoryID=? AND mazes.Difficulty=?
+      GROUP BY
+        mazes.StoryID
     ';
     $sql = $conn->prepare($query);
     $sql->bind_param("ii", $mazeID, $difficulty);
     $sql->execute();
     $result = $sql->get_result();
 
-    // Determine if guest user is requesting a valid maze.
-    //   If so, proceed to app interface.
-    $row = $result->fetch_assoc();
-    if (!$row || $row['Total'] <= 0)
+    // Check value to verify guest user is requesting a valid maze.
+    if ($row = $result->fetch_assoc())
+    {
+      // Guest requested a valid amze, update session for app initialization.
+      $_SESSION['mazeID'] = $mazeID;
+      $_SESSION['currLevel'] = 1; // Guests always start at first level, but may jump to other levels.
+      $_SESSION['totalLvls'] = $row['Total'];
+      $_SESSION['difficulty'] = $difficulty;
+      $_SESSION['cutscenes'] = $cutscenes;
+    } else
     {
       // Guest user requesting an invalid maze, redirect to dashboard.
       header('Location: dashboard.php?notify=You are not authorized to access that maze!&notifyType=2');

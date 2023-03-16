@@ -97,7 +97,7 @@ function loadCurrentLevel()
     // Allows last level to show conclusion cutscenes without separate retrieval from database.
     storyObj.finalCutscenes = data.finalCutscnImgs;
   }
-
+  
   // Retrieve level data from database.
   $.post("../php/getLevelData.php", {}, function(data) {
     if (data.success)
