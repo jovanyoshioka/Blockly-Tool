@@ -4,13 +4,26 @@
 
   // Retrieve guest mazes, i.e., the default mazes created by the Code a Story team (UploaderID = 0).
   // Only get valid mazes, i.e., those with associated levels, at least one difficulty, published (Published = 1).
+  // Retrieve if cutscenes available to determine if "Cutscenes" checkbox should be shown.
   $sql = $conn->prepare("
     SELECT DISTINCT
       stories.ID,
       stories.Title,
       stories.Author,
       stories.Cover,
-      GROUP_CONCAT(DISTINCT mazes.Difficulty) as Difficulties
+      GROUP_CONCAT(DISTINCT mazes.Difficulty) as Difficulties,
+      (
+        CASE WHEN EXISTS (
+          SELECT
+            ID
+          FROM
+            cutscenes
+          WHERE
+            cutscenes.StoryID = stories.ID
+        )
+        THEN 1
+        ELSE 0 END
+      ) as HasCutscenes
     FROM
       stories
         LEFT JOIN
@@ -51,19 +64,27 @@
       $difficulties .= '<option value="'.$difficulty.'">'.$difficultiesKeys[$difficulty].'</option>';
     }
 
+    // Only show "Cutscenes" checkbox if story has cutscenes.
+    $cutscenes = $row['HasCutscenes'] ? '
+      <input type="checkbox" name="cutscenes'.$row['ID'].'" id="cutscenes'.$row['ID'].'" />
+      <label for="cutscenes'.$row['ID'].'">Cutscenes</label>
+    ' : '
+      <p>No Cutscenes</p>
+    ';
+
     $mazes .= '
       <div class="maze">
         <!-- Story cover, title, author -->
         <div class="info">
           <figure>
-            <img src="'.$row["Cover"].'" />
+            <img src="'.$row['Cover'].'" />
             <!-- Blurred background since cover images may not perfectly fit card -->
-            <img src="'.$row["Cover"].'" class="blur" />
+            <img src="'.$row['Cover'].'" class="blur" />
           </figure>
           <div class="textWrapper">
             <div class="text">
-              <h1>'.$row["Title"].'</h1>
-              <h2>'.$row["Author"].'</h2>
+              <h1>'.$row['Title'].'</h1>
+              <h2>'.$row['Author'].'</h2>
             </div>
             <div class="tintedBackground"></div>
           </div>
@@ -71,12 +92,11 @@
         <!-- Selections for yes/no cutscenes and difficulty, and play button -->
         <div class="controls">
           <!-- ID to determine which checkbox/select elements to reference when play button clicked -->
-          <input type="checkbox" name="cutscenes'.$row["ID"].'" id="cutscenes'.$row["ID"].'" />
-          <label for="cutscenes'.$row["ID"].'">Cutscenes</label>
+          '.$cutscenes.'
           <button class="orangeBtn" onclick="playMaze('.$row['ID'].', \''.$row['Title'].'\', \''.$row['Author'].'\')">
             <i class="fas fa-play"></i>
           </button>
-          <select name="difficulty'.$row["ID"].'" id="difficulty'.$row["ID"].'">
+          <select name="difficulty'.$row['ID'].'" id="difficulty'.$row['ID'].'">
             '.$difficulties.'
           </select>
         </div>

@@ -423,6 +423,7 @@ function checkCompletion()
       if (data.success)
       {
         // User's current level was successfully updated in database, give option to go to next level.
+        // If current level is last level and final cutscenes exist, show them via goNextLvl() before the last prompt.
         if (storyObj.finalCutscenes.length > 0)
         {
           goNextLvl();

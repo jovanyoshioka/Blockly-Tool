@@ -1028,7 +1028,9 @@ function playMaze(storyID, title, author)
   // Retrieve difficulty and cutscene selections.
   var difficulty = document.getElementById("difficulty" + storyID).value;
   // Note: set cutscenes as 0/1 for boolean check in back-end since true/false will convert to a string in URL.
-  var cutscenes = document.getElementById("cutscenes" + storyID).checked ? 1 : 0;
+  // Default to false if cutscenesNode is null (which will happen when "No Cutscenes" text replaces checkbox option).
+  var cutscenesNode = document.getElementById("cutscenes" + storyID);
+  var cutscenes = cutscenesNode && cutscenesNode.checked ? 1 : 0;
 
   // Redirect user to app interface with appropriate URL parameters.
   //   App will verify these parameters are valid.
