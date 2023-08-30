@@ -895,9 +895,9 @@ function addStudents()
  * @param id Student's ID number.
  * @param fName Student's first name.
  * @param lName Student's last name.
- * @param birthday Student's birthday, formatted "YYYY-MM-DD".
+ * @param password Student's password, in plain text.
  */
-function displayEditStudent(id, fName, lName, birthday)
+function displayEditStudent(id, fName, lName, password)
 {
   var formObj = document.querySelector("#editStudentForm");
 
@@ -908,7 +908,7 @@ function displayEditStudent(id, fName, lName, birthday)
   formObj.elements["id"].value       = id;
   formObj.elements["fName"].value    = fName;
   formObj.elements["lName"].value    = lName;
-  formObj.elements["birthday"].value = birthday;
+  formObj.elements["password"].value = password;
 
   // Open edit student modal.
   openModal("editModal");
@@ -923,7 +923,7 @@ function editStudent(e, formObj)
   const FAIL_MSG = "Edit unsuccessful!";
   var msgNode    = formObj.querySelector("p.msg");
 
-  // Note: Birthday field may be unset as it is automatically set on student login,
+  // Note: Password field may be unset as it is automatically set on student login,
   // thus it is not a required field.
   var fieldsToVerify = [
     formObj.elements["id"],

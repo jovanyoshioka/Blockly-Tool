@@ -41,8 +41,8 @@
             <input type="text" id="fName" name="fName" placeholder="First Name" required /><br />
             <input type="text" id="lName" name="lName" placeholder="Last Name" required /><br />
           </fieldset>  
-          <label for="birthday">Birthday</label>
-          <input type="date" id="birthday" name="birthday" required /><br />
+          <label for="studentPwd">Password</label>
+          <input type="password" id="studentPwd" name="pwd" required /><br />
           <!-- Automatically fill ClassID if in URL -->
           <label for="classID">Class ID</label>
           <input type="text" id="classID" name="classID" placeholder="XXXXXX" value="<?php echo isset($_GET["classID"]) ? $_GET["classID"] : '' ?>" required /><br />

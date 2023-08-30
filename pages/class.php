@@ -120,7 +120,7 @@
         <thead>
           <tr>
             <th>Name</th>
-            <th>Birthday</th>
+            <th>Password</th>
             <th></th>
           </tr>
         </thead>
@@ -171,8 +171,8 @@
             <input type="text" id="fName" name="fName" required /><br />
             <label for="lName">Last Name</label><br />
             <input type="text" id="lName" name="lName" required /><br />
-            <label for="birthday">Birthday</label><br />
-            <input type="date" id="birthday" name="birthday" />
+            <label for="password">Password</label><br />
+            <input type="text" id="password" name="pwd" />
           </div>
         </div>
         <footer>

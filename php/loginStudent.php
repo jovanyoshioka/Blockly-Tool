@@ -20,11 +20,11 @@
   // Retrieve entered login information.
   $fName    = $_POST["fName"];
   $lName    = $_POST["lName"];
-  $birthday = $_POST["birthday"];
+  $pwd = $_POST["pwd"];
   $classID  = $_POST["classID"];
 
   // Get user data associated with entered name and class ID.
-  // Also determine if exact credentials match, i.e. name, classID, AND birthday.
+  // Also determine if exact credentials match, i.e. name, classID, AND password.
   $sql = $conn->prepare("
     SELECT
       *,
@@ -35,7 +35,7 @@
           FROM
             students
           WHERE
-            ClassID=? AND FName=? AND LName=? AND Birthday=?
+            ClassID=? AND FName=? AND LName=? AND Password=?
         ) THEN TRUE
         ELSE FALSE
       END AS Found
@@ -44,7 +44,7 @@
     WHERE
       ClassID=? AND FName=? AND LName=?
   ");
-  $sql->bind_param("isssiss", $classID, $fName, $lName, $birthday, $classID, $fName, $lName);
+  $sql->bind_param("isssiss", $classID, $fName, $lName, $pwd, $classID, $fName, $lName);
   $sql->execute();
   $results = $sql->get_result();
 
@@ -52,29 +52,29 @@
   // thus need to loop through results.
   while ($row = $results->fetch_assoc())
   {
-    // If no exact match was found (with birthday), but user data still returned, 
+    // If no exact match was found (i.e., $row['Found'] == 0), but user data still returned, 
     // this means student is authenticated for specified class, but has not yet registered
-    // a birthday, i.e. this is their first time logging in.
-    // Register user-entered birthday using first row w/ unset birthday.
-    if ($row['Found'] == 0 && $row['Birthday'] === NULL)
+    // a password, i.e. this is their first time logging in.
+    // In this scenario, save the user-entered password as the student's password for future logins.
+    if ($row['Found'] == 0 && $row['Password'] === NULL)
     {
       $sql = $conn->prepare("
         UPDATE
           students
         SET
-          Birthday=?
+          Password=?
         WHERE
           ID=?
       ");
-      $sql->bind_param("si", $birthday, $row['ID']);
+      $sql->bind_param("si", $pwd, $row['ID']);
       $sql->execute();
     }
 
     // If user data is an exact match to entered credentials, or recently registered
     // as above, authenticate user.
     if (
-      ($row['Found'] == 1 && $row['Birthday'] == $birthday) ||
-      ($row['Found'] == 0 && $row['Birthday'] === NULL)
+      ($row['Found'] == 1 && $row['Password'] == $pwd) ||
+      ($row['Found'] == 0 && $row['Password'] === NULL)
     )
     {
       $conn->close();

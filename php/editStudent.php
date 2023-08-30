@@ -8,8 +8,8 @@
   $id       = $_POST['id'];
   $fName    = $_POST['fName'];
   $lName    = $_POST['lName'];
-  // Birthday may be empty if student has not yet logged in, or teacher wishes to reset it.
-  $birthday = empty($_POST['birthday']) ? NULL : $_POST['birthday'];
+  // Password may be empty if student has not yet logged in, or teacher wishes to reset it.
+  $pwd = empty($_POST['pwd']) ? NULL : $_POST['pwd'];
   
   $classID = $_SESSION['classID'];
 
@@ -31,11 +31,11 @@
     UPDATE
       students
     SET
-      FName=?, LName=?, Birthday=?
+      FName=?, LName=?, Password=?
     WHERE
       ID=?
   ");
-  $sql->bind_param("sssi", $fName, $lName, $birthday, $id);
+  $sql->bind_param("sssi", $fName, $lName, $pwd, $id);
   $sql->execute();
 
   $conn->close();

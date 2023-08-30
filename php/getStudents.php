@@ -45,17 +45,17 @@
   // Format retrieved data into table rows and buttons.
   while ($row = $results->fetch_assoc())
   {
-    // Format birthday, either "MMM. DD, YYYY" or "Set on Login" if null.
-    if (isset($row['Birthday']))
-      $birthday = date_format( date_create($row['Birthday']) , 'M. j, Y' );
+    // Format password column value, either the password in plain text or "Set on Login" if null.
+    if (isset($row['Password']))
+      $password = $row['Password'];
     else
-      $birthday = '<span>Set on Login</span>';
+      $password = '<span>Set on Login</span>';
     
     // Format data as row for "Manage Students" table.
     $studentsRows .= '
       <tr>
         <td>'.$row['LName'].', '.$row['FName'].'</td>
-        <td>'.$birthday.'</td>
+        <td>'.$password.'</td>
         <td>
           <button
             class="orangeBtn"
@@ -63,7 +63,7 @@
               '.$row['ID'].',
               &apos;'.$row['FName'].'&apos;,
               &apos;'.$row['LName'].'&apos;,
-              &apos;'.$row['Birthday'].'&apos;
+              &apos;'.$row['Password'].'&apos;
             )"
           >
             Edit <i class="fas fa-user-edit"></i>

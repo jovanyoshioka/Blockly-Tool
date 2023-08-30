@@ -1429,7 +1429,7 @@ body#class div.studentsContainer div button {
   padding: 7.5px 10px;
   float: right;
 }
-/* List of Students w/ Birthday and Edit/Delete Buttons */
+/* List of Students w/ Password and Edit/Delete Buttons */
 body#class div.studentsContainer table {
   width: 100%;
   text-align: left;
@@ -1446,7 +1446,7 @@ body#class div.studentsContainer table td {
   font-size: 1.65em;
   background-color: var(--lighterGray);
 }
-/* Birthday Field: "Set on Login" */
+/* Password Field: "Set on Login" */
 body#class div.studentsContainer table td span {
   font-style: italic;
 }
