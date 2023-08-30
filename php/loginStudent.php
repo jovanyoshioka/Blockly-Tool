@@ -2,8 +2,8 @@
 
   session_start();
 
-  // Verify user not already logged in. This may be possible if user must set a new password,
-  // which is on the same login page, and "Inspect Element" the student/teacher form.
+  // Verify user not already logged in. User may be logged in already if must set a new password
+  // and manually calls switchFormTabs(...) via console to show/submit login form again.
   if (isset($_SESSION['id']))
   {
     // Notify user of situation.
@@ -20,7 +20,7 @@
   // Retrieve entered login information.
   $fName    = $_POST["fName"];
   $lName    = $_POST["lName"];
-  $pwd = $_POST["pwd"];
+  $pwd      = $_POST["pwd"];
   $classID  = $_POST["classID"];
 
   // Get user data associated with entered name and class ID.

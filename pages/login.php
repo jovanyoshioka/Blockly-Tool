@@ -46,6 +46,7 @@
           <!-- Automatically fill ClassID if in URL -->
           <label for="classID">Class ID</label>
           <input type="text" id="classID" name="classID" placeholder="XXXXXX" value="<?php echo isset($_GET["classID"]) ? $_GET["classID"] : '' ?>" required /><br />
+          <input class="orangeBtn" type="button" onclick="switchFormTabs('studentForm', 'loginSelector')" value="&#10094; Back" />
           <input class="orangeBtn" type="submit" value="Login" />
         </form>
 
@@ -57,6 +58,7 @@
           <input type="email" id="email" name="email" placeholder="example@domain.com" required /><br />
           <label for="pwd">Password</label>
           <input type="password" id="pwd" name="pwd" required /><br />
+          <input class="orangeBtn" type="button" onclick="switchFormTabs('teacherForm', 'loginSelector')" value="&#10094; Back" />
           <input class="orangeBtn" type="submit" value="Login" />
         </form>
         
@@ -79,6 +81,7 @@
       if (isset($_SESSION['id']) && $_SESSION['type'] == 1 && $_SESSION['tempPwd'])
       {
         // Only display password form if teacher used temporary password to log in to current session.
+        // Note: `style.transition = "none"` immediately shows pwdForm without switchFormTabs animation.
         echo '
           <script type="text/javascript">
             document.getElementById("loginSelector").style.transition = "none";
@@ -88,11 +91,10 @@
         ';
       } else if (isset($_GET['classID']))
       {
-        // Only display student login if "classID" present in URL.
+        // Load page with student login form if "classID" present in URL.
+        // Note: `style.transition = "none"` is not included, unlike the above, because the "Back" button animation will break.
         echo '
           <script type="text/javascript">
-            document.getElementById("loginSelector").style.transition = "none";
-            document.getElementById("studentForm").style.transition   = "none";
             switchFormTabs("loginSelector","studentForm");
           </script>
         ';

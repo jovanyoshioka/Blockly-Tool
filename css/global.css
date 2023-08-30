@@ -587,8 +587,15 @@ body#login div.forms form input[type=submit] {
   margin: 15px 0 60px 0;
   padding: 10px 20px;
 }
+/* Back Button */
+body#login div.forms form#studentForm input[type=button],
+body#login div.forms form#teacherForm input[type=button] {
+  padding: 5px 20px 10px 20px;
+  margin-right: 80px; /* back and login buttons on opposite sides */
+}
+/* Logout Button (when setting new password) */
 body#login div.forms form#pwdForm input[type=button] {
-  margin-right: 92.5px; /* abort and save buttons on opposite sides */
+  margin-right: 92.5px; /* logout and save buttons on opposite sides */
 }
 
 /***********************
